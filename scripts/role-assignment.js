@@ -19,6 +19,8 @@ const permissionCount = document.querySelector("#permission-count");
 const permissionItems = Array.from(document.querySelectorAll(".permission-item"));
 const resetButton = document.querySelector("#reset-role-assignment");
 const form = document.querySelector("#role-assignment-form");
+const accessInputs = Array.from(document.querySelectorAll("#access-options input"));
+const roleToast = document.querySelector("#role-toast");
 
 const permissions = {
   student: ["dashboard", "duties", "cases", "schedule", "reports"],
@@ -35,6 +37,7 @@ const roleLabels = {
 let selectedCard = document.querySelector(".role-user-card.is-selected");
 let savedRole = selectedCard.dataset.role;
 let hasUnsavedRole = false;
+let toastTimer;
 
 function setMessage(text, state) {
   message.textContent = text;
@@ -58,8 +61,20 @@ function activeRole() {
   return document.querySelector("[name='assignedRole']:checked").value;
 }
 
-function updatePermissionPreview(role) {
+function selectedAccess() {
+  return accessInputs.filter((input) => input.checked).map((input) => input.value);
+}
+
+function setAccessDefaults(role) {
   const enabled = permissions[role];
+
+  accessInputs.forEach((input) => {
+    input.checked = enabled.includes(input.value);
+  });
+}
+
+function updatePermissionPreview(role) {
+  const enabled = selectedAccess();
 
   permissionItems.forEach((item) => {
     item.classList.toggle("is-enabled", enabled.includes(item.dataset.permission));
@@ -67,6 +82,15 @@ function updatePermissionPreview(role) {
 
   permissionTitle.textContent = roleLabels[role];
   permissionCount.textContent = `${enabled.length} enabled`;
+}
+
+function showTopToast(text) {
+  roleToast.textContent = text;
+  roleToast.hidden = false;
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => {
+    roleToast.hidden = true;
+  }, 2800);
 }
 
 function setRole(role, markUnsaved) {
@@ -78,11 +102,12 @@ function setRole(role, markUnsaved) {
     option.classList.toggle("is-active", option.querySelector("input").checked);
   });
 
+  setAccessDefaults(role);
   updatePermissionPreview(role);
 
   hasUnsavedRole = markUnsaved && role !== savedRole;
   pendingRoleCount.textContent = hasUnsavedRole ? "1" : "0";
-  assignmentStatus.textContent = hasUnsavedRole ? "Unsaved" : "Draft";
+  assignmentStatus.textContent = hasUnsavedRole ? "Unsaved" : "Saved";
   assignmentStatus.classList.toggle("status-verified", !hasUnsavedRole);
   assignmentStatus.classList.toggle("status-pending", hasUnsavedRole);
   syncPill.textContent = hasUnsavedRole ? "Unsaved role" : "1 selected";
@@ -96,7 +121,7 @@ function selectUser(card) {
   userCards.forEach((item) => item.classList.toggle("is-selected", item === card));
   selectedAvatar.textContent = initials(card.dataset.name);
   selectedName.textContent = card.dataset.name;
-  selectedMeta.textContent = `${card.dataset.id} • ${card.dataset.section} • ${card.dataset.email}`;
+  selectedMeta.textContent = `${card.dataset.id} - ${card.dataset.section} - ${card.dataset.email}`;
   selectedStatus.textContent = card.dataset.status;
   selectedStatus.className = `status-badge ${card.dataset.status === "Pending" ? "status-pending" : "status-verified"}`;
   setRole(savedRole, false);
@@ -116,7 +141,9 @@ function filterUsers() {
     }
   });
 
-  visibleCount.textContent = `${shown} visible`;
+  if (visibleCount) {
+    visibleCount.textContent = `${shown} visible`;
+  }
   emptyState.hidden = shown > 0;
 }
 
@@ -139,6 +166,19 @@ roleInputs.forEach((input) => {
   });
 });
 
+accessInputs.forEach((input) => {
+  input.addEventListener("change", () => {
+    hasUnsavedRole = true;
+    pendingRoleCount.textContent = "1";
+    assignmentStatus.textContent = "Unsaved";
+    assignmentStatus.classList.remove("status-verified");
+    assignmentStatus.classList.add("status-pending");
+    syncPill.textContent = "Unsaved access";
+    updatePermissionPreview(activeRole());
+    setMessage("Access selection updated. Save to apply these permissions.");
+  });
+});
+
 userSearch.addEventListener("input", filterUsers);
 
 resetButton.addEventListener("click", () => {
@@ -151,11 +191,17 @@ form.addEventListener("submit", (event) => {
 
   const role = activeRole();
   selectedCard.dataset.role = role;
-  selectedCard.querySelector("small").textContent = `${roleLabels[role].replace(" access", "")} • ${selectedCard.dataset.section}`;
+  selectedCard.querySelector("small").textContent = `${roleLabels[role].replace(" access", "")} - ${selectedCard.dataset.section}`;
   savedRole = role;
-  setRole(role, false);
-  setMessage(`${selectedCard.dataset.name} role updated successfully.`, "is-success");
+  hasUnsavedRole = false;
+  pendingRoleCount.textContent = "0";
+  assignmentStatus.textContent = "Saved";
+  assignmentStatus.classList.add("status-verified");
+  assignmentStatus.classList.remove("status-pending");
+  updatePermissionPreview(role);
+  setMessage(`${selectedCard.dataset.name} role and access updated successfully.`, "is-success");
   syncPill.textContent = "Updated successfully";
+  showTopToast(`${selectedCard.dataset.name} Role Updated Successfully`);
 });
 
 selectUser(selectedCard);

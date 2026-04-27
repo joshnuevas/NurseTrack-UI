@@ -20,6 +20,15 @@ const newIdError = newIdLabel.querySelector(".field-error");
 const activeUserCount = document.querySelector("#active-user-count");
 const pendingUserCount = document.querySelector("#pending-user-count");
 const syncPill = document.querySelector("#user-sync-pill");
+const openAddUserModal = document.querySelector("#open-add-user-modal");
+const addUserModal = document.querySelector("#add-user-modal");
+const actionModal = document.querySelector("#user-action-modal");
+const actionCopy = document.querySelector("#user-action-copy");
+const confirmActionButton = document.querySelector("#confirm-user-action");
+const closeAddUserButtons = document.querySelectorAll("[data-close-modal]");
+const closeActionButtons = document.querySelectorAll("[data-close-action-modal]");
+
+let pendingAction = null;
 
 function statusText(row) {
   return row.dataset.status.charAt(0).toUpperCase() + row.dataset.status.slice(1);
@@ -67,33 +76,71 @@ function setRowStatus(row, status) {
   badge.className = `status-badge ${status === "active" ? "status-verified" : status === "pending" ? "status-pending" : "status-rejected"}`;
 
   if (status === "active") {
-    button.textContent = "Suspend";
     button.dataset.action = "suspend";
-    button.className = "ghost-button user-action";
   } else if (status === "suspended") {
-    button.textContent = "Restore";
     button.dataset.action = "restore";
-    button.className = "primary-button user-action";
+  } else if (status === "pending") {
+    button.dataset.action = "approve";
   }
 
   updateCounts();
   filterUsers();
 }
 
-function handleUserAction(button) {
+function actionLabel(action) {
+  if (action === "approve") {
+    return "approve";
+  }
+
+  if (action === "restore") {
+    return "restore";
+  }
+
+  return "suspend";
+}
+
+function openModal(modal) {
+  modal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function closeModal(modal) {
+  modal.hidden = true;
+  document.body.classList.remove("modal-open");
+}
+
+function openActionConfirmation(button) {
   const row = button.closest(".user-row");
   const action = button.dataset.action;
+  const name = row.querySelector("strong").textContent;
+
+  pendingAction = { row, action };
+  actionCopy.textContent = `Confirm that you want to ${actionLabel(action)} ${name}. This avoids accidental account changes.`;
+  openModal(actionModal);
+}
+
+function applyPendingAction() {
+  if (!pendingAction) {
+    return;
+  }
+
+  const { row, action } = pendingAction;
+  const name = row.querySelector("strong").textContent;
 
   if (action === "approve" || action === "restore") {
     setRowStatus(row, "active");
-    userMessage.textContent = `${row.querySelector("strong").textContent} is now active.`;
+    userMessage.textContent = `${name} is now active.`;
     userMessage.classList.add("is-success");
+    closeModal(actionModal);
+    pendingAction = null;
     return;
   }
 
   setRowStatus(row, "suspended");
-  userMessage.textContent = `${row.querySelector("strong").textContent} has been suspended.`;
+  userMessage.textContent = `${name} has been suspended.`;
   userMessage.classList.add("is-success");
+  closeModal(actionModal);
+  pendingAction = null;
 }
 
 function validateNewId() {
@@ -132,7 +179,7 @@ function addPendingUser() {
       <small>${newSection.value.trim()}</small>
     </span>
     <span><mark class="status-badge status-pending">Pending</mark></span>
-    <span><button class="primary-button user-action" type="button" data-action="approve">Approve</button></span>
+    <span><button class="icon-button kebab-button user-action" type="button" data-action="approve" aria-label="Open account action" title="Actions"><svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg></button></span>
   `;
 
   userTable.append(row);
@@ -154,9 +201,24 @@ userTable.addEventListener("click", (event) => {
   const button = event.target.closest(".user-action");
 
   if (button) {
-    handleUserAction(button);
+    openActionConfirmation(button);
   }
 });
+
+openAddUserModal.addEventListener("click", () => openModal(addUserModal));
+
+closeAddUserButtons.forEach((button) => {
+  button.addEventListener("click", () => closeModal(addUserModal));
+});
+
+closeActionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    closeModal(actionModal);
+    pendingAction = null;
+  });
+});
+
+confirmActionButton.addEventListener("click", applyPendingAction);
 
 newId.addEventListener("input", () => {
   if (newId.value.trim()) {
@@ -181,6 +243,7 @@ userForm.addEventListener("submit", (event) => {
   newUserMessage.textContent = "Account created successfully.";
   newUserMessage.classList.remove("is-error");
   newUserMessage.classList.add("is-success");
+  closeModal(addUserModal);
   userForm.reset();
   newIdLabel.classList.remove("has-error");
   newIdError.hidden = true;

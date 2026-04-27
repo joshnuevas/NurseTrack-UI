@@ -77,7 +77,7 @@
           <section class="dashboard-stats" aria-label="Instructor dashboard summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">DV</span>
+                <span class="card-icon">Duty validations</span>
                 <span class="status-badge status-pending">Pending</span>
               </div>
               <h3>Duty validations</h3>
@@ -88,7 +88,7 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">CV</span>
+                <span class="card-icon">Case validations</span>
                 <span class="status-badge status-pending">Pending</span>
               </div>
               <h3>Case validations</h3>
@@ -99,7 +99,7 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">CP</span>
+                <span class="card-icon">Class compliance</span>
                 <span class="status-badge status-verified">On track</span>
               </div>
               <h3>Class compliance</h3>
@@ -110,7 +110,7 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">CF</span>
+                <span class="card-icon">Schedule conflicts</span>
                 <span class="status-badge status-rejected">Conflict</span>
               </div>
               <h3>Schedule conflicts</h3>
@@ -130,7 +130,9 @@
                   <p class="section-kicker">Needs review</p>
                   <h2>Pending submissions</h2>
                 </div>
-                <span class="status-badge status-pending">20 total</span>
+                <button class="icon-button kebab-button" type="button" aria-label="Pending submission actions" title="Actions">
+                  <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg>
+                </button>
               </div>
 
               <div class="review-list">
@@ -160,10 +162,7 @@
                 </div>
               </div>
 
-              <div class="quick-actions">
-                <a class="ghost-button button-link" href="review-submissions.html">Open queue</a>
-                <button class="ghost-button" type="button">Filter submissions</button>
-              </div>
+              <div class="pagination-note">20 total submissions queued for review.</div>
             </article>
 
             <article class="workspace-panel">

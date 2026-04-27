@@ -69,7 +69,6 @@
               <h2>Assign access based on account responsibility.</h2>
               <p>Select a user, choose the correct role, and review permissions before saving.</p>
             </div>
-            <button class="primary-button workspace-action" type="submit" form="role-assignment-form">Save role</button>
           </section>
 
           <section class="dashboard-stats">
@@ -103,7 +102,6 @@
                     <p class="section-kicker">Select User</p>
                     <h2>Account list</h2>
                   </div>
-                  <span class="status-badge status-verified" id="visible-role-users">5 visible</span>
                 </div>
 
                 <label class="form-label role-search-field" for="role-user-search">
@@ -116,7 +114,7 @@
                     <span class="avatar">MC</span>
                     <span>
                       <strong>Maria Cruz</strong>
-                      <small>Nursing Student • BSN 3A</small>
+                      <small>Nursing Student - BSN 3A</small>
                     </span>
                     <mark class="status-badge status-verified">Active</mark>
                   </button>
@@ -125,7 +123,7 @@
                     <span class="avatar">JD</span>
                     <span>
                       <strong>Juan Dela Cruz</strong>
-                      <small>Nursing Student • BSN 2B</small>
+                      <small>Nursing Student - BSN 2B</small>
                     </span>
                     <mark class="status-badge status-pending">Pending</mark>
                   </button>
@@ -134,7 +132,7 @@
                     <span class="avatar">PR</span>
                     <span>
                       <strong>Prof. Reyes</strong>
-                      <small>Clinical Instructor • Ward B</small>
+                      <small>Clinical Instructor - Ward B</small>
                     </span>
                     <mark class="status-badge status-verified">Active</mark>
                   </button>
@@ -143,7 +141,7 @@
                     <span class="avatar">AT</span>
                     <span>
                       <strong>Angela Tan</strong>
-                      <small>Nursing Student • BSN 3A</small>
+                      <small>Nursing Student - BSN 3A</small>
                     </span>
                     <mark class="status-badge status-verified">Active</mark>
                   </button>
@@ -152,7 +150,7 @@
                     <span class="avatar">AR</span>
                     <span>
                       <strong>Admin Reyes</strong>
-                      <small>Admin / Manager • Nursing Office</small>
+                      <small>Admin / Manager - Nursing Office</small>
                     </span>
                     <mark class="status-badge status-verified">Active</mark>
                   </button>
@@ -169,14 +167,14 @@
                     <p class="section-kicker">Assign Role</p>
                     <h2>Access details</h2>
                   </div>
-                  <span class="status-badge status-pending" id="assignment-status">Draft</span>
+                  <span class="status-badge status-verified" id="assignment-status">Saved</span>
                 </div>
 
                 <div class="selected-user-card">
                   <div class="avatar" id="selected-avatar">MC</div>
                   <div>
                     <strong id="selected-name">Maria Cruz</strong>
-                    <p id="selected-meta">12-3456-789 • BSN 3A • maria.cruz@cit.edu</p>
+                    <p id="selected-meta">12-3456-789 - BSN 3A - maria.cruz@cit.edu</p>
                   </div>
                   <span class="status-badge status-verified" id="selected-status">Active</span>
                 </div>
@@ -195,6 +193,44 @@
                     <label class="role-option">
                       <input type="radio" name="assignedRole" value="admin">
                       <span>Admin</span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset class="role-fieldset access-fieldset">
+                  <legend>Select access</legend>
+                  <div class="access-option-grid" id="access-options">
+                    <label class="access-option">
+                      <input type="checkbox" value="dashboard" checked>
+                      <span>Dashboard</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="duties" checked>
+                      <span>Duty Records</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="cases" checked>
+                      <span>Case Logs</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="schedule" checked>
+                      <span>Schedules</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="validation">
+                      <span>Validation</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="users">
+                      <span>User Management</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="reports" checked>
+                      <span>Reports</span>
+                    </label>
+                    <label class="access-option">
+                      <input type="checkbox" value="roles">
+                      <span>Role Assignment</span>
                     </label>
                   </div>
                 </fieldset>
@@ -264,39 +300,6 @@
               <article class="workspace-panel">
                 <div class="panel-heading">
                   <div>
-                    <p class="section-kicker">Guide</p>
-                    <h2>Role scope</h2>
-                  </div>
-                </div>
-
-                <div class="requirement-list compact-list">
-                  <div class="requirement-item">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Nursing Student</strong>
-                      <p>Records duties, submits cases, views schedules, and monitors progress.</p>
-                    </div>
-                  </div>
-                  <div class="requirement-item">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Clinical Instructor</strong>
-                      <p>Reviews submissions, validates records, and monitors assigned students.</p>
-                    </div>
-                  </div>
-                  <div class="requirement-item">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Admin / Manager</strong>
-                      <p>Maintains accounts, role assignments, schedules, and reports.</p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <article class="workspace-panel">
-                <div class="panel-heading">
-                  <div>
                     <p class="section-kicker">Links</p>
                     <h2>Continue</h2>
                   </div>
@@ -329,6 +332,9 @@
             </aside>
           </section>
         </main>
+        <div class="top-toast" id="role-toast" role="status" aria-live="polite" hidden>
+          Juan Dela Cruz Role Updated Successfully
+        </div>
       </div>
     </div>
 
