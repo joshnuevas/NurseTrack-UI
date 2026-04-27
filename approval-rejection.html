@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Approval Decision</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Clinical Instructor</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Select Student</a>
+          <a class="nav-link" href="duty-validation.html"><span class="nav-dot"></span>Duty Validation</a>
+          <a class="nav-link" href="case-validation.html"><span class="nav-dot"></span>Case Validation</a>
+          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="instructor-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">PR</div>
+          <div>
+            <strong>Prof. Reyes</strong>
+            <span>Clinical Instructor</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Validation</p>
+              <h1>Approval Decision</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Ready for action</span>
+            <a class="ghost-button button-link" href="instructor-notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace decision-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Decision</p>
+              <h2>Approve or reject this submission.</h2>
+              <p>Choose a validation decision and add comments before updating the student record.</p>
+            </div>
+            <span class="status-badge status-pending" id="decision-badge">No decision</span>
+          </section>
+
+          <section class="decision-layout">
+            <form id="decision-form" class="workspace-panel decision-form" novalidate>
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Validation action</p>
+                  <h2>Decision details</h2>
+                </div>
+                <span class="status-badge status-pending">Required</span>
+              </div>
+
+              <fieldset class="decision-options">
+                <legend>Select decision</legend>
+                <label class="decision-card is-selected">
+                  <input type="radio" name="decision" value="approved" checked>
+                  <span class="decision-icon approve-icon">✓</span>
+                  <strong>Approve</strong>
+                  <p>Accept this record and add it to student progress.</p>
+                </label>
+
+                <label class="decision-card">
+                  <input type="radio" name="decision" value="rejected">
+                  <span class="decision-icon reject-icon">!</span>
+                  <strong>Reject</strong>
+                  <p>Return this record to the student for correction.</p>
+                </label>
+              </fieldset>
+
+              <label class="form-label" for="decision-reason">
+                Rejection reason
+                <select id="decision-reason" name="decisionReason">
+                  <option value="">Select reason when rejecting</option>
+                  <option>Incomplete required fields</option>
+                  <option>Incorrect time or schedule details</option>
+                  <option>Checklist needs correction</option>
+                  <option>Verification does not match assigned site</option>
+                </select>
+              </label>
+
+              <label class="form-label" for="decision-comment">
+                Comment
+                <textarea id="decision-comment" name="decisionComment" rows="5" placeholder="Add a note for the student record"></textarea>
+              </label>
+
+              <div id="form-message" class="form-message" role="status" aria-live="polite">
+                Select a decision, then submit the validation update.
+              </div>
+
+              <div class="button-row">
+                <a class="ghost-button" href="review-submissions.html">Back to queue</a>
+                <button class="primary-button workspace-action" type="submit">Submit decision</button>
+              </div>
+            </form>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Record summary</p>
+                    <h2>Submission</h2>
+                  </div>
+                  <span class="status-badge status-pending">Pending</span>
+                </div>
+
+                <div class="student-validation-card no-margin">
+                  <div class="avatar">MC</div>
+                  <div>
+                    <strong>Maria Cruz</strong>
+                    <p>Duty hours - Ward B - 8.0 hrs</p>
+                  </div>
+                  <span class="status-badge status-verified">Verified</span>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Impact</p>
+                    <h2>After decision</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Approved records</strong>
+                      <p>Count toward duty or case progress.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Rejected records</strong>
+                      <p>Return to the student with your reason.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>History updated</strong>
+                      <p>Decision appears in validation history.</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/approval-rejection.js"></script>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+const menuButton = document.querySelector("[data-menu-button]");
+const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
+const userSearch = document.querySelector("#role-user-search");
+const userCards = Array.from(document.querySelectorAll(".role-user-card"));
+const emptyState = document.querySelector("#role-user-empty");
+const visibleCount = document.querySelector("#visible-role-users");
+const selectedAvatar = document.querySelector("#selected-avatar");
+const selectedName = document.querySelector("#selected-name");
+const selectedMeta = document.querySelector("#selected-meta");
+const selectedStatus = document.querySelector("#selected-status");
+const roleOptions = Array.from(document.querySelectorAll(".role-assignment-segment .role-option"));
+const roleInputs = Array.from(document.querySelectorAll("[name='assignedRole']"));
+const assignmentStatus = document.querySelector("#assignment-status");
+const message = document.querySelector("#role-assignment-message");
+const syncPill = document.querySelector("#role-sync-pill");
+const pendingRoleCount = document.querySelector("#pending-role-count");
+const permissionTitle = document.querySelector("#permission-title");
+const permissionCount = document.querySelector("#permission-count");
+const permissionItems = Array.from(document.querySelectorAll(".permission-item"));
+const resetButton = document.querySelector("#reset-role-assignment");
+const form = document.querySelector("#role-assignment-form");
+
+const permissions = {
+  student: ["dashboard", "duties", "cases", "schedule", "reports"],
+  instructor: ["dashboard", "schedule", "validation", "reports"],
+  admin: ["dashboard", "duties", "cases", "schedule", "validation", "users", "reports", "roles"]
+};
+
+const roleLabels = {
+  student: "Student access",
+  instructor: "Instructor access",
+  admin: "Admin access"
+};
+
+let selectedCard = document.querySelector(".role-user-card.is-selected");
+let savedRole = selectedCard.dataset.role;
+let hasUnsavedRole = false;
+
+function setMessage(text, state) {
+  message.textContent = text;
+  message.classList.remove("is-error", "is-success");
+
+  if (state) {
+    message.classList.add(state);
+  }
+}
+
+function initials(name) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function activeRole() {
+  return document.querySelector("[name='assignedRole']:checked").value;
+}
+
+function updatePermissionPreview(role) {
+  const enabled = permissions[role];
+
+  permissionItems.forEach((item) => {
+    item.classList.toggle("is-enabled", enabled.includes(item.dataset.permission));
+  });
+
+  permissionTitle.textContent = roleLabels[role];
+  permissionCount.textContent = `${enabled.length} enabled`;
+}
+
+function setRole(role, markUnsaved) {
+  roleInputs.forEach((input) => {
+    input.checked = input.value === role;
+  });
+
+  roleOptions.forEach((option) => {
+    option.classList.toggle("is-active", option.querySelector("input").checked);
+  });
+
+  updatePermissionPreview(role);
+
+  hasUnsavedRole = markUnsaved && role !== savedRole;
+  pendingRoleCount.textContent = hasUnsavedRole ? "1" : "0";
+  assignmentStatus.textContent = hasUnsavedRole ? "Unsaved" : "Draft";
+  assignmentStatus.classList.toggle("status-verified", !hasUnsavedRole);
+  assignmentStatus.classList.toggle("status-pending", hasUnsavedRole);
+  syncPill.textContent = hasUnsavedRole ? "Unsaved role" : "1 selected";
+}
+
+function selectUser(card) {
+  selectedCard = card;
+  savedRole = card.dataset.role;
+  hasUnsavedRole = false;
+
+  userCards.forEach((item) => item.classList.toggle("is-selected", item === card));
+  selectedAvatar.textContent = initials(card.dataset.name);
+  selectedName.textContent = card.dataset.name;
+  selectedMeta.textContent = `${card.dataset.id} • ${card.dataset.section} • ${card.dataset.email}`;
+  selectedStatus.textContent = card.dataset.status;
+  selectedStatus.className = `status-badge ${card.dataset.status === "Pending" ? "status-pending" : "status-verified"}`;
+  setRole(savedRole, false);
+  setMessage("Review the selected role before saving.");
+}
+
+function filterUsers() {
+  const query = userSearch.value.trim().toLowerCase();
+  let shown = 0;
+
+  userCards.forEach((card) => {
+    const matches = !query || card.textContent.toLowerCase().includes(query) || Object.values(card.dataset).join(" ").toLowerCase().includes(query);
+    card.hidden = !matches;
+
+    if (matches) {
+      shown += 1;
+    }
+  });
+
+  visibleCount.textContent = `${shown} visible`;
+  emptyState.hidden = shown > 0;
+}
+
+menuButton.addEventListener("click", () => {
+  document.body.classList.add("sidebar-open");
+});
+
+sidebarBackdrop.addEventListener("click", () => {
+  document.body.classList.remove("sidebar-open");
+});
+
+userCards.forEach((card) => {
+  card.addEventListener("click", () => selectUser(card));
+});
+
+roleInputs.forEach((input) => {
+  input.addEventListener("change", () => {
+    setRole(input.value, true);
+    setMessage(`${roleLabels[input.value]} selected. Save to apply this role.`);
+  });
+});
+
+userSearch.addEventListener("input", filterUsers);
+
+resetButton.addEventListener("click", () => {
+  setRole(savedRole, false);
+  setMessage("Role selection reset to the saved account role.", "is-success");
+});
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const role = activeRole();
+  selectedCard.dataset.role = role;
+  selectedCard.querySelector("small").textContent = `${roleLabels[role].replace(" access", "")} • ${selectedCard.dataset.section}`;
+  savedRole = role;
+  setRole(role, false);
+  setMessage(`${selectedCard.dataset.name} role updated successfully.`, "is-success");
+  syncPill.textContent = "Updated successfully";
+});
+
+selectUser(selectedCard);
+filterUsers();

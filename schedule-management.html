@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Schedule Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Clinical Instructor</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Select Student</a>
+          <a class="nav-link" href="duty-validation.html"><span class="nav-dot"></span>Duty Validation</a>
+          <a class="nav-link" href="case-validation.html"><span class="nav-dot"></span>Case Validation</a>
+          <a class="nav-link is-active" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="instructor-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">PR</div>
+          <div>
+            <strong>Prof. Reyes</strong>
+            <span>Clinical Instructor</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Scheduling</p>
+              <h1>Schedule Management</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" href="instructor-notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace schedule-management-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Scheduling hub</p>
+              <h2>Manage clinical duty schedules.</h2>
+              <p>Review active rotations, assignment capacity, and duty conflicts before publishing updates.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="create-schedule.html">Create schedule</a>
+          </section>
+
+          <section class="dashboard-stats" aria-label="Schedule management summary">
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">AC</span>
+                <span class="status-badge status-verified">Active</span>
+              </div>
+              <h3>Active schedules</h3>
+              <p>Current rotations</p>
+              <strong class="stat-value">12</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">DR</span>
+                <span class="status-badge status-pending">Draft</span>
+              </div>
+              <h3>Draft schedules</h3>
+              <p>Needs publishing</p>
+              <strong class="stat-value">3</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">CF</span>
+                <span class="status-badge status-rejected">Conflict</span>
+              </div>
+              <h3>Conflicts</h3>
+              <p>Requires action</p>
+              <strong class="stat-value">2</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">ST</span>
+                <span class="status-badge status-pending">Assigned</span>
+              </div>
+              <h3>Students assigned</h3>
+              <p>Across active schedules</p>
+              <strong class="stat-value">42</strong>
+            </article>
+          </section>
+
+          <section class="schedule-management-layout">
+            <article class="workspace-panel schedule-calendar-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Schedules</p>
+                  <h2>Calendar and list view</h2>
+                </div>
+                <div class="schedule-view-tabs" aria-label="Schedule management view">
+                  <button class="state-tab is-active" type="button" data-management-view="calendar">Calendar</button>
+                  <button class="state-tab" type="button" data-management-view="list">List</button>
+                </div>
+              </div>
+
+              <div class="history-filters management-filters" aria-label="Schedule filters">
+                <label class="form-label" for="status-filter">
+                  Status
+                  <select id="status-filter">
+                    <option value="all">All statuses</option>
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="conflict">Conflict</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="area-filter">
+                  Duty area
+                  <select id="area-filter">
+                    <option value="all">All areas</option>
+                    <option value="Ward B">Ward B</option>
+                    <option value="Delivery Room">Delivery Room</option>
+                    <option value="Pediatric Ward">Pediatric Ward</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="schedule-search">
+                  Search
+                  <input id="schedule-search" type="search" placeholder="Search group, site, or instructor">
+                </label>
+              </div>
+
+              <div class="management-calendar" id="calendar-view">
+                <div class="management-day">
+                  <span>Mon 20</span>
+                  <p>No major assignments</p>
+                </div>
+                <div class="management-day has-duty" data-status="active" data-area="Delivery Room">
+                  <span>Tue 21</span>
+                  <strong>Delivery Room</strong>
+                  <p>BSN 3A - Group 1 · 6 students</p>
+                </div>
+                <div class="management-day">
+                  <span>Wed 22</span>
+                  <p>Open slots available</p>
+                </div>
+                <div class="management-day has-duty" data-status="active" data-area="Pediatric Ward">
+                  <span>Thu 23</span>
+                  <strong>Pediatric Ward</strong>
+                  <p>BSN 3B - Group 1 · 8 students</p>
+                </div>
+                <div class="management-day has-conflict" data-status="conflict" data-area="Ward B">
+                  <span>Fri 24</span>
+                  <strong>Ward B Rotation</strong>
+                  <p>BSN 3A - Group 2 · conflict detected</p>
+                </div>
+                <div class="management-day has-duty" data-status="draft" data-area="Ward B">
+                  <span>Sat 25</span>
+                  <strong>Ward B Draft</strong>
+                  <p>BSN 4A - Group 1 · 5 students</p>
+                </div>
+                <div class="management-day">
+                  <span>Sun 26</span>
+                  <p>No duty scheduled</p>
+                </div>
+              </div>
+
+              <div class="management-list" id="list-view" hidden>
+                <div class="management-row" data-status="conflict" data-area="Ward B">
+                  <div>
+                    <strong>Ward B Rotation</strong>
+                    <p>Apr 24 · BSN 3A - Group 2 · Cebu City Medical Center</p>
+                  </div>
+                  <span class="status-badge status-rejected">Conflict</span>
+                  <div class="quick-actions no-margin">
+                    <a class="text-link" href="edit-schedule.html">Edit</a>
+                    <a class="text-link" href="assign-duty.html">Assign</a>
+                  </div>
+                </div>
+                <div class="management-row" data-status="active" data-area="Delivery Room">
+                  <div>
+                    <strong>Delivery Room Rotation</strong>
+                    <p>Apr 21 · BSN 3A - Group 1 · Cebu City Medical Center</p>
+                  </div>
+                  <span class="status-badge status-verified">Active</span>
+                  <div class="quick-actions no-margin">
+                    <a class="text-link" href="edit-schedule.html">Edit</a>
+                    <a class="text-link" href="assign-duty.html">Assign</a>
+                  </div>
+                </div>
+                <div class="management-row" data-status="draft" data-area="Ward B">
+                  <div>
+                    <strong>Ward B Draft</strong>
+                    <p>Apr 25 · BSN 4A - Group 1 · Cebu City Medical Center</p>
+                  </div>
+                  <span class="status-badge status-pending">Draft</span>
+                  <div class="quick-actions no-margin">
+                    <a class="text-link" href="edit-schedule.html">Edit</a>
+                    <a class="text-link" href="assign-duty.html">Assign</a>
+                  </div>
+                </div>
+              </div>
+
+              <div id="schedule-empty" class="empty-state" hidden>
+                No schedules match the selected filters.
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Conflict warning</p>
+                    <h2>Needs action</h2>
+                  </div>
+                  <span class="status-badge status-rejected">2 conflicts</span>
+                </div>
+
+                <div class="schedule-warning">
+                  <div class="warning-icon">!</div>
+                  <div>
+                    <strong>Ward B over-assignment</strong>
+                    <p>BSN 3A - Group 2 overlaps with another Ward B schedule on Apr 24.</p>
+                  </div>
+                </div>
+
+                <div class="quick-actions">
+                  <a class="ghost-button" href="edit-schedule.html">Edit schedule</a>
+                  <a class="ghost-button" href="assign-duty.html">Adjust assignment</a>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Quick actions</p>
+                    <h2>Manage scheduling</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="create-schedule.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Create schedule</strong>
+                      <p>Add a new duty assignment.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="assign-duty.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Assign duty</strong>
+                      <p>Manage student slots and capacity.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="edit-schedule.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Edit schedule</strong>
+                      <p>Update existing duty details.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/schedule-management.js"></script>
+  </body>
+</html>

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Case Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Nursing Student</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link is-active" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong>Maria Cruz</strong>
+            <span>BSN 3A</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Clinical Cases</p>
+              <h1>Case Detail</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" href="notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace case-detail-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Case record</p>
+              <h2>Newborn care assessment</h2>
+              <p>Maternal care · Cebu City Medical Center · Checklist completed</p>
+            </div>
+            <div class="quick-actions no-margin">
+              <a class="ghost-button" href="case-history.html">Back to history</a>
+              <span class="status-badge status-verified">Approved</span>
+            </div>
+          </section>
+
+          <section class="case-detail-layout">
+            <article class="workspace-panel detail-main-card">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Summary</p>
+                  <h2>Case information</h2>
+                </div>
+                <a class="ghost-button" href="edit-case.html">Edit case</a>
+              </div>
+
+              <div class="detail-summary-grid">
+                <div class="detail-summary-item">
+                  <span>Case date</span>
+                  <strong>April 24, 2026</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Case code</span>
+                  <strong>CASE-0424-002</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Category</span>
+                  <strong>Maternal care</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Procedure title</span>
+                  <strong>Newborn care assessment</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Clinical site</span>
+                  <strong>Cebu City Medical Center</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Duty area</span>
+                  <strong>Delivery Room</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Clinical instructor</span>
+                  <strong>Prof. Reyes</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Checklist</span>
+                  <strong>9 / 9 completed</strong>
+                </div>
+              </div>
+
+              <div class="notes-card">
+                <p class="section-kicker">Case notes</p>
+                <p>Assisted with newborn assessment and documented vital observations under instructor supervision.</p>
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Checklist</p>
+                    <h2>Completion result</h2>
+                  </div>
+                  <span class="status-badge status-verified">Complete</span>
+                </div>
+
+                <div class="progress-track large-track"><span style="width: 100%"></span></div>
+                <p class="panel-note">All required checklist fields were completed before submission.</p>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Validation</p>
+                    <h2>Instructor review</h2>
+                  </div>
+                  <span class="status-badge status-verified">Approved</span>
+                </div>
+
+                <div class="review-comment no-margin">
+                  <div class="avatar small-avatar">PR</div>
+                  <div>
+                    <strong>Prof. Reyes</strong>
+                    <p>Checklist is complete and aligned with the submitted case record. Approved for progress tracking.</p>
+                  </div>
+                </div>
+              </article>
+            </aside>
+          </section>
+
+          <section class="dashboard-columns">
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Checklist details</p>
+                  <h2>Completed sections</h2>
+                </div>
+              </div>
+
+              <div class="requirement-list compact-list">
+                <div class="requirement-item">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Preparation</strong>
+                    <p>Patient identity, consent, and supplies confirmed</p>
+                  </div>
+                </div>
+                <div class="requirement-item">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Procedure Performance</strong>
+                    <p>Performed with supervision and safe technique</p>
+                  </div>
+                </div>
+                <div class="requirement-item">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Reflection</strong>
+                    <p>Learning summary and improvement plan submitted</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Timeline</p>
+                  <h2>Case activity</h2>
+                </div>
+              </div>
+
+              <div class="timeline-list">
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <div>
+                    <strong>Case record created</strong>
+                    <p>April 24, 2026 · 4:12 PM</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <div>
+                    <strong>Checklist submitted</strong>
+                    <p>All required checklist fields were completed.</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <div>
+                    <strong>Instructor approved</strong>
+                    <p>Case added to approved clinical requirements.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/case-detail.js"></script>
+  </body>
+</html>

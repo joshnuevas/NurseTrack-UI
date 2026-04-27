@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Page Not Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Nursing Student</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link is-active" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong>Maria Cruz</strong>
+            <span>BSN 3A</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Navigation</p>
+              <h1>Page Not Found</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">404</span>
+            <a class="ghost-button button-link" href="help.html">Help</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace not-found-workspace">
+          <section class="not-found-layout">
+            <article class="workspace-panel not-found-panel">
+              <div class="not-found-code" aria-hidden="true">404</div>
+              <p class="section-kicker">Page not found</p>
+              <h2>This page is unavailable.</h2>
+              <p class="not-found-copy">The link may be incorrect, moved, or no longer available. Use the actions below to return to a working page.</p>
+
+              <div class="button-row not-found-actions">
+                <a class="primary-button workspace-action button-link" href="student-dashboard.html">Go to dashboard</a>
+                <button class="ghost-button" type="button" id="go-back">Go back</button>
+              </div>
+
+              <div id="not-found-message" class="form-message" role="status" aria-live="polite">
+                Select a page below or return to your dashboard.
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel not-found-search-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Find page</p>
+                    <h2>Search links</h2>
+                  </div>
+                  <span class="status-badge status-pending" id="not-found-count">8 links</span>
+                </div>
+
+                <label class="form-label" for="page-search">
+                  Search
+                  <input id="page-search" type="search" placeholder="Search dashboard, duty, cases, reports">
+                </label>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Pages</p>
+                    <h2>Quick recovery</h2>
+                  </div>
+                </div>
+
+                <div class="not-found-link-grid" id="not-found-link-grid">
+                  <a class="not-found-link-card" href="student-dashboard.html" data-page="dashboard home overview">
+                    <strong>Dashboard</strong>
+                    <span>Overview and shortcuts</span>
+                  </a>
+                  <a class="not-found-link-card" href="record-duty-hours.html" data-page="duty hours record verification">
+                    <strong>Record duty hours</strong>
+                    <span>Add a completed shift</span>
+                  </a>
+                  <a class="not-found-link-card" href="case-history.html" data-page="case logs clinical checklist history">
+                    <strong>Clinical cases</strong>
+                    <span>View submitted cases</span>
+                  </a>
+                  <a class="not-found-link-card" href="view-schedule.html" data-page="schedule duty assignment calendar">
+                    <strong>Schedule</strong>
+                    <span>Check duty assignments</span>
+                  </a>
+                  <a class="not-found-link-card" href="student-progress.html" data-page="progress completion pending requirements">
+                    <strong>Progress</strong>
+                    <span>Track requirements</span>
+                  </a>
+                  <a class="not-found-link-card" href="student-reports.html" data-page="reports export summary pdf csv">
+                    <strong>Reports</strong>
+                    <span>Generate summaries</span>
+                  </a>
+                  <a class="not-found-link-card" href="notifications.html" data-page="notifications alerts updates returned">
+                    <strong>Notifications</strong>
+                    <span>Review recent updates</span>
+                  </a>
+                  <a class="not-found-link-card" href="help.html" data-page="help support faq request">
+                    <strong>Help center</strong>
+                    <span>Find support options</span>
+                  </a>
+                </div>
+
+                <div id="not-found-empty" class="empty-state" hidden>
+                  No matching pages found.
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/not-found.js"></script>
+  </body>
+</html>

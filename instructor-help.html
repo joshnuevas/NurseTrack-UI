@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Instructor Help</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Clinical Instructor</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Select Student</a>
+          <a class="nav-link" href="duty-validation.html"><span class="nav-dot"></span>Duty Validation</a>
+          <a class="nav-link" href="case-validation.html"><span class="nav-dot"></span>Case Validation</a>
+          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="instructor-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link is-active" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">PR</div>
+          <div>
+            <strong>Prof. Reyes</strong>
+            <span>Clinical Instructor</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Instructor Workspace</p>
+              <h1>Help Center</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">7 topics</span>
+            <a class="ghost-button button-link" href="instructor-notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace help-workspace">
+          <section class="workspace-hero dashboard-hero help-hero">
+            <div>
+              <p class="section-kicker">Help Center</p>
+              <h2>Find instructor tools and support actions.</h2>
+              <p>Search submissions, duty validation, case validation, scheduling, progress, reports, and notification topics.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="#support-request">Request support</a>
+          </section>
+
+          <section class="workspace-panel help-search-panel">
+            <label class="form-label" for="help-search">
+              Search help topics
+              <input id="help-search" type="search" placeholder="Search submissions, validation, schedules, reports">
+            </label>
+            <div id="help-search-message" class="form-message" role="status" aria-live="polite">
+              Showing all help topics.
+            </div>
+          </section>
+
+          <section class="help-layout">
+            <div class="help-main-stack">
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Topics</p>
+                    <h2>Instructor areas</h2>
+                  </div>
+                  <span class="status-badge status-verified" id="visible-topic-count">7 visible</span>
+                </div>
+
+                <div class="help-topic-grid" id="help-topic-grid">
+                  <a class="help-topic-card" href="instructor-dashboard.html" data-topic="dashboard overview instructor queue">
+                    <span>DB</span>
+                    <div>
+                      <strong>Dashboard</strong>
+                      <p>Open pending submissions, schedule issues, and student progress summaries.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="review-submissions.html" data-topic="submissions review queue pending">
+                    <span>SB</span>
+                    <div>
+                      <strong>Submissions</strong>
+                      <p>Review pending duty and case submissions in one queue.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="duty-validation.html" data-topic="duty validation approve reject submitted records">
+                    <span>DV</span>
+                    <div>
+                      <strong>Duty validation</strong>
+                      <p>Approve, reject, or comment on duty hour records.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="case-validation.html" data-topic="case validation checklist approve reject comments">
+                    <span>CV</span>
+                    <div>
+                      <strong>Case validation</strong>
+                      <p>Check clinical case details, procedure checklists, and comments.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="schedule-management.html" data-topic="scheduling assign duty conflict calendar">
+                    <span>SC</span>
+                    <div>
+                      <strong>Scheduling</strong>
+                      <p>Create schedules, assign duties, and review conflict warnings.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="instructor-student-view.html" data-topic="student progress completion pending requirements">
+                    <span>PR</span>
+                    <div>
+                      <strong>Student progress</strong>
+                      <p>Monitor completion status, pending requirements, and validation status.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="instructor-reports.html" data-topic="reports export compliance duty case schedule">
+                    <span>RP</span>
+                    <div>
+                      <strong>Reports</strong>
+                      <p>Generate instructor summaries and export report previews.</p>
+                    </div>
+                  </a>
+                </div>
+
+                <div id="help-empty" class="empty-state" hidden>
+                  No matching help topics found.
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">FAQ</p>
+                    <h2>Quick answers</h2>
+                  </div>
+                </div>
+
+                <div class="help-faq-list" id="help-faq-list">
+                  <details class="help-faq-item" open data-topic="approve reject validation comments">
+                    <summary>Where do I approve or reject records?</summary>
+                    <p>Use Duty Validation or Case Validation depending on the submitted record type.</p>
+                  </details>
+                  <details class="help-faq-item" data-topic="schedule conflict assign duty">
+                    <summary>Where can I resolve schedule conflicts?</summary>
+                    <p>Open Scheduling to review calendar/list assignments and conflict warnings.</p>
+                  </details>
+                  <details class="help-faq-item" data-topic="student progress pending requirements">
+                    <summary>Where can I view a student's progress?</summary>
+                    <p>Use Student Progress to inspect completion, pending requirements, and validation status.</p>
+                  </details>
+                  <details class="help-faq-item" data-topic="report export pdf csv">
+                    <summary>Can I export instructor reports?</summary>
+                    <p>Open Reports to generate a preview and prepare PDF or CSV exports.</p>
+                  </details>
+                </div>
+              </article>
+            </div>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel" id="support-request">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Support</p>
+                    <h2>Send request</h2>
+                  </div>
+                  <span class="status-badge status-pending">Draft</span>
+                </div>
+
+                <form class="help-request-form" id="help-request-form">
+                  <label class="form-label" for="request-topic">
+                    Topic
+                    <select id="request-topic" required>
+                      <option value="">Select topic</option>
+                      <option>Submissions</option>
+                      <option>Duty validation</option>
+                      <option>Case validation</option>
+                      <option>Scheduling</option>
+                      <option>Reports</option>
+                    </select>
+                  </label>
+
+                  <label class="form-label" for="request-priority">
+                    Priority
+                    <select id="request-priority" required>
+                      <option value="">Select priority</option>
+                      <option>Low</option>
+                      <option>Medium</option>
+                      <option>High</option>
+                    </select>
+                  </label>
+
+                  <label class="form-label" for="request-details">
+                    Details
+                    <textarea id="request-details" rows="5" placeholder="Describe the issue" required></textarea>
+                  </label>
+
+                  <div id="request-message" class="form-message" role="status" aria-live="polite">
+                    Complete the request details to send support.
+                  </div>
+
+                  <button class="primary-button workspace-action" type="submit">Send request</button>
+                </form>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Links</p>
+                    <h2>Related pages</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="instructor-notifications.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Instructor notifications</strong>
+                      <p>Review submissions, schedule updates, and returned records.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="review-submissions.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Review submissions</strong>
+                      <p>Open the instructor queue for pending records.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="instructor-dashboard.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Instructor dashboard</strong>
+                      <p>Return to the instructor overview.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/help.js"></script>
+  </body>
+</html>

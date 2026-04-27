@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Workspace</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-switch" aria-label="Workspace role">
+          <button class="role-tab is-active" type="button" data-role="student">Student</button>
+          <button class="role-tab" type="button" data-role="instructor">Instructor</button>
+        </div>
+
+        <nav class="sidebar-nav" data-nav="student">
+          <a class="nav-link is-active" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <nav class="sidebar-nav" data-nav="instructor" hidden>
+          <a class="nav-link is-active" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
+          <a class="nav-link" href="duty-validation.html"><span class="nav-dot"></span>Duty Validation</a>
+          <a class="nav-link" href="case-validation.html"><span class="nav-dot"></span>Case Validation</a>
+          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="instructor-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong id="sidebar-name">Maria Cruz</strong>
+            <span id="sidebar-role">Nursing Student</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p id="workspace-kicker">Student Workspace</p>
+              <h1 id="workspace-title">Dashboard</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" id="topbar-notifications" href="notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace">
+          <section class="workspace-hero">
+            <div>
+              <p class="section-kicker" id="hero-kicker">Today</p>
+              <h2 id="hero-title">Good evening, Maria.</h2>
+              <p id="hero-copy">Your duty hours, case entries, and schedule updates are ready for review.</p>
+            </div>
+            <button class="primary-button workspace-action" type="button" id="hero-action">Record duty hours</button>
+          </section>
+
+          <section class="workspace-grid" aria-label="Workspace summary">
+            <article class="workspace-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">DH</span>
+                <span class="status-badge status-verified">Verified</span>
+              </div>
+              <h3>Duty hours</h3>
+              <p>48 of 72 hours completed</p>
+              <div class="progress-track"><span style="width: 67%"></span></div>
+            </article>
+
+            <article class="workspace-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">CL</span>
+                <span class="status-badge status-pending">Pending</span>
+              </div>
+              <h3>Case logs</h3>
+              <p>3 entries awaiting review</p>
+              <div class="progress-track"><span style="width: 58%"></span></div>
+            </article>
+
+            <article class="workspace-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">SC</span>
+                <span class="status-badge status-pending">Next duty</span>
+              </div>
+              <h3>Schedule</h3>
+              <p>Ward rotation tomorrow, 7:00 AM</p>
+              <div class="progress-track"><span style="width: 42%"></span></div>
+            </article>
+          </section>
+
+          <section class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Activity</p>
+                <h2 id="activity-title">Recent updates</h2>
+              </div>
+              <button class="ghost-button" type="button">View all</button>
+            </div>
+
+            <div class="activity-list" id="activity-list">
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>Duty hour entry verified</strong>
+                  <p>Medical ward shift marked as verified.</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>Case checklist submitted</strong>
+                  <p>Maternal care checklist sent for instructor review.</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>Schedule updated</strong>
+                  <p>Next duty area changed to Ward B.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/layout.js"></script>
+  </body>
+</html>

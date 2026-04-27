@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | User List / Manage Users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Admin / Manager</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="admin-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">AR</div>
+          <div>
+            <strong>Admin Reyes</strong>
+            <span>Manager</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Admin Workspace</p>
+              <h1>User List / Manage Users</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill" id="user-sync-pill">24 active</span>
+            <a class="ghost-button button-link" href="admin-notifications.html">Notifications</a>
+            <a class="logout-link" href="index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace user-management-workspace">
+          <section class="workspace-hero dashboard-hero user-management-hero">
+            <div>
+              <p class="section-kicker">User List</p>
+              <h2>Manage accounts, roles, and access status.</h2>
+              <p>Review account requests, update roles, and keep student and instructor records organized.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="#add-user">Add user</a>
+          </section>
+
+          <section class="dashboard-stats">
+            <article class="workspace-card stat-card">
+              <span>Active users</span>
+              <strong id="active-user-count">24</strong>
+              <small>Accounts currently enabled</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Pending</span>
+              <strong id="pending-user-count">3</strong>
+              <small>Awaiting approval</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Students</span>
+              <strong>18</strong>
+              <small>Registered nursing users</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Instructors</span>
+              <strong>6</strong>
+              <small>Clinical reviewers</small>
+            </article>
+          </section>
+
+          <section class="user-management-layout">
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Accounts</p>
+                  <h2>User list</h2>
+                </div>
+                <span class="status-badge status-verified" id="visible-user-count">6 visible</span>
+              </div>
+
+              <div class="form-grid user-filters">
+                <label class="form-label" for="role-filter">
+                  Role
+                  <select id="role-filter">
+                    <option value="all">All roles</option>
+                    <option value="student">Student</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="admin">Admin / Manager</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="status-filter">
+                  Status
+                  <select id="status-filter">
+                    <option value="all">All status</option>
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="user-search">
+                  Search
+                  <input id="user-search" type="search" placeholder="Search name, ID, email">
+                </label>
+              </div>
+
+              <div class="user-table" id="user-table">
+                <div class="user-row user-row-head">
+                  <span>Name</span>
+                  <span>Role</span>
+                  <span>ID / Section</span>
+                  <span>Status</span>
+                  <span>Action</span>
+                </div>
+
+                <div class="user-row" data-role="student" data-status="active">
+                  <span>
+                    <strong>Maria Cruz</strong>
+                    <small>maria.cruz@cit.edu</small>
+                  </span>
+                  <span>Nursing Student</span>
+                  <span>
+                    <strong>12-3456-789</strong>
+                    <small>BSN 3A</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span><button class="ghost-button user-action" type="button" data-action="suspend">Suspend</button></span>
+                </div>
+
+                <div class="user-row" data-role="student" data-status="pending">
+                  <span>
+                    <strong>Juan Dela Cruz</strong>
+                    <small>juan.delacruz@cit.edu</small>
+                  </span>
+                  <span>Nursing Student</span>
+                  <span>
+                    <strong>24-0001-001</strong>
+                    <small>BSN 2B</small>
+                  </span>
+                  <span><mark class="status-badge status-pending">Pending</mark></span>
+                  <span><button class="primary-button user-action" type="button" data-action="approve">Approve</button></span>
+                </div>
+
+                <div class="user-row" data-role="instructor" data-status="active">
+                  <span>
+                    <strong>Prof. Reyes</strong>
+                    <small>reyes@cit.edu</small>
+                  </span>
+                  <span>Clinical Instructor</span>
+                  <span>
+                    <strong>CI-1002</strong>
+                    <small>Ward B</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span><button class="ghost-button user-action" type="button" data-action="suspend">Suspend</button></span>
+                </div>
+
+                <div class="user-row" data-role="student" data-status="active">
+                  <span>
+                    <strong>Angela Tan</strong>
+                    <small>angela.tan@cit.edu</small>
+                  </span>
+                  <span>Nursing Student</span>
+                  <span>
+                    <strong>23-1450-110</strong>
+                    <small>BSN 3A</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span><button class="ghost-button user-action" type="button" data-action="suspend">Suspend</button></span>
+                </div>
+
+                <div class="user-row" data-role="admin" data-status="active">
+                  <span>
+                    <strong>Admin Reyes</strong>
+                    <small>admin.reyes@cit.edu</small>
+                  </span>
+                  <span>Admin / Manager</span>
+                  <span>
+                    <strong>AD-1001</strong>
+                    <small>Nursing Office</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span><button class="ghost-button user-action" type="button" data-action="suspend">Suspend</button></span>
+                </div>
+
+                <div class="user-row" data-role="student" data-status="suspended">
+                  <span>
+                    <strong>Paolo Lim</strong>
+                    <small>paolo.lim@cit.edu</small>
+                  </span>
+                  <span>Nursing Student</span>
+                  <span>
+                    <strong>22-0988-414</strong>
+                    <small>BSN 4A</small>
+                  </span>
+                  <span><mark class="status-badge status-rejected">Suspended</mark></span>
+                  <span><button class="primary-button user-action" type="button" data-action="restore">Restore</button></span>
+                </div>
+              </div>
+
+              <div id="user-empty" class="empty-state" hidden>
+                No matching users found.
+              </div>
+
+              <div id="user-message" class="form-message" role="status" aria-live="polite">
+                Directory loaded successfully.
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel" id="add-user">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Add user</p>
+                    <h2>New account</h2>
+                  </div>
+                  <span class="status-badge status-pending">Draft</span>
+                </div>
+
+                <form class="user-form" id="user-form" novalidate>
+                  <label class="form-label" for="new-name">
+                    Full name
+                    <input id="new-name" type="text" placeholder="Enter full name" required>
+                  </label>
+
+                  <label class="form-label" for="new-id">
+                    School ID number
+                    <input id="new-id" type="text" placeholder="xx-xxxx-xxx" required>
+                    <span class="field-error" hidden>Use the format xx-xxxx-xxx.</span>
+                  </label>
+
+                  <label class="form-label" for="new-email">
+                    School email
+                    <input id="new-email" type="email" placeholder="name@cit.edu" required>
+                  </label>
+
+                  <label class="form-label" for="new-role">
+                    Role
+                    <select id="new-role" required>
+                      <option value="">Select role</option>
+                      <option>Nursing Student</option>
+                      <option>Clinical Instructor</option>
+                      <option>Admin / Manager</option>
+                    </select>
+                  </label>
+
+                  <label class="form-label" for="new-section">
+                    Section or department
+                    <input id="new-section" type="text" placeholder="BSN 3A / Nursing Office" required>
+                  </label>
+
+                  <div id="new-user-message" class="form-message" role="status" aria-live="polite">
+                    Complete the fields to add an account.
+                  </div>
+
+                  <button class="primary-button workspace-action" type="submit">Create account</button>
+                </form>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Access</p>
+                    <h2>Role permissions</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Nursing Student</strong>
+                      <p>Can record duties, submit cases, view schedules, and track progress.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Clinical Instructor</strong>
+                      <p>Can validate submissions, manage assigned schedules, and monitor students.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Admin / Manager</strong>
+                      <p>Can manage accounts, view reports, and maintain system access.</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="scripts/user-management.js"></script>
+  </body>
+</html>
