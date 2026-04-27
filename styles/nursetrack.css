@@ -1075,6 +1075,7 @@ h2 {
 }
 
 .ghost-button,
+.icon-button,
 .menu-button,
 .logout-link {
   min-height: 38px;
@@ -1093,8 +1094,26 @@ h2 {
   transition: border-color 160ms ease, color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
+.icon-button {
+  width: 42px;
+  min-width: 42px;
+  padding: 8px;
+}
+
+.notification-bell {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .ghost-button:hover,
 .ghost-button:focus-visible,
+.icon-button:hover,
+.icon-button:focus-visible,
 .menu-button:hover,
 .menu-button:focus-visible,
 .logout-link:hover,
