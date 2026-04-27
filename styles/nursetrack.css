@@ -1168,6 +1168,12 @@ h2 {
   min-width: 180px;
 }
 
+.admin-schedule-report-button {
+  min-width: 250px;
+  padding-inline: 30px;
+  white-space: nowrap;
+}
+
 .admin-validation-hero .validation-hero-action {
   flex: 0 0 auto;
   width: 260px;
