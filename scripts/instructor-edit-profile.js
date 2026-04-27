@@ -69,14 +69,16 @@ photoInput.addEventListener("change", () => {
   syncPill.textContent = "Unsaved photo";
 });
 
-removePhotoButton.addEventListener("click", () => {
-  photoInput.value = "";
-  renderInitials();
-  message.textContent = "Profile picture removed from preview.";
-  message.classList.remove("is-error");
-  message.classList.add("is-success");
-  syncPill.textContent = "Unsaved photo";
-});
+if (removePhotoButton) {
+  removePhotoButton.addEventListener("click", () => {
+    photoInput.value = "";
+    renderInitials();
+    message.textContent = "Profile picture removed from preview.";
+    message.classList.remove("is-error");
+    message.classList.add("is-success");
+    syncPill.textContent = "Unsaved photo";
+  });
+}
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();

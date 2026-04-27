@@ -1,6 +1,12 @@
 const loginForm = document.querySelector("#login-form");
 const message = document.querySelector("#form-message");
 const nextPageLinks = document.querySelectorAll("[data-next-page]");
+const studentAccount = {
+  email: "maria.cruz@cit.edu",
+  schoolId: "12-3456-789",
+  password: "NurseTrack123",
+  destination: "nursing-student/student-dashboard.html?login=student"
+};
 
 function setMessage(text, state) {
   message.textContent = text;
@@ -28,7 +34,21 @@ loginForm.addEventListener("submit", (event) => {
     return;
   }
 
-  setMessage("Signed in successfully.", "is-success");
+  const normalizedUserId = userId.toLowerCase();
+  const isStudentAccount =
+    (normalizedUserId === studentAccount.email || userId === studentAccount.schoolId) &&
+    password === studentAccount.password;
+
+  if (!isStudentAccount) {
+    setMessage("Account not found. Use the mock Nursing Student account.", "is-error");
+    return;
+  }
+
+  setMessage("Signed in successfully. Opening the Nursing Student workspace.", "is-success");
+
+  window.setTimeout(() => {
+    window.location.href = studentAccount.destination;
+  }, 500);
 });
 
 nextPageLinks.forEach((link) => {

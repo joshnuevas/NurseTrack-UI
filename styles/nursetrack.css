@@ -619,6 +619,35 @@ h2 {
   }
 }
 
+@keyframes sidebarGradientFlow {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+
+  100% {
+    background-position: 72px 72px, 0 0;
+  }
+}
+
+@keyframes sidebarGoldSweep {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translateX(-62%) skewX(-18deg);
+  }
+
+  42%,
+  62% {
+    opacity: 1;
+  }
+
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateX(42%) skewX(-18deg);
+  }
+}
+
 .auth-card-footer {
   display: flex;
   justify-content: center;
@@ -823,16 +852,77 @@ h2 {
 .app-sidebar {
   position: sticky;
   top: 0;
+  isolation: isolate;
   height: 100vh;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   gap: 22px;
-  background: var(--primary);
+  background:
+    linear-gradient(135deg, rgba(255, 207, 1, 0.08) 0 1px, transparent 1px 72px),
+    linear-gradient(180deg, #982a32 0%, var(--primary) 46%, var(--primary-dark) 100%);
+  background-size: 72px 72px, 100% 100%;
   color: var(--surface);
   padding: 22px;
   overflow-y: auto;
+  overflow-x: hidden;
   scrollbar-color: var(--accent) rgba(255, 255, 255, 0.14);
   z-index: 20;
+  animation: sidebarGradientFlow 22s linear infinite;
+}
+
+.app-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: -12% -72%;
+  z-index: -1;
+  background: linear-gradient(100deg, transparent 0 34%, rgba(255, 207, 1, 0.14) 43%, rgba(255, 255, 255, 0.1) 49%, transparent 60%);
+  animation: sidebarGoldSweep 8s ease-in-out infinite;
+}
+
+.app-sidebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(80, 15, 20, 0.06), rgba(80, 15, 20, 0.32));
+  pointer-events: none;
+}
+
+.app-sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+.login-logo-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background:
+    radial-gradient(circle at 50% 46%, rgba(255, 207, 1, 0.14), transparent 22%),
+    rgba(246, 247, 249, 0.88);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+.login-logo-mark {
+  position: fixed;
+  display: block;
+  border-radius: 50%;
+  background: var(--surface);
+  padding: 8px;
+  object-fit: contain;
+  box-shadow: 0 24px 60px rgba(32, 33, 36, 0.18), 0 0 0 0 rgba(255, 207, 1, 0.34);
+  animation: loginLogoGlow 1.15s ease-in-out infinite alternate;
+}
+
+@keyframes loginLogoGlow {
+  from {
+    box-shadow: 0 24px 60px rgba(32, 33, 36, 0.18), 0 0 0 0 rgba(255, 207, 1, 0.34);
+  }
+
+  to {
+    box-shadow: 0 28px 70px rgba(32, 33, 36, 0.2), 0 0 0 14px rgba(255, 207, 1, 0);
+  }
 }
 
 .app-sidebar::-webkit-scrollbar {
@@ -856,6 +946,14 @@ h2 {
   display: flex;
   align-items: center;
   gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+
+.sidebar-brand:hover,
+.sidebar-brand:focus-visible {
+  transform: translateX(2px);
 }
 
 .sidebar-logo,
@@ -2199,6 +2297,10 @@ h2 {
   text-align: right;
   font-size: 0.88rem;
   line-height: 1.35;
+}
+
+.profile-card .form-message {
+  margin-top: 12px;
 }
 
 .duty-history-workspace {
@@ -4163,6 +4265,23 @@ h2 {
   color: var(--surface);
 }
 
+.alert-check-icon {
+  position: relative;
+  font-size: 0;
+}
+
+.alert-check-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 13px;
+  height: 7px;
+  border-left: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 .alert-content {
   display: grid;
   gap: 10px;
@@ -4880,6 +4999,53 @@ h2 {
   object-fit: cover;
 }
 
+.profile-avatar-upload {
+  position: relative;
+  display: inline-grid;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.profile-avatar-upload:focus-within .profile-avatar-large,
+.profile-avatar-upload:hover .profile-avatar-large {
+  box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.55), 0 0 0 4px rgba(138, 37, 44, 0.15);
+}
+
+.profile-avatar-upload .profile-avatar-large {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.profile-avatar-upload:hover .profile-avatar-large {
+  transform: translateY(-1px);
+}
+
+.profile-avatar-edit {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: rgba(138, 37, 44, 0.96);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(138, 37, 44, 0.18);
+  pointer-events: none;
+}
+
+.profile-avatar-edit svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
 .profile-photo-section {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -5107,19 +5273,71 @@ h2 {
 }
 
 .password-input-wrap {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
+  position: relative;
+  display: block;
 }
 
 .password-input-wrap input {
+  width: 100%;
   min-width: 0;
+  padding-right: 52px;
 }
 
 .password-toggle {
-  min-height: 48px;
-  padding: 0 14px;
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0;
+  transform: translateY(-50%);
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.password-toggle::before {
+  content: "";
+  width: 20px;
+  height: 13px;
+  border: 2px solid currentColor;
+  border-radius: 50% / 60%;
+}
+
+.password-toggle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.password-toggle.is-visible::before {
+  background: rgba(138, 37, 44, 0.08);
+}
+
+.password-toggle.is-visible::after {
+  width: 22px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%) rotate(-38deg);
 }
 
 .password-strength-card {
@@ -6181,23 +6399,36 @@ h2 {
 
 .decision-options legend {
   grid-column: 1 / -1;
-  padding-bottom: 2px;
+  padding-bottom: 10px;
   color: #344054;
   font-size: 0.88rem;
   font-weight: 800;
 }
 
 .decision-card {
+  position: relative;
+  overflow: hidden;
   display: grid;
-  align-content: start;
-  gap: 10px;
-  min-height: 176px;
+  grid-template-columns: 46px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center;
+  align-items: center;
+  gap: 6px 14px;
+  min-height: 126px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--surface-muted);
+  background: var(--surface);
   cursor: pointer;
-  padding: 20px;
+  padding: 18px;
   transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.decision-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: transparent;
 }
 
 .decision-card input {
@@ -6212,15 +6443,23 @@ h2 {
 }
 
 .decision-card:has(input[value="approved"]:checked) {
-  border-color: rgba(21, 127, 59, 0.38);
-  background: #ecfdf3;
-  box-shadow: inset 0 0 0 1px rgba(21, 127, 59, 0.08);
+  border-color: rgba(21, 127, 59, 0.42);
+  background: linear-gradient(90deg, rgba(21, 127, 59, 0.1), rgba(236, 253, 243, 0.62));
+  box-shadow: inset 0 0 0 1px rgba(21, 127, 59, 0.08), 0 14px 30px rgba(21, 127, 59, 0.08);
+}
+
+.decision-card:has(input[value="approved"]:checked)::before {
+  background: var(--success);
 }
 
 .decision-card:has(input[value="rejected"]:checked) {
-  border-color: rgba(180, 35, 24, 0.36);
-  background: #fff1f0;
-  box-shadow: inset 0 0 0 1px rgba(180, 35, 24, 0.08);
+  border-color: rgba(180, 35, 24, 0.42);
+  background: linear-gradient(90deg, rgba(180, 35, 24, 0.1), rgba(255, 241, 240, 0.62));
+  box-shadow: inset 0 0 0 1px rgba(180, 35, 24, 0.08), 0 14px 30px rgba(180, 35, 24, 0.08);
+}
+
+.decision-card:has(input[value="rejected"]:checked)::before {
+  background: var(--danger);
 }
 
 .decision-card:hover {
@@ -6230,23 +6469,63 @@ h2 {
 }
 
 .decision-icon {
-  width: 52px;
-  height: 52px;
+  grid-row: 1 / 3;
+  position: relative;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   color: var(--surface);
-  display: grid;
-  place-items: center;
-  margin-bottom: 4px;
-  font-size: 1rem;
+  display: block;
+  font-size: 0;
   font-weight: 800;
+  box-shadow: 0 10px 20px rgba(32, 33, 36, 0.1);
+}
+
+.decision-icon::before,
+.decision-icon::after {
+  content: "";
+  display: block;
 }
 
 .approve-icon {
   background: var(--success);
 }
 
+.approve-icon::before {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 16px;
+  height: 9px;
+  border-left: 3px solid currentColor;
+  border-bottom: 3px solid currentColor;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 .reject-icon {
   background: var(--danger);
+}
+
+.reject-icon::before {
+  position: absolute;
+  left: 50%;
+  top: 43%;
+  width: 3px;
+  height: 15px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+.reject-icon::after {
+  position: absolute;
+  left: 50%;
+  top: 68%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateX(-50%);
 }
 
 .decision-card strong {

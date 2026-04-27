@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -8,17 +8,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
   </head>
   <body class="app-body">
     <div class="app-shell">
       <aside class="app-sidebar" aria-label="Primary navigation">
-        <div class="sidebar-brand">
+        <a class="sidebar-brand" href="about.html" aria-label="About NurseTrack">
           <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
           <div>
             <strong>NurseTrack</strong>
             <span>CIT-U Nursing</span>
           </div>
-        </div>
+        </a>
 
         <div class="role-chip">Nursing Student</div>
 
@@ -30,7 +31,7 @@
           <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
           <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
           <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="alerts.html"><span class="nav-dot"></span>Alerts</a>
           <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
@@ -60,7 +61,6 @@
           <div class="topbar-actions">
             <span class="sync-pill" id="profile-sync-pill">Active</span>
             <a class="icon-button notification-button button-link" href="notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
-            <a class="ghost-button button-link" href="edit-profile.html">Edit profile</a>
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
@@ -72,7 +72,7 @@
               <div>
                 <p class="section-kicker">Nursing Student</p>
                 <h2>Maria Cruz</h2>
-                <p>BSN 3A • 12-3456-789 • maria.cruz@cit.edu</p>
+                <p>BSN 3A &bull; 12-3456-789 &bull; maria.cruz@cit.edu</p>
                 <div class="profile-chip-row">
                   <span class="status-badge status-verified">Active account</span>
                   <span class="status-badge status-pending">Profile 92%</span>
@@ -197,21 +197,21 @@
                     <span></span>
                     <div>
                       <strong>Duty record submitted</strong>
-                      <p>Ward B • Apr 26, 2026 • Pending validation</p>
+                      <p>Ward B &bull; Apr 26, 2026 &bull; Pending validation</p>
                     </div>
                   </div>
                   <div class="profile-activity-item">
                     <span></span>
                     <div>
                       <strong>Case log approved</strong>
-                      <p>Medical-surgical case • Apr 24, 2026</p>
+                      <p>Medical-surgical case &bull; Apr 24, 2026</p>
                     </div>
                   </div>
                   <div class="profile-activity-item">
                     <span></span>
                     <div>
                       <strong>Schedule viewed</strong>
-                      <p>CCMC Ward B assignment • Apr 22, 2026</p>
+                      <p>CCMC Ward B assignment &bull; Apr 22, 2026</p>
                     </div>
                   </div>
                 </div>
@@ -239,7 +239,7 @@
                   </div>
                   <div class="detail-row">
                     <span>Last login</span>
-                    <strong>Apr 26, 2026 • 8:24 AM</strong>
+                    <strong>Apr 26, 2026 &bull; 8:24 AM</strong>
                   </div>
                   <div class="detail-row">
                     <span>Password</span>

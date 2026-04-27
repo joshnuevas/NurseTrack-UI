@@ -60,7 +60,9 @@ function togglePassword(button) {
   const input = document.querySelector(`#${button.dataset.togglePassword}`);
   const isHidden = input.type === "password";
   input.type = isHidden ? "text" : "password";
-  button.textContent = isHidden ? "Hide" : "Show";
+  button.classList.toggle("is-visible", isHidden);
+  button.setAttribute("aria-label", isHidden ? "Hide password" : "Show password");
+  button.setAttribute("title", isHidden ? "Hide password" : "Show password");
 }
 
 menuButton.addEventListener("click", () => {
