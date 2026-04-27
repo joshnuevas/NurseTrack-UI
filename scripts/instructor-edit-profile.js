@@ -4,9 +4,6 @@ const form = document.querySelector("#edit-profile-form");
 const resetButton = document.querySelector("#reset-profile-form");
 const message = document.querySelector("#edit-profile-message");
 const syncPill = document.querySelector("#edit-profile-sync");
-const schoolId = document.querySelector("#school-id");
-const schoolIdLabel = schoolId.closest(".form-label");
-const schoolIdError = schoolIdLabel.querySelector(".field-error");
 const previewName = document.querySelector("#preview-name");
 const previewSection = document.querySelector("#preview-section");
 const previewEmail = document.querySelector("#preview-email");
@@ -19,7 +16,7 @@ const profileAvatars = Array.from(document.querySelectorAll("[data-profile-avata
 
 function renderInitials() {
   profileAvatars.forEach((avatar) => {
-    avatar.textContent = "MC";
+    avatar.textContent = "PR";
   });
 }
 
@@ -34,9 +31,9 @@ function renderPhoto(src) {
 }
 
 function updatePreview() {
-  previewName.textContent = document.querySelector("#full-name").value || "Maria Cruz";
-  previewSection.textContent = document.querySelector("#section").value || "BSN 3A";
-  previewEmail.textContent = document.querySelector("#school-email").value || "maria.cruz@cit.edu";
+  previewName.textContent = document.querySelector("#full-name").value || "Prof. Reyes";
+  previewSection.textContent = document.querySelector("#department").value || "College of Nursing";
+  previewEmail.textContent = document.querySelector("#school-email").value || "reyes@cit.edu";
 
   const requiredFields = Array.from(form.querySelectorAll("[required]"));
   const filledFields = requiredFields.filter((field) => field.value.trim()).length;
@@ -48,14 +45,6 @@ function updatePreview() {
   syncPill.textContent = "Unsaved changes";
 }
 
-function validateSchoolId() {
-  const isValid = /^\d{2}-\d{4}-\d{3}$/.test(schoolId.value.trim());
-  schoolIdLabel.classList.toggle("has-error", !isValid);
-  schoolId.setAttribute("aria-invalid", String(!isValid));
-  schoolIdError.hidden = isValid;
-  return isValid;
-}
-
 menuButton.addEventListener("click", () => {
   document.body.classList.add("sidebar-open");
 });
@@ -64,13 +53,7 @@ sidebarBackdrop.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-form.addEventListener("input", () => {
-  updatePreview();
-
-  if (schoolId.value.trim()) {
-    validateSchoolId();
-  }
-});
+form.addEventListener("input", updatePreview);
 
 photoInput.addEventListener("change", () => {
   const file = photoInput.files[0];
@@ -98,14 +81,14 @@ removePhotoButton.addEventListener("click", () => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  if (!form.checkValidity() || !validateSchoolId()) {
-    message.textContent = "Complete all required fields and use the correct ID format.";
+  if (!form.checkValidity()) {
+    message.textContent = "Complete all required fields before saving.";
     message.classList.remove("is-success");
     message.classList.add("is-error");
     return;
   }
 
-  message.textContent = "Profile updated successfully.";
+  message.textContent = "Instructor profile updated successfully.";
   message.classList.remove("is-error");
   message.classList.add("is-success");
   syncPill.textContent = "Updated successfully";
@@ -116,9 +99,7 @@ resetButton.addEventListener("click", () => {
   photoInput.value = "";
   renderInitials();
   updatePreview();
-  schoolIdLabel.classList.remove("has-error");
-  schoolIdError.hidden = true;
-  message.textContent = "Changes reset to saved profile details.";
+  message.textContent = "Changes reset to saved instructor profile details.";
   message.classList.remove("is-error");
   message.classList.add("is-success");
 });

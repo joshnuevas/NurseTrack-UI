@@ -4862,6 +4862,7 @@ h2 {
   width: 92px;
   height: 92px;
   flex: 0 0 auto;
+  overflow: hidden;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -4870,6 +4871,73 @@ h2 {
   font-size: 2rem;
   font-weight: 800;
   box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.45);
+}
+
+.profile-avatar-large img,
+.profile-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-photo-section {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 16px;
+}
+
+.profile-photo-preview {
+  width: 112px;
+  height: 112px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 4px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--primary);
+  font-size: 2rem;
+  font-weight: 900;
+  box-shadow: 0 14px 30px rgba(32, 33, 36, 0.08);
+}
+
+.profile-photo-section h3 {
+  margin: 2px 0 6px;
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.profile-photo-section p:not(.section-kicker) {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.profile-photo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.profile-photo-button {
+  cursor: pointer;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
 }
 
 .profile-chip-row,
@@ -6645,6 +6713,7 @@ h2 {
   .user-row,
   .profile-info-grid,
   .profile-activity-item,
+  .profile-photo-section,
   .role-user-card,
   .selected-user-card,
   .permission-item,
