@@ -5541,6 +5541,18 @@ h2 {
   }
 }
 
+@keyframes livePulse {
+  from {
+    opacity: 0.8;
+    transform: scale(0.65);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+
 .instructor-columns {
   grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
 }
@@ -5684,6 +5696,272 @@ h2 {
 
 .management-filters {
   margin-bottom: 18px;
+}
+
+.live-attendance-hero {
+  align-items: center;
+}
+
+.live-attendance-workspace {
+  display: grid;
+  gap: 34px;
+}
+
+.live-hero-status {
+  min-width: 250px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid rgba(21, 127, 59, 0.24);
+  border-radius: 8px;
+  background: #ecfdf3;
+  padding: 14px 16px;
+}
+
+.live-hero-status strong,
+.live-hero-status small {
+  display: block;
+  line-height: 1.35;
+}
+
+.live-hero-status strong {
+  color: var(--success);
+  font-size: 0.92rem;
+}
+
+.live-hero-status small {
+  color: #05603a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.live-dot {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: inherit;
+  border: 2px solid rgba(21, 127, 59, 0.22);
+  animation: livePulse 1.6s ease-out infinite;
+}
+
+.live-attendance-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.live-attendance-main,
+.live-attendance-layout .duty-side-panel .workspace-panel {
+  margin-top: 0;
+}
+
+.live-attendance-stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.live-attendance-stats .stat-card {
+  min-height: 224px;
+  padding: 26px;
+}
+
+.live-attendance-stats .workspace-card-header {
+  align-items: flex-start;
+  margin-bottom: 26px;
+}
+
+.live-attendance-stats .card-icon {
+  min-width: 76px;
+  min-height: 52px;
+  padding-inline: 16px;
+}
+
+.live-attendance-stats .stat-card h3 {
+  margin-top: 0;
+  font-size: 1.18rem;
+}
+
+.live-attendance-stats .stat-card p {
+  min-height: 0;
+  margin-bottom: 18px;
+  line-height: 1.45;
+}
+
+.live-attendance-filters {
+  grid-template-columns: minmax(220px, 0.9fr) minmax(190px, 0.76fr) minmax(240px, 1.2fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.live-attendance-filters .form-label,
+.live-attendance-filters input,
+.live-attendance-filters select {
+  min-width: 0;
+}
+
+.live-attendance-filters select {
+  padding-right: 48px;
+  background-position:
+    calc(100% - 24px) 50%,
+    calc(100% - 18px) 50%;
+}
+
+.live-attendance-table {
+  display: grid;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  max-height: 430px;
+  overflow: auto;
+  scrollbar-color: var(--primary) #f3e9ea;
+  scrollbar-width: thin;
+}
+
+.live-attendance-table::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+.live-attendance-table::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: #f3e9ea;
+}
+
+.live-attendance-table::-webkit-scrollbar-thumb {
+  border: 3px solid #f3e9ea;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--primary), var(--primary-dark));
+}
+
+.live-attendance-table::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a8333b, var(--primary-dark));
+}
+
+.live-attendance-row {
+  display: grid;
+  grid-template-columns: minmax(210px, 1.15fr) minmax(210px, 1.05fr) minmax(90px, 0.5fr) minmax(110px, 0.5fr) minmax(96px, 0.45fr);
+  gap: 18px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  padding: 18px;
+}
+
+.live-attendance-row:first-child {
+  border-top: 0;
+}
+
+.live-attendance-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-muted);
+  color: #344054;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.live-attendance-row > span {
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.live-attendance-row > span:first-child {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.live-attendance-row strong,
+.live-attendance-row small {
+  display: block;
+}
+
+.live-attendance-row strong {
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.live-attendance-row small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.live-site-list {
+  display: grid;
+  gap: 10px;
+}
+
+.live-site-card {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  cursor: pointer;
+  padding: 13px;
+  text-align: left;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.live-site-card:hover,
+.live-site-card.is-active {
+  border-color: rgba(138, 37, 44, 0.3);
+  box-shadow: 0 14px 30px rgba(32, 33, 36, 0.08);
+  transform: translateY(-1px);
+}
+
+.live-site-card strong,
+.live-site-card small {
+  display: block;
+}
+
+.live-site-card strong {
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.live-site-card small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.live-site-signal {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 6px rgba(21, 127, 59, 0.12);
+}
+
+.live-site-signal.is-warning {
+  background: var(--accent);
+  box-shadow: 0 0 0 6px rgba(255, 207, 1, 0.18);
 }
 
 .review-filters {
@@ -6155,6 +6433,7 @@ h2 {
   .schedule-form-layout,
   .assign-duty-layout,
   .schedule-management-layout,
+  .live-attendance-layout,
   .review-layout,
   .validation-layout,
   .validation-selection-layout,
@@ -6272,6 +6551,8 @@ h2 {
   .assign-student,
   .management-row,
   .submission-item,
+  .live-attendance-row,
+  .live-site-card,
   .validation-user-card,
   .student-validation-card,
   .progress-breakdown-item,
@@ -6369,6 +6650,14 @@ h2 {
 
   .completion-row-head {
     display: none;
+  }
+
+  .live-attendance-head {
+    display: none;
+  }
+
+  .live-attendance-table {
+    max-height: 520px;
   }
 
   .compliance-row-head {
