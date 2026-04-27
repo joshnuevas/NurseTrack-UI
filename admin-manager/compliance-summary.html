@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Compliance Summary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Admin / Manager</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link is-active" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="admin-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">AM</div>
+          <div>
+            <strong>Admin Manager</strong>
+            <span>Reporting Access</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Reporting</p>
+              <h1>Compliance Summary</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" href="admin-notifications.html">Notifications</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace compliance-summary-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Compliance report</p>
+              <h2>Monitor completion across nursing sections.</h2>
+              <p>Review completed, pending, and at-risk student records by section and requirement status.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="export-page.html">Prepare export</a>
+          </section>
+
+          <section class="dashboard-stats" aria-label="Compliance summary totals">
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">ST</span>
+                <span class="status-badge status-verified">Tracked</span>
+              </div>
+              <h3>Total students</h3>
+              <p>Included in current reporting scope</p>
+              <strong class="stat-value">42</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">CP</span>
+                <span class="status-badge status-verified">Complete</span>
+              </div>
+              <h3>Completed</h3>
+              <p>Met required duty and case targets</p>
+              <strong class="stat-value">31</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">PN</span>
+                <span class="status-badge status-pending">Pending</span>
+              </div>
+              <h3>Pending</h3>
+              <p>Waiting on validation or updates</p>
+              <strong class="stat-value">9</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">AR</span>
+                <span class="status-badge status-rejected">At risk</span>
+              </div>
+              <h3>Needs action</h3>
+              <p>Returned or below target</p>
+              <strong class="stat-value">2</strong>
+            </article>
+          </section>
+
+          <section class="compliance-summary-layout">
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Students</p>
+                  <h2>Compliance records</h2>
+                </div>
+                <button class="ghost-button" type="button" id="refresh-summary">Refresh summary</button>
+              </div>
+
+              <div class="history-filters compliance-filters" aria-label="Compliance filters">
+                <label class="form-label" for="section-filter">
+                  Section
+                  <select id="section-filter">
+                    <option value="all">All sections</option>
+                    <option value="BSN 3A">BSN 3A</option>
+                    <option value="BSN 3B">BSN 3B</option>
+                    <option value="BSN 3C">BSN 3C</option>
+                    <option value="BSN 4A">BSN 4A</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="status-filter">
+                  Status
+                  <select id="status-filter">
+                    <option value="all">All statuses</option>
+                    <option value="complete">Complete</option>
+                    <option value="pending">Pending</option>
+                    <option value="risk">Needs action</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="student-search">
+                  Search
+                  <input id="student-search" type="search" placeholder="Search student, section, or site">
+                </label>
+              </div>
+
+              <div class="compliance-table" id="compliance-table">
+                <div class="compliance-row compliance-row-head">
+                  <span>Student</span>
+                  <span>Section</span>
+                  <span>Duty</span>
+                  <span>Cases</span>
+                  <span>Overall</span>
+                  <span>Status</span>
+                  <span>Action</span>
+                </div>
+
+                <div class="compliance-row" data-section="BSN 3A" data-status="pending">
+                  <span>
+                    <strong>Maria Cruz</strong>
+                    <small>Cebu City Medical Center</small>
+                  </span>
+                  <span>BSN 3A</span>
+                  <span>48 / 72</span>
+                  <span>14 / 24</span>
+                  <span>
+                    <div class="progress-track"><span style="width: 63%"></span></div>
+                    <small>63%</small>
+                  </span>
+                  <span><span class="status-badge status-pending">Pending</span></span>
+                  <span><a class="text-link" href="../clinical-instructor/instructor-student-view.html">View</a></span>
+                </div>
+
+                <div class="compliance-row" data-section="BSN 3C" data-status="complete">
+                  <span>
+                    <strong>Lichael Ursulo</strong>
+                    <small>Cebu City Medical Center</small>
+                  </span>
+                  <span>BSN 3C</span>
+                  <span>72 / 72</span>
+                  <span>24 / 24</span>
+                  <span>
+                    <div class="progress-track"><span style="width: 100%"></span></div>
+                    <small>100%</small>
+                  </span>
+                  <span><span class="status-badge status-verified">Complete</span></span>
+                  <span><a class="text-link" href="../clinical-instructor/instructor-student-view.html">View</a></span>
+                </div>
+
+                <div class="compliance-row" data-section="BSN 3B" data-status="risk">
+                  <span>
+                    <strong>Zander Aligato</strong>
+                    <small>Community Health Center</small>
+                  </span>
+                  <span>BSN 3B</span>
+                  <span>36 / 72</span>
+                  <span>9 / 24</span>
+                  <span>
+                    <div class="progress-track"><span style="width: 45%"></span></div>
+                    <small>45%</small>
+                  </span>
+                  <span><span class="status-badge status-rejected">Needs action</span></span>
+                  <span><a class="text-link" href="compliance-summary.html">Open</a></span>
+                </div>
+
+                <div class="compliance-row" data-section="BSN 3A" data-status="complete">
+                  <span>
+                    <strong>Treasure Abadinas</strong>
+                    <small>Skills Laboratory</small>
+                  </span>
+                  <span>BSN 3A</span>
+                  <span>72 / 72</span>
+                  <span>24 / 24</span>
+                  <span>
+                    <div class="progress-track"><span style="width: 100%"></span></div>
+                    <small>100%</small>
+                  </span>
+                  <span><span class="status-badge status-verified">Complete</span></span>
+                  <span><a class="text-link" href="../clinical-instructor/instructor-student-view.html">View</a></span>
+                </div>
+
+                <div class="compliance-row" data-section="BSN 4A" data-status="pending">
+                  <span>
+                    <strong>Andrea Gomez</strong>
+                    <small>Cebu City Medical Center</small>
+                  </span>
+                  <span>BSN 4A</span>
+                  <span>56 / 72</span>
+                  <span>19 / 24</span>
+                  <span>
+                    <div class="progress-track"><span style="width: 78%"></span></div>
+                    <small>78%</small>
+                  </span>
+                  <span><span class="status-badge status-pending">Pending</span></span>
+                  <span><a class="text-link" href="../clinical-instructor/instructor-student-view.html">View</a></span>
+                </div>
+              </div>
+
+              <div id="compliance-empty" class="empty-state" hidden>
+                No compliance records match the selected filters.
+              </div>
+
+              <div id="compliance-message" class="form-message compliance-message" role="status" aria-live="polite">
+                Showing all compliance records.
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel report-preview-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Section health</p>
+                    <h2>Completion by section</h2>
+                  </div>
+                  <span class="status-badge status-pending">Live</span>
+                </div>
+
+                <div class="section-health-list">
+                  <div class="section-health-item">
+                    <div>
+                      <strong>BSN 3A</strong>
+                      <span>14 students - 10 complete</span>
+                    </div>
+                    <div class="progress-track"><span style="width: 71%"></span></div>
+                  </div>
+                  <div class="section-health-item">
+                    <div>
+                      <strong>BSN 3B</strong>
+                      <span>11 students - 7 complete</span>
+                    </div>
+                    <div class="progress-track"><span style="width: 64%"></span></div>
+                  </div>
+                  <div class="section-health-item">
+                    <div>
+                      <strong>BSN 3C</strong>
+                      <span>9 students - 8 complete</span>
+                    </div>
+                    <div class="progress-track"><span style="width: 89%"></span></div>
+                  </div>
+                  <div class="section-health-item">
+                    <div>
+                      <strong>BSN 4A</strong>
+                      <span>8 students - 6 complete</span>
+                    </div>
+                    <div class="progress-track"><span style="width: 75%"></span></div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Export</p>
+                    <h2>Report actions</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="generate-report.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Change filters</strong>
+                      <p>Return to the report builder.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="export-page.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Export report</strong>
+                      <p>Prepare PDF or CSV output.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="compliance-summary.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Open pending items</strong>
+                      <p>Review records blocking completion.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/compliance-summary.js"></script>
+  </body>
+</html>

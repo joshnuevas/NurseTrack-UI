@@ -20,7 +20,7 @@ const roleContent = {
     hero: "Good evening, Maria.",
     copy: "Your duty hours, case entries, and schedule updates are ready for review.",
     action: "Record duty hours",
-    notifications: "notifications.html",
+    notifications: "nursing-student/notifications.html",
     activity: "Recent updates",
     items: [
       ["Duty hour entry verified", "Medical ward shift marked as verified."],
@@ -35,7 +35,7 @@ const roleContent = {
     hero: "Good evening, Prof. Reyes.",
     copy: "Pending submissions, schedule updates, and student progress are ready for review.",
     action: "Review submissions",
-    notifications: "instructor-notifications.html",
+    notifications: "clinical-instructor/instructor-notifications.html",
     activity: "Instructor queue",
     items: [
       ["5 duty entries need validation", "Review student time records before they appear in progress summaries."],

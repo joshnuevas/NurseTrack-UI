@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Edit Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Nursing Student</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong>Maria Cruz</strong>
+            <span>BSN 3A</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Account</p>
+              <h1>Edit Profile</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill" id="edit-profile-sync">Unsaved changes</span>
+            <a class="ghost-button button-link" href="view-profile.html">View profile</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace profile-workspace edit-profile-workspace">
+          <section class="workspace-hero dashboard-hero profile-hero">
+            <div class="profile-identity">
+              <div class="profile-avatar-large">MC</div>
+              <div>
+                <p class="section-kicker">Edit Profile</p>
+                <h2>Update your account information.</h2>
+                <p>Keep contact details, section, and emergency contact records current.</p>
+                <div class="profile-chip-row">
+                  <span class="status-badge status-verified">Active account</span>
+                  <span class="status-badge status-pending" id="completion-badge">92% complete</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-hero-actions">
+              <a class="ghost-button button-link" href="view-profile.html">Cancel</a>
+              <button class="primary-button workspace-action" type="submit" form="edit-profile-form">Save changes</button>
+            </div>
+          </section>
+
+          <section class="profile-layout">
+            <form class="workspace-panel edit-profile-form" id="edit-profile-form" novalidate>
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Profile Form</p>
+                  <h2>Personal details</h2>
+                </div>
+                <span class="status-badge status-pending">Editable</span>
+              </div>
+
+              <div class="form-grid">
+                <label class="form-label" for="full-name">
+                  Full name
+                  <input id="full-name" name="fullName" type="text" value="Maria Cruz" required>
+                </label>
+
+                <label class="form-label" for="school-id">
+                  School ID number
+                  <input id="school-id" name="schoolId" type="text" value="12-3456-789" required>
+                  <span class="field-error" hidden>Use the format xx-xxxx-xxx.</span>
+                </label>
+
+                <label class="form-label" for="school-email">
+                  School email
+                  <input id="school-email" name="schoolEmail" type="email" value="maria.cruz@cit.edu" required>
+                </label>
+
+                <label class="form-label" for="mobile-number">
+                  Mobile number
+                  <input id="mobile-number" name="mobileNumber" type="tel" value="+63 917 000 1234" required>
+                </label>
+
+                <label class="form-label" for="section">
+                  Section
+                  <input id="section" name="section" type="text" value="BSN 3A" required>
+                </label>
+
+                <label class="form-label" for="clinical-site">
+                  Primary clinical site
+                  <select id="clinical-site" name="clinicalSite" required>
+                    <option>Cebu City Medical Center</option>
+                    <option>Skills Laboratory</option>
+                    <option>Community Health Center</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="profile-form-section">
+                <div class="panel-heading compact-heading">
+                  <div>
+                    <p class="section-kicker">Emergency Contact</p>
+                    <h2>Contact details</h2>
+                  </div>
+                </div>
+
+                <div class="form-grid">
+                  <label class="form-label" for="emergency-name">
+                    Contact name
+                    <input id="emergency-name" name="emergencyName" type="text" value="Elena Cruz" required>
+                  </label>
+
+                  <label class="form-label" for="relationship">
+                    Relationship
+                    <input id="relationship" name="relationship" type="text" value="Mother" required>
+                  </label>
+
+                  <label class="form-label" for="emergency-mobile">
+                    Mobile number
+                    <input id="emergency-mobile" name="emergencyMobile" type="tel" value="+63 917 111 4400" required>
+                  </label>
+
+                  <label class="form-label" for="address">
+                    Address
+                    <input id="address" name="address" type="text" value="Cebu City, Cebu" required>
+                  </label>
+                </div>
+              </div>
+
+              <div id="edit-profile-message" class="form-message" role="status" aria-live="polite">
+                Review your information before saving.
+              </div>
+
+              <div class="button-row">
+                <button class="ghost-button" type="button" id="reset-profile-form">Reset changes</button>
+                <button class="primary-button workspace-action" type="submit">Save changes</button>
+              </div>
+            </form>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel profile-preview-card">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Preview</p>
+                    <h2>Profile card</h2>
+                  </div>
+                  <span class="status-badge status-verified">Live</span>
+                </div>
+
+                <div class="profile-preview">
+                  <div class="profile-avatar-large">MC</div>
+                  <strong id="preview-name">Maria Cruz</strong>
+                  <span id="preview-section">BSN 3A</span>
+                  <p id="preview-email">maria.cruz@cit.edu</p>
+                </div>
+
+                <div class="profile-completion">
+                  <div>
+                    <span>Profile completion</span>
+                    <strong id="completion-percent">92%</strong>
+                  </div>
+                  <div class="progress-track">
+                    <span id="completion-bar" style="width: 92%"></span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Security</p>
+                    <h2>Account options</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="change-password.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Change password</strong>
+                      <p>Update your login credentials.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="view-profile.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>View profile</strong>
+                      <p>Return to the profile summary.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="notifications.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Notifications</strong>
+                      <p>Check account and validation updates.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/edit-profile.js"></script>
+  </body>
+</html>

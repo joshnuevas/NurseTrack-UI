@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Case History</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Nursing Student</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link is-active" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong>Maria Cruz</strong>
+            <span>BSN 3A</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Clinical Cases</p>
+              <h1>Case History</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" href="notifications.html">Notifications</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace case-history-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Records</p>
+              <h2>Review your clinical case submissions.</h2>
+              <p>Track completed, pending, returned, and draft case records with checklist status.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="add-clinical-case.html">Add clinical case</a>
+          </section>
+
+          <section class="dashboard-stats" aria-label="Case history summary">
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">TC</span>
+                <span class="status-badge status-verified">Total</span>
+              </div>
+              <h3>Submitted cases</h3>
+              <p>All case records</p>
+              <strong class="stat-value">18</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">AP</span>
+                <span class="status-badge status-verified">Approved</span>
+              </div>
+              <h3>Approved</h3>
+              <p>Accepted for completion</p>
+              <strong class="stat-value">14</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">PN</span>
+                <span class="status-badge status-pending">Pending</span>
+              </div>
+              <h3>Pending review</h3>
+              <p>Awaiting instructor validation</p>
+              <strong class="stat-value">3</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">RT</span>
+                <span class="status-badge status-rejected">Returned</span>
+              </div>
+              <h3>Needs update</h3>
+              <p>Requires correction</p>
+              <strong class="stat-value">1</strong>
+            </article>
+          </section>
+
+          <section class="workspace-panel history-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">History</p>
+                <h2>Clinical case records</h2>
+              </div>
+              <div class="quick-actions no-margin">
+                <a class="ghost-button" href="add-clinical-case.html">Add case</a>
+                <button class="ghost-button" type="button">Export list</button>
+              </div>
+            </div>
+
+            <div class="history-filters" aria-label="Case history filters">
+              <label class="form-label" for="status-filter">
+                Status
+                <select id="status-filter">
+                  <option value="all">All statuses</option>
+                  <option value="approved">Approved</option>
+                  <option value="pending">Pending</option>
+                  <option value="returned">Returned</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </label>
+
+              <label class="form-label" for="category-filter">
+                Category
+                <select id="category-filter">
+                  <option value="all">All categories</option>
+                  <option value="Maternal care">Maternal care</option>
+                  <option value="Pediatric care">Pediatric care</option>
+                  <option value="Medical-surgical care">Medical-surgical care</option>
+                  <option value="Community health">Community health</option>
+                </select>
+              </label>
+
+              <label class="form-label" for="search-records">
+                Search
+                <input id="search-records" type="search" placeholder="Search case, site, or instructor">
+              </label>
+            </div>
+
+            <div class="history-table case-table" role="table" aria-label="Clinical case records">
+              <div class="history-row case-row history-row-head" role="row">
+                <span role="columnheader">Date</span>
+                <span role="columnheader">Case</span>
+                <span role="columnheader">Category</span>
+                <span role="columnheader">Checklist</span>
+                <span role="columnheader">Status</span>
+                <span role="columnheader">Action</span>
+              </div>
+
+              <div class="history-row case-row" role="row" data-status="approved" data-category="Maternal care">
+                <span role="cell">Apr 24, 2026</span>
+                <span role="cell">Newborn care assessment</span>
+                <span role="cell">Maternal care</span>
+                <span role="cell">9 / 9</span>
+                <span role="cell"><span class="status-badge status-verified">Approved</span></span>
+                <span role="cell"><a class="text-link" href="case-detail.html">View</a></span>
+              </div>
+
+              <div class="history-row case-row" role="row" data-status="pending" data-category="Maternal care">
+                <span role="cell">Apr 21, 2026</span>
+                <span role="cell">Maternal care assessment</span>
+                <span role="cell">Maternal care</span>
+                <span role="cell">9 / 9</span>
+                <span role="cell"><span class="status-badge status-pending">Pending</span></span>
+                <span role="cell"><a class="text-link" href="case-detail.html">View</a></span>
+              </div>
+
+              <div class="history-row case-row" role="row" data-status="returned" data-category="Medical-surgical care">
+                <span role="cell">Apr 18, 2026</span>
+                <span role="cell">Medication administration</span>
+                <span role="cell">Medical-surgical care</span>
+                <span role="cell">7 / 9</span>
+                <span role="cell"><span class="status-badge status-rejected">Returned</span></span>
+                <span role="cell"><a class="text-link" href="edit-case.html">Edit</a></span>
+              </div>
+
+              <div class="history-row case-row" role="row" data-status="approved" data-category="Pediatric care">
+                <span role="cell">Apr 15, 2026</span>
+                <span role="cell">Pediatric vital signs</span>
+                <span role="cell">Pediatric care</span>
+                <span role="cell">9 / 9</span>
+                <span role="cell"><span class="status-badge status-verified">Approved</span></span>
+                <span role="cell"><a class="text-link" href="case-detail.html">View</a></span>
+              </div>
+
+              <div class="history-row case-row" role="row" data-status="draft" data-category="Community health">
+                <span role="cell">Apr 12, 2026</span>
+                <span role="cell">Community assessment</span>
+                <span role="cell">Community health</span>
+                <span role="cell">4 / 9</span>
+                <span role="cell"><span class="status-badge status-pending">Draft</span></span>
+                <span role="cell"><a class="text-link" href="checklist-form.html">Continue</a></span>
+              </div>
+            </div>
+
+            <div id="history-empty" class="empty-state" hidden>
+              No clinical case records match the selected filters.
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/case-history.js"></script>
+  </body>
+</html>

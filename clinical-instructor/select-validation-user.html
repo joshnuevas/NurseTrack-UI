@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Select Student for Validation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Clinical Instructor</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
+          <a class="nav-link is-active" href="select-validation-user.html"><span class="nav-dot"></span>Select Student</a>
+          <a class="nav-link" href="duty-validation.html"><span class="nav-dot"></span>Duty Validation</a>
+          <a class="nav-link" href="case-validation.html"><span class="nav-dot"></span>Case Validation</a>
+          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="instructor-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">PR</div>
+          <div>
+            <strong>Prof. Reyes</strong>
+            <span>Clinical Instructor</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Validation</p>
+              <h1>Select Student</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="ghost-button button-link" href="instructor-notifications.html">Notifications</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace validation-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Student selection</p>
+              <h2>Select a student before validation.</h2>
+              <p>Search the instructor queue, choose a student, then open either duty-hour validation or clinical case validation.</p>
+            </div>
+            <span class="status-badge status-pending">6 records pending</span>
+          </section>
+
+          <section class="validation-selection-layout">
+            <article class="workspace-panel validation-lookup-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Lookup</p>
+                  <h2>Students with pending records</h2>
+                </div>
+                <span class="status-badge status-pending" id="validation-user-count">5 students</span>
+              </div>
+
+              <div class="history-filters validation-lookup-filters" aria-label="Student validation search">
+                <label class="form-label" for="validation-user-search">
+                  Search student
+                  <input id="validation-user-search" type="search" placeholder="Search name, student ID, section, or duty area">
+                </label>
+
+                <label class="form-label" for="validation-user-section">
+                  Section
+                  <select id="validation-user-section">
+                    <option value="all">All sections</option>
+                    <option value="BSN 3A">BSN 3A</option>
+                    <option value="BSN 3B">BSN 3B</option>
+                    <option value="BSN 3C">BSN 3C</option>
+                    <option value="BSN 4A">BSN 4A</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="validation-record-type">
+                  Record type
+                  <select id="validation-record-type">
+                    <option value="all">All records</option>
+                    <option value="duty">Duty hours</option>
+                    <option value="case">Clinical cases</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="validation-user-list" id="validation-user-list">
+                <button class="validation-user-card is-selected" type="button" data-validation-user data-name="Maria Cruz" data-initials="MC" data-section="BSN 3A" data-student-id="12-3456-789" data-duty="2" data-case="1" data-types="duty case" data-area="Ward B" data-duty-link="duty-validation.html" data-case-link="case-validation.html">
+                  <span class="avatar small-avatar">MC</span>
+                  <span>
+                    <strong>Maria Cruz</strong>
+                    <small>BSN 3A - Student ID 12-3456-789</small>
+                  </span>
+                  <span class="status-badge status-pending">3 pending</span>
+                </button>
+
+                <button class="validation-user-card" type="button" data-validation-user data-name="Treasure Abadinas" data-initials="TA" data-section="BSN 3A" data-student-id="22-1845-103" data-duty="0" data-case="2" data-types="case" data-area="Delivery Room" data-duty-link="duty-validation.html" data-case-link="case-validation.html">
+                  <span class="avatar small-avatar">TA</span>
+                  <span>
+                    <strong>Treasure Abadinas</strong>
+                    <small>BSN 3A - Student ID 22-1845-103</small>
+                  </span>
+                  <span class="status-badge status-pending">2 pending</span>
+                </button>
+
+                <button class="validation-user-card" type="button" data-validation-user data-name="Josh Anton Nuevas" data-initials="JA" data-section="BSN 3A" data-student-id="24-1180-221" data-duty="1" data-case="0" data-types="duty" data-area="Delivery Room" data-duty-link="duty-validation.html" data-case-link="case-validation.html">
+                  <span class="avatar small-avatar">JA</span>
+                  <span>
+                    <strong>Josh Anton Nuevas</strong>
+                    <small>BSN 3A - Student ID 24-1180-221</small>
+                  </span>
+                  <span class="status-badge status-pending">1 pending</span>
+                </button>
+
+                <button class="validation-user-card" type="button" data-validation-user data-name="Zander Aligato" data-initials="ZA" data-section="BSN 3B" data-student-id="21-7740-118" data-duty="0" data-case="1" data-types="case" data-area="Ward B" data-duty-link="duty-validation.html" data-case-link="case-validation.html">
+                  <span class="avatar small-avatar">ZA</span>
+                  <span>
+                    <strong>Zander Aligato</strong>
+                    <small>BSN 3B - Student ID 21-7740-118</small>
+                  </span>
+                  <span class="status-badge status-pending">1 pending</span>
+                </button>
+
+                <button class="validation-user-card" type="button" data-validation-user data-name="Andrea Gomez" data-initials="AG" data-section="BSN 4A" data-student-id="20-4408-332" data-duty="1" data-case="1" data-types="duty case" data-area="Pediatric Ward" data-duty-link="duty-validation.html" data-case-link="case-validation.html">
+                  <span class="avatar small-avatar">AG</span>
+                  <span>
+                    <strong>Andrea Gomez</strong>
+                    <small>BSN 4A - Student ID 20-4408-332</small>
+                  </span>
+                  <span class="status-badge status-pending">2 pending</span>
+                </button>
+              </div>
+
+              <div id="validation-selection-message" class="form-message" role="status" aria-live="polite">
+                Maria Cruz is selected.
+              </div>
+            </article>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel selected-validation-card">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Selected student</p>
+                    <h2 id="selected-validation-name">Maria Cruz</h2>
+                  </div>
+                  <span class="status-badge status-pending" id="selected-validation-count">3 pending</span>
+                </div>
+
+                <div class="student-validation-card no-margin">
+                  <div class="avatar" id="selected-validation-avatar">MC</div>
+                  <div>
+                    <strong id="selected-validation-meta">BSN 3A - Student ID 12-3456-789</strong>
+                    <p id="selected-validation-area">Assigned area: Ward B</p>
+                  </div>
+                </div>
+
+                <div class="detail-list">
+                  <div class="detail-row">
+                    <span>Duty records</span>
+                    <strong id="selected-validation-duty">2 pending</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Clinical cases</span>
+                    <strong id="selected-validation-case">1 pending</strong>
+                  </div>
+                </div>
+
+                <div class="validation-action-grid">
+                  <a class="primary-button button-link" id="selected-duty-link" href="duty-validation.html">Validate duty hours</a>
+                  <a class="ghost-button button-link" id="selected-case-link" href="case-validation.html">Validate clinical cases</a>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Queue guide</p>
+                    <h2>Validation path</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Select student</strong>
+                      <p>Search by name, ID, section, or assigned area.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Open record type</strong>
+                      <p>Choose duty-hour validation or clinical case validation.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Approve or return</strong>
+                      <p>Add comments before completing the decision step.</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/select-validation-user.js"></script>
+  </body>
+</html>

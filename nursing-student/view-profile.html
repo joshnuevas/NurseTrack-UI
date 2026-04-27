@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | View Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Nursing Student</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
+          <a class="nav-link" href="duty-history.html"><span class="nav-dot"></span>Duty Hours</a>
+          <a class="nav-link" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="about.html"><span class="nav-dot"></span>About</a>
+          <a class="nav-link" href="help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">MC</div>
+          <div>
+            <strong>Maria Cruz</strong>
+            <span>BSN 3A</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Account</p>
+              <h1>View Profile</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill" id="profile-sync-pill">Active</span>
+            <a class="ghost-button button-link" href="edit-profile.html">Edit profile</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace profile-workspace">
+          <section class="workspace-hero dashboard-hero profile-hero">
+            <div class="profile-identity">
+              <div class="profile-avatar-large">MC</div>
+              <div>
+                <p class="section-kicker">Nursing Student</p>
+                <h2>Maria Cruz</h2>
+                <p>BSN 3A • 12-3456-789 • maria.cruz@cit.edu</p>
+                <div class="profile-chip-row">
+                  <span class="status-badge status-verified">Active account</span>
+                  <span class="status-badge status-pending">Profile 92%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-hero-actions">
+              <button class="ghost-button" type="button" id="copy-profile-id">Copy ID</button>
+              <a class="primary-button workspace-action button-link" href="edit-profile.html">Edit profile</a>
+            </div>
+          </section>
+
+          <section class="dashboard-stats">
+            <article class="workspace-card stat-card">
+              <span>Duty hours</span>
+              <strong>128</strong>
+              <small>Verified and pending</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Case logs</span>
+              <strong>34</strong>
+              <small>Submitted records</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Schedules</span>
+              <strong>5</strong>
+              <small>Upcoming duties</small>
+            </article>
+            <article class="workspace-card stat-card">
+              <span>Completion</span>
+              <strong>76%</strong>
+              <small>Current progress</small>
+            </article>
+          </section>
+
+          <section class="profile-layout">
+            <div class="profile-main-stack">
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Details</p>
+                    <h2>Profile information</h2>
+                  </div>
+                  <span class="status-badge status-verified">Verified</span>
+                </div>
+
+                <div class="profile-info-grid">
+                  <div class="profile-info-card">
+                    <span>Full name</span>
+                    <strong>Maria Cruz</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>School ID number</span>
+                    <strong>12-3456-789</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>School email</span>
+                    <strong>maria.cruz@cit.edu</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>Mobile number</span>
+                    <strong>+63 917 000 1234</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>Section</span>
+                    <strong>BSN 3A</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>Assigned instructor</span>
+                    <strong>Prof. Reyes</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>Primary clinical site</span>
+                    <strong>Cebu City Medical Center</strong>
+                  </div>
+                  <div class="profile-info-card">
+                    <span>Account created</span>
+                    <strong>Jan 15, 2026</strong>
+                  </div>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Emergency Contact</p>
+                    <h2>Contact record</h2>
+                  </div>
+                </div>
+
+                <div class="detail-list">
+                  <div class="detail-row">
+                    <span>Name</span>
+                    <strong>Elena Cruz</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Relationship</span>
+                    <strong>Mother</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Mobile number</span>
+                    <strong>+63 917 111 4400</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Address</span>
+                    <strong>Cebu City, Cebu</strong>
+                  </div>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Activity</p>
+                    <h2>Recent account activity</h2>
+                  </div>
+                </div>
+
+                <div class="profile-activity-list">
+                  <div class="profile-activity-item">
+                    <span></span>
+                    <div>
+                      <strong>Duty record submitted</strong>
+                      <p>Ward B • Apr 26, 2026 • Pending validation</p>
+                    </div>
+                  </div>
+                  <div class="profile-activity-item">
+                    <span></span>
+                    <div>
+                      <strong>Case log approved</strong>
+                      <p>Medical-surgical case • Apr 24, 2026</p>
+                    </div>
+                  </div>
+                  <div class="profile-activity-item">
+                    <span></span>
+                    <div>
+                      <strong>Schedule viewed</strong>
+                      <p>CCMC Ward B assignment • Apr 22, 2026</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel profile-card">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Access</p>
+                    <h2>Account status</h2>
+                  </div>
+                  <span class="status-badge status-verified">Active</span>
+                </div>
+
+                <div class="detail-list">
+                  <div class="detail-row">
+                    <span>Role</span>
+                    <strong>Nursing Student</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Email status</span>
+                    <strong>Verified</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Last login</span>
+                    <strong>Apr 26, 2026 • 8:24 AM</strong>
+                  </div>
+                  <div class="detail-row">
+                    <span>Password</span>
+                    <strong>Updated 18 days ago</strong>
+                  </div>
+                </div>
+
+                <div id="profile-message" class="form-message" role="status" aria-live="polite">
+                  Profile information loaded.
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Actions</p>
+                    <h2>Profile options</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="edit-profile.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Edit profile</strong>
+                      <p>Update contact and section details.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="change-password.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Change password</strong>
+                      <p>Update login security.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="student-progress.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>View progress</strong>
+                      <p>Check completion and pending requirements.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/view-profile.js"></script>
+  </body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Export Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Admin / Manager</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link is-active" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link" href="admin-notifications.html"><span class="nav-dot"></span>Notifications</a>
+          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">AM</div>
+          <div>
+            <strong>Admin Manager</strong>
+            <span>Reporting Access</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Reporting</p>
+              <h1>Export Report</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Ready</span>
+            <a class="ghost-button button-link" href="admin-notifications.html">Notifications</a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace export-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Export center</p>
+              <h2>Prepare PDF and CSV report files.</h2>
+              <p>Choose the report source, review the package details, and generate the selected file format.</p>
+            </div>
+            <button class="primary-button workspace-action" type="button" id="quick-export">Prepare export</button>
+          </section>
+
+          <section class="dashboard-stats" aria-label="Export summary">
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">PDF</span>
+                <span class="status-badge status-verified">Ready</span>
+              </div>
+              <h3>PDF exports</h3>
+              <p>Formatted report files</p>
+              <strong class="stat-value">8</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">CSV</span>
+                <span class="status-badge status-verified">Ready</span>
+              </div>
+              <h3>CSV exports</h3>
+              <p>Spreadsheet-ready data</p>
+              <strong class="stat-value">4</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">RC</span>
+                <span class="status-badge status-pending">Recent</span>
+              </div>
+              <h3>Recent files</h3>
+              <p>Prepared this week</p>
+              <strong class="stat-value">12</strong>
+            </article>
+
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">OK</span>
+                <span class="status-badge status-verified">Clear</span>
+              </div>
+              <h3>Export status</h3>
+              <p>No failed exports</p>
+              <strong class="stat-value">100%</strong>
+            </article>
+          </section>
+
+          <section class="export-layout">
+            <form class="workspace-panel export-form" id="export-form" novalidate>
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Package</p>
+                  <h2>Export settings</h2>
+                </div>
+                <span class="status-badge status-pending" id="export-status">Not prepared</span>
+              </div>
+
+              <label class="form-label" for="report-source">
+                Report source
+                <select id="report-source" name="reportSource" required>
+                  <option value="Compliance Summary">Compliance Summary</option>
+                  <option value="Duty Report">Duty Report</option>
+                  <option value="Case Report">Case Report</option>
+                  <option value="Schedule Report">Schedule Report</option>
+                </select>
+              </label>
+
+              <fieldset class="export-format-grid">
+                <legend>File format</legend>
+                <label class="export-format-card is-selected">
+                  <input type="radio" name="fileFormat" value="PDF" checked>
+                  <span class="card-icon">PDF</span>
+                  <strong>PDF</strong>
+                  <p>Formatted file for printing and sharing.</p>
+                </label>
+
+                <label class="export-format-card">
+                  <input type="radio" name="fileFormat" value="CSV">
+                  <span class="card-icon">CSV</span>
+                  <strong>CSV</strong>
+                  <p>Data file for spreadsheet analysis.</p>
+                </label>
+              </fieldset>
+
+              <div class="form-grid">
+                <label class="form-label" for="file-name">
+                  File name
+                  <input id="file-name" name="fileName" type="text" value="nursetrack-compliance-summary" required>
+                </label>
+
+                <label class="form-label" for="report-period">
+                  Report period
+                  <select id="report-period" name="reportPeriod">
+                    <option>Apr 1, 2026 - Apr 25, 2026</option>
+                    <option>Apr 1, 2026 - Apr 30, 2026</option>
+                    <option>Mar 1, 2026 - Mar 31, 2026</option>
+                  </select>
+                </label>
+              </div>
+
+              <fieldset class="report-options">
+                <legend>Include</legend>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  Summary totals
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  Student records
+                </label>
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  Validation status
+                </label>
+                <label class="check-row">
+                  <input type="checkbox">
+                  Instructor comments
+                </label>
+              </fieldset>
+
+              <div id="export-message" class="form-message" role="status" aria-live="polite">
+                Select a format, then prepare the export package.
+              </div>
+
+              <div class="button-row export-form-actions">
+                <a class="ghost-button" href="generate-report.html">Back to builder</a>
+                <button class="primary-button workspace-action" type="submit">Prepare export</button>
+              </div>
+            </form>
+
+            <aside class="duty-side-panel">
+              <article class="workspace-panel report-preview-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Preview</p>
+                    <h2>Export package</h2>
+                  </div>
+                  <span class="status-badge status-pending" id="package-badge">PDF</span>
+                </div>
+
+                <div class="export-package-card">
+                  <div>
+                    <span>Source</span>
+                    <strong id="package-source">Compliance Summary</strong>
+                  </div>
+                  <div>
+                    <span>File</span>
+                    <strong id="package-name">nursetrack-compliance-summary.pdf</strong>
+                  </div>
+                  <div>
+                    <span>Period</span>
+                    <strong id="package-period">Apr 1, 2026 - Apr 25, 2026</strong>
+                  </div>
+                  <div>
+                    <span>Records</span>
+                    <strong id="package-records">42 students</strong>
+                  </div>
+                </div>
+
+                <div class="button-row report-actions">
+                  <button class="ghost-button" type="button" id="csv-button">CSV</button>
+                  <button class="primary-button workspace-action" type="button" id="pdf-button">PDF</button>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Recent exports</p>
+                    <h2>Generated files</h2>
+                  </div>
+                  <span class="status-badge status-verified">12 files</span>
+                </div>
+
+                <div class="export-history-list">
+                  <div class="export-history-item">
+                    <span class="card-icon">PDF</span>
+                    <div>
+                      <strong>Compliance Summary</strong>
+                      <p>Apr 25, 2026 - Ready</p>
+                    </div>
+                    <span class="status-badge status-verified">PDF</span>
+                  </div>
+                  <div class="export-history-item">
+                    <span class="card-icon">CSV</span>
+                    <div>
+                      <strong>Duty Report</strong>
+                      <p>Apr 24, 2026 - Ready</p>
+                    </div>
+                    <span class="status-badge status-verified">CSV</span>
+                  </div>
+                  <div class="export-history-item">
+                    <span class="card-icon">PDF</span>
+                    <div>
+                      <strong>Schedule Report</strong>
+                      <p>Apr 23, 2026 - Ready</p>
+                    </div>
+                    <span class="status-badge status-verified">PDF</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="workspace-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="section-kicker">Report links</p>
+                    <h2>Open report views</h2>
+                  </div>
+                </div>
+
+                <div class="requirement-list compact-list">
+                  <a class="requirement-item action-item" href="compliance-summary.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Compliance summary</strong>
+                      <p>View student completion report.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="duty-report.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Duty report</strong>
+                      <p>View duty-hour reporting.</p>
+                    </div>
+                  </a>
+                  <a class="requirement-item action-item" href="case-report.html">
+                    <span class="requirement-status"></span>
+                    <div>
+                      <strong>Case report</strong>
+                      <p>View clinical case reporting.</p>
+                    </div>
+                  </a>
+                </div>
+              </article>
+            </aside>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/export-page.js"></script>
+  </body>
+</html>
