@@ -24,11 +24,13 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   const formData = new FormData(form);
-  const requiredFields = ["caseDate", "caseCategory", "clinicalSite", "dutyArea", "caseCode", "clinicalInstructor", "procedureTitle", "revisionNote"];
+  const requiredFields = ["caseDate", "caseCategory", "caseSubcategory", "clinicalSite", "dutyArea", "caseCode", "clinicalInstructor", "procedureTitle", "revisionNote"];
   const missingField = requiredFields.some((field) => !String(formData.get(field) || "").trim());
+  const isMajorCase = formData.get("caseSubcategory") === "Major cases";
+  const missingMajorRole = isMajorCase && formData.get("caseMajorRole") === "Not applicable";
 
-  if (missingField) {
-    setMessage("Please complete all required fields, including the revision note.", "is-error");
+  if (missingField || missingMajorRole) {
+    setMessage("Please complete the DR/OR category, subcategory, and revision note.", "is-error");
     return;
   }
 

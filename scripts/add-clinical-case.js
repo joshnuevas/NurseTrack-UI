@@ -17,6 +17,7 @@ function hasRequiredFields(formData) {
   const fields = [
     "caseDate",
     "caseCategory",
+    "caseSubcategory",
     "clinicalSite",
     "dutyArea",
     "caseCode",
@@ -24,7 +25,11 @@ function hasRequiredFields(formData) {
     "procedureTitle"
   ];
 
-  return fields.every((field) => String(formData.get(field) || "").trim());
+  const hasBaseFields = fields.every((field) => String(formData.get(field) || "").trim());
+  const isMajorCase = formData.get("caseSubcategory") === "Major cases";
+  const hasMajorRole = !isMajorCase || formData.get("caseMajorRole") !== "Not applicable";
+
+  return hasBaseFields && hasMajorRole;
 }
 
 menuButton.addEventListener("click", () => {
@@ -45,7 +50,7 @@ form.addEventListener("submit", (event) => {
   const formData = new FormData(form);
 
   if (!hasRequiredFields(formData)) {
-    setMessage("Please complete all required case details.", "is-error");
+    setMessage("Please complete the DR/OR category, subcategory, and required case details.", "is-error");
     return;
   }
 

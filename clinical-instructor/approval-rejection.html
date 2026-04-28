@@ -26,10 +26,9 @@
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link" href="view-profile.html"><span class="nav-dot"></span>Profile</a>
-          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Submissions</a>
-          <a class="nav-link is-active" href="select-validation-user.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link is-active" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
-          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Scheduling</a>
+          <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
           <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
@@ -69,8 +68,8 @@
           <section class="workspace-hero dashboard-hero">
             <div>
               <p class="section-kicker">Decision</p>
-              <h2>Approve or reject this submission.</h2>
-              <p>Choose a validation decision and add comments before updating the student record.</p>
+              <h2>Verify, reject, keep pending, or mark not applicable.</h2>
+              <p>Choose a validation status and add remarks before updating the student record.</p>
             </div>
             <span class="status-badge status-pending" id="decision-badge">No decision</span>
           </section>
@@ -89,27 +88,43 @@
                 <legend>Select decision</legend>
                 <label class="decision-card is-selected">
                   <input type="radio" name="decision" value="approved" checked>
-                  <span class="decision-icon approve-icon">âœ“</span>
-                  <strong>Approve</strong>
+                  <span class="decision-icon approve-icon"></span>
+                  <strong>Verify</strong>
                   <p>Accept this record and add it to student progress.</p>
                 </label>
 
                 <label class="decision-card">
                   <input type="radio" name="decision" value="rejected">
                   <span class="decision-icon reject-icon">!</span>
-                  <strong>Reject</strong>
+                  <strong>Unverified / Reject</strong>
                   <p>Return this record to the student for correction.</p>
+                </label>
+
+                <label class="decision-card">
+                  <input type="radio" name="decision" value="pending">
+                  <span class="decision-icon pending-icon"></span>
+                  <strong>Keep pending</strong>
+                  <p>Leave the record in review when more checking is needed.</p>
+                </label>
+
+                <label class="decision-card">
+                  <input type="radio" name="decision" value="notApplicable">
+                  <span class="decision-icon not-applicable-icon"></span>
+                  <strong>Not Applicable</strong>
+                  <p>Keep the record for history, but do not count it toward progress.</p>
                 </label>
               </fieldset>
 
               <label class="form-label" for="decision-reason">
-                Rejection reason
+                Reason or remarks
                 <select id="decision-reason" name="decisionReason">
-                  <option value="">Select reason when rejecting</option>
+                  <option value="">Select reason when needed</option>
                   <option>Incomplete required fields</option>
                   <option>Incorrect time or schedule details</option>
                   <option>Checklist needs correction</option>
                   <option>Verification does not match assigned site</option>
+                  <option>Case is not applicable to required DR/OR category</option>
+                  <option>Pending CI or Chair clarification</option>
                 </select>
               </label>
 
@@ -174,6 +189,13 @@
                   <div class="requirement-item">
                     <span class="requirement-status"></span>
                     <div>
+                      <strong>Not applicable records</strong>
+                      <p>Stay in history but do not count toward completion.</p>
+                    </div>
+                  </div>
+                  <div class="requirement-item">
+                    <span class="requirement-status"></span>
+                    <div>
                       <strong>History updated</strong>
                       <p>Decision appears in validation history.</p>
                     </div>
@@ -188,5 +210,7 @@
 
     <script src="../scripts/approval-rejection.js"></script>
     <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
   </body>
 </html>

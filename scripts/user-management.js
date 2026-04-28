@@ -156,7 +156,7 @@ function roleValue(label) {
     return "instructor";
   }
 
-  if (label === "Admin / Manager") {
+  if (label === "Chair") {
     return "admin";
   }
 

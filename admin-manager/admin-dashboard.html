@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NurseTrack | Admin Dashboard</title>
+    <title>NurseTrack | Chair Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <div class="role-chip">Admin / Manager</div>
+        <div class="role-chip">Chair</div>
 
         <nav class="sidebar-nav">
           <a class="nav-link is-active" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
@@ -34,10 +34,10 @@
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">AR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Admin Reyes</strong>
-            <span>Manager</span>
+            <strong>Chair Reyes</strong>
+            <span>Chair</span>
           </div>
         </div>
       </aside>
@@ -51,7 +51,7 @@
           <div class="topbar-title">
             <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
             <div>
-              <p>Admin Workspace</p>
+              <p>Chair Workspace</p>
               <h1>Dashboard</h1>
             </div>
           </div>
@@ -66,21 +66,21 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <p class="section-kicker">Admin Overview</p>
-              <h2>Good evening, Admin Reyes.</h2>
+              <p class="section-kicker">Chair Overview</p>
+              <h2>Good evening, Chair Reyes.</h2>
               <p>Manage accounts, access roles, summaries, reports, and export activity from one workspace.</p>
             </div>
             <a class="primary-button workspace-action button-link" href="user-list-manage-users.html">Manage users</a>
           </section>
 
-          <section class="dashboard-stats" aria-label="Admin dashboard summary">
+          <section class="dashboard-stats" aria-label="Chair dashboard summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
                 <span class="card-icon">Users</span>
                 <span class="status-badge status-verified">Active</span>
               </div>
               <h3>Users</h3>
-              <p>Active student, instructor, and manager accounts</p>
+              <p>Active student, instructor, and chair accounts</p>
               <strong class="stat-value">24</strong>
             </article>
 
@@ -137,13 +137,13 @@
                   <span class="requirement-status"></span>
                   <div>
                     <strong>Role Assignment</strong>
-                    <p>Assign Student, Clinical Instructor, or Admin access.</p>
+                    <p>Assign Student, Clinical Instructor, or Chair access.</p>
                   </div>
                 </a>
                 <a class="requirement-item action-item" href="admin-notifications.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>Admin Notifications</strong>
+                    <strong>Chair Notifications</strong>
                     <p>Check account requests, access changes, and export notices.</p>
                   </div>
                 </a>
@@ -189,7 +189,7 @@
             <div class="panel-heading">
               <div>
                 <p class="section-kicker">Recent Activity</p>
-                <h2>Admin Queue</h2>
+                <h2>Chair Queue</h2>
               </div>
               <a class="ghost-button button-link" href="admin-notifications.html">View notifications</a>
             </div>
@@ -234,7 +234,7 @@
                 <span class="activity-marker"></span>
                 <div>
                   <strong>Validation summary refreshed</strong>
-                  <p>Pending duty and case totals are ready for manager review.</p>
+                  <p>Pending duty and case totals are ready for Chair review.</p>
                 </div>
               </div>
             </div>
@@ -245,5 +245,7 @@
 
     <script src="../scripts/instructor-dashboard.js"></script>
     <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
   </body>
 </html>

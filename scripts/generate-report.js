@@ -24,12 +24,24 @@ const reportMetrics = document.body.dataset.reportScope === "student" ? {
   "Compliance Summary": ["42 records", "31", "9", "2"],
   "Duty Report": ["128 duty hours", "96", "24", "8"],
   "Case Report": ["34 case logs", "27", "5", "2"],
-  "Schedule Report": ["5 schedules", "4", "1", "0"]
+  "Schedule Report": ["5 schedules", "4", "1", "0"],
+  "Lacking Duty Hours": ["24 hours lacking", "96", "24", "8"],
+  "Lacking Clinical Cases": ["10 case items lacking", "14", "6", "4"],
+  "Late Attendance Records": ["3 late entries", "2", "1", "0"],
+  "Not Applicable Records": ["2 case records", "0", "0", "2"],
+  "Group Progress": ["1 active group", "3", "1", "0"],
+  "CI Assigned Student Status": ["1 assigned CI", "4", "1", "0"]
 } : {
   "Compliance Summary": ["42 students", "31", "9", "2"],
   "Duty Report": ["318 duty records", "246", "58", "14"],
   "Case Report": ["186 case logs", "142", "36", "8"],
-  "Schedule Report": ["28 schedules", "22", "4", "2"]
+  "Schedule Report": ["28 schedules", "22", "4", "2"],
+  "Lacking Duty Hours": ["58 duty gaps", "246", "58", "14"],
+  "Lacking Clinical Cases": ["36 case gaps", "142", "36", "8"],
+  "Late Attendance Records": ["14 late entries", "9", "3", "2"],
+  "Not Applicable Records": ["8 records", "0", "0", "8"],
+  "Group Progress": ["12 active groups", "9", "2", "1"],
+  "CI Assigned Student Status": ["6 instructors", "31", "9", "2"]
 };
 
 function formatDate(value) {
@@ -54,7 +66,7 @@ function setMessage(text, state) {
 }
 
 function updatePreview() {
-  const metrics = reportMetrics[reportType.value];
+  const metrics = reportMetrics[reportType.value] || reportMetrics["Compliance Summary"];
 
   previewTitle.textContent = reportType.value;
   previewPeriod.textContent = `${formatDate(startDate.value)} - ${formatDate(endDate.value)}`;

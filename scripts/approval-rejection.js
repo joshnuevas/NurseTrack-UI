@@ -6,6 +6,12 @@ const decisionBadge = document.querySelector("#decision-badge");
 const decisionCards = Array.from(document.querySelectorAll(".decision-card"));
 const decisionInputs = Array.from(document.querySelectorAll("input[name='decision']"));
 const reasonSelect = document.querySelector("#decision-reason");
+const decisionLabels = {
+  approved: "Verified",
+  rejected: "Unverified",
+  pending: "Pending",
+  notApplicable: "Not Applicable"
+};
 
 function setMessage(text, state) {
   message.textContent = text;
@@ -28,10 +34,10 @@ function updateDecisionUI() {
     card.classList.toggle("is-selected", input.checked);
   });
 
-  decisionBadge.textContent = decision === "approved" ? "Approve" : "Reject";
+  decisionBadge.textContent = decisionLabels[decision] || "Pending";
   decisionBadge.classList.toggle("status-verified", decision === "approved");
   decisionBadge.classList.toggle("status-rejected", decision === "rejected");
-  decisionBadge.classList.toggle("status-pending", false);
+  decisionBadge.classList.toggle("status-pending", decision === "pending" || decision === "notApplicable");
 }
 
 menuButton.addEventListener("click", () => {
@@ -50,13 +56,20 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const decision = selectedDecision();
 
-  if (decision === "rejected" && !reasonSelect.value) {
-    setMessage("Select a rejection reason before submitting.", "is-error");
+  if ((decision === "rejected" || decision === "notApplicable" || decision === "pending") && !reasonSelect.value) {
+    setMessage("Select a reason before submitting this validation status.", "is-error");
     reasonSelect.focus();
     return;
   }
 
-  setMessage(decision === "approved" ? "Submission approved successfully." : "Submission rejected and returned to student.", "is-success");
+  const messages = {
+    approved: "Submission verified successfully.",
+    rejected: "Submission marked unverified and returned to student.",
+    pending: "Submission remains pending with reviewer remarks.",
+    notApplicable: "Submission marked not applicable and retained in history."
+  };
+
+  setMessage(messages[decision] || "Validation status updated.", "is-success");
 });
 
 updateDecisionUI();

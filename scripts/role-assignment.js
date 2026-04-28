@@ -31,7 +31,7 @@ const permissions = {
 const roleLabels = {
   student: "Student access",
   instructor: "Instructor access",
-  admin: "Admin access"
+  admin: "Chair access"
 };
 
 let selectedCard = document.querySelector(".role-user-card.is-selected");
