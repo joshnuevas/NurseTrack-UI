@@ -24,11 +24,10 @@
         <div class="role-chip">Chair</div>
 
         <nav class="sidebar-nav">
-          <a class="nav-link is-active" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
-          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link is-active" href="admin-dashboard.html" aria-current="page"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
-          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
           <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
@@ -68,29 +67,29 @@
             <div>
               <p class="section-kicker">Chair Overview</p>
               <h2>Good evening, Chair Reyes.</h2>
-              <p>Manage accounts, access roles, summaries, reports, and export activity from one workspace.</p>
+              <p>Manage schedules, student progress, exceptions, reports, and export activity from one workflow workspace.</p>
             </div>
-            <a class="primary-button workspace-action button-link" href="user-list-manage-users.html">Manage users</a>
+            <a class="primary-button workspace-action button-link" href="admin-schedules.html">Open schedules</a>
           </section>
 
           <section class="dashboard-stats" aria-label="Chair dashboard summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Users</span>
+                <span class="card-icon">Students</span>
                 <span class="status-badge status-verified">Active</span>
               </div>
-              <h3>Users</h3>
-              <p>Active student, instructor, and chair accounts</p>
+              <h3>Students</h3>
+              <p>Students monitored across current clinical rotations</p>
               <strong class="stat-value">24</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Requests</span>
+                <span class="card-icon">Exceptions</span>
                 <span class="status-badge status-pending">Pending</span>
               </div>
-              <h3>Requests</h3>
-              <p>Account and role updates waiting for action</p>
+              <h3>Exceptions</h3>
+              <p>Late attendance and override requests waiting for action</p>
               <strong class="stat-value">3</strong>
             </article>
 
@@ -119,32 +118,32 @@
             <article class="workspace-panel">
               <div class="panel-heading">
                 <div>
-                  <p class="section-kicker">Access</p>
-                  <h2>User Management</h2>
+                  <p class="section-kicker">Workflow</p>
+                  <h2>Chair controls</h2>
                 </div>
                 <span class="status-badge status-pending">3 pending</span>
               </div>
 
               <div class="requirement-list">
-                <a class="requirement-item action-item" href="user-list-manage-users.html">
+                <a class="requirement-item action-item" href="admin-schedules.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>User List / Manage Users</strong>
-                    <p>Review accounts, status, and registration details.</p>
+                    <strong>Schedules</strong>
+                    <p>Create schedules, upload groupings, and assign students to hospital, area, shift, and CI.</p>
                   </div>
                 </a>
-                <a class="requirement-item action-item" href="role-assignment.html">
+                <a class="requirement-item action-item" href="chair-student-progress.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>Role Assignment</strong>
-                    <p>Assign Student, Clinical Instructor, or Chair access.</p>
+                    <strong>Student Progress</strong>
+                    <p>Search students and monitor completion, incompletion, and readiness status.</p>
                   </div>
                 </a>
-                <a class="requirement-item action-item" href="admin-notifications.html">
+                <a class="requirement-item action-item" href="admin-validation.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>Chair Notifications</strong>
-                    <p>Check account requests, access changes, and export notices.</p>
+                    <strong>Exceptions & Overrides</strong>
+                    <p>Review late attendance, special approvals, and override remarks.</p>
                   </div>
                 </a>
               </div>
@@ -198,15 +197,15 @@
               <div class="activity-item">
                 <span class="activity-marker"></span>
                 <div>
-                  <strong>New account request received</strong>
-                  <p>One nursing student account is waiting for review.</p>
+                  <strong>Schedule import reviewed</strong>
+                  <p>BSN 3A grouping is ready for hospital and CI assignment.</p>
                 </div>
               </div>
               <div class="activity-item">
                 <span class="activity-marker"></span>
                 <div>
-                  <strong>Role update saved</strong>
-                  <p>Instructor access was updated for one account.</p>
+                  <strong>Override request received</strong>
+                  <p>One late attendance exception is waiting for Chair review.</p>
                 </div>
               </div>
               <div class="activity-item">
@@ -226,15 +225,15 @@
               <div class="activity-item">
                 <span class="activity-marker"></span>
                 <div>
-                  <strong>User profile updated</strong>
-                  <p>Maria Cruz updated contact details for BSN 3A records.</p>
+                  <strong>Student readiness changed</strong>
+                  <p>Andrea Gomez moved to Ready for Enrollment in Student Progress.</p>
                 </div>
               </div>
               <div class="activity-item">
                 <span class="activity-marker"></span>
                 <div>
-                  <strong>Validation summary refreshed</strong>
-                  <p>Pending duty and case totals are ready for Chair review.</p>
+                  <strong>Exceptions summary refreshed</strong>
+                  <p>Pending duty, case, and override totals are ready for Chair review.</p>
                 </div>
               </div>
             </div>

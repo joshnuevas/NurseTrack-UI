@@ -428,6 +428,15 @@ h2 {
   resize: vertical;
 }
 
+.form-label.is-disabled {
+  opacity: 0.62;
+}
+
+.form-label.is-disabled select {
+  background-color: var(--surface-muted);
+  cursor: not-allowed;
+}
+
 .form-label select {
   appearance: none;
   color: #5f6670;
@@ -855,14 +864,15 @@ h2 {
   isolation: isolate;
   height: 100vh;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: 22px;
   background:
     linear-gradient(135deg, rgba(255, 207, 1, 0.08) 0 1px, transparent 1px 72px),
     linear-gradient(180deg, #982a32 0%, var(--primary) 46%, var(--primary-dark) 100%);
   background-size: 72px 72px, 100% 100%;
+  background-color: var(--primary-dark);
   color: var(--surface);
-  padding: 22px;
+  padding: 22px 22px 28px;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-color: var(--accent) rgba(255, 255, 255, 0.14);
@@ -884,7 +894,7 @@ h2 {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(80, 15, 20, 0.06), rgba(80, 15, 20, 0.32));
+  background: linear-gradient(180deg, rgba(80, 15, 20, 0.06), rgba(80, 15, 20, 0.18));
   pointer-events: none;
 }
 
@@ -1124,6 +1134,7 @@ h2 {
 }
 
 .sidebar-account {
+  align-self: end;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -1257,6 +1268,30 @@ h2 {
   stroke-linejoin: round;
 }
 
+.profile-user-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon-button.is-active {
+  border-color: rgba(138, 37, 44, 0.7);
+  background: var(--primary);
+  color: var(--surface);
+  box-shadow: 0 12px 26px rgba(138, 37, 44, 0.18);
+}
+
+.icon-button.is-active:hover,
+.icon-button.is-active:focus-visible {
+  border-color: var(--primary-dark);
+  background: var(--primary-dark);
+  color: var(--surface);
+}
+
 .ghost-button:hover,
 .ghost-button:focus-visible,
 .icon-button:hover,
@@ -1359,8 +1394,8 @@ h2 {
 .panel-heading {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 22px;
 }
 
 .card-icon {
@@ -1409,17 +1444,22 @@ h2 {
 
 .workspace-panel {
   margin-top: 18px;
-  padding: 20px;
+  padding: 24px;
   animation: fadeUp 620ms 160ms ease both;
 }
 
 .panel-heading {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .panel-heading h2 {
   color: var(--text);
   font-size: 1.24rem;
+}
+
+.panel-heading > .status-badge {
+  flex: 0 0 auto;
+  margin-top: 2px;
 }
 
 .activity-list {
@@ -1471,7 +1511,7 @@ h2 {
 
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
 }
 
@@ -2620,7 +2660,7 @@ h2 {
 
 .schedule-management-workspace {
   display: grid;
-  gap: 18px;
+  gap: 22px;
 }
 
 .review-workspace {
@@ -2648,9 +2688,13 @@ h2 {
   gap: 18px;
 }
 
+.student-progress-workspace .dashboard-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .instructor-student-workspace {
   display: grid;
-  gap: 18px;
+  gap: 24px;
 }
 
 .completion-status-workspace {
@@ -2980,28 +3024,43 @@ h2 {
   display: none;
 }
 
+.student-progress-search-panel {
+  display: grid;
+  gap: 20px;
+}
+
+.student-progress-search-panel .panel-heading,
+.student-progress-search-panel .validation-scope-note,
+.student-progress-search-panel .student-progress-filters,
+.student-progress-search-panel .student-progress-pick-list,
+.student-progress-search-panel .form-message,
+.student-progress-search-panel .empty-state {
+  margin: 0;
+}
+
 .student-progress-filters {
   grid-template-columns: minmax(320px, 1.3fr) minmax(220px, 0.8fr) minmax(220px, 0.8fr);
-  margin-bottom: 18px;
+  gap: 18px;
+  margin-bottom: 24px;
 }
 
 .student-progress-pick-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
 .student-progress-pick-card {
   width: 100%;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface-muted);
   cursor: pointer;
-  padding: 14px;
+  padding: 18px;
   color: inherit;
   text-decoration: none;
   text-align: left;
@@ -3959,6 +4018,10 @@ h2 {
   min-height: 50px;
 }
 
+.student-report-field {
+  grid-column: 1 / -1;
+}
+
 .report-preview-card {
   display: grid;
   gap: 10px;
@@ -4024,7 +4087,7 @@ h2 {
 .export-format-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
   border: 0;
   margin: 0;
@@ -4036,18 +4099,26 @@ h2 {
   color: #344054;
   font-size: 0.88rem;
   font-weight: 800;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
 }
 
 .export-format-card {
+  position: relative;
   display: grid;
-  gap: 10px;
-  align-content: start;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "icon title"
+    "icon copy";
+  gap: 6px 14px;
+  align-content: center;
+  align-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: var(--surface-muted);
+  background: var(--surface);
   cursor: pointer;
-  padding: 18px;
-  min-height: 148px;
+  padding: 16px;
+  min-height: 118px;
   transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
@@ -4058,9 +4129,9 @@ h2 {
 }
 
 .export-format-card.is-selected {
-  border-color: rgba(138, 37, 44, 0.45);
-  background: var(--primary-soft);
-  box-shadow: inset 0 0 0 1px rgba(138, 37, 44, 0.08);
+  border-color: rgba(138, 37, 44, 0.58);
+  background: linear-gradient(135deg, rgba(138, 37, 44, 0.08), rgba(255, 207, 1, 0.12));
+  box-shadow: inset 0 0 0 1px rgba(138, 37, 44, 0.08), 0 14px 28px rgba(32, 33, 36, 0.07);
 }
 
 .export-format-card:hover {
@@ -4068,11 +4139,31 @@ h2 {
   transform: translateY(-1px);
 }
 
+.export-format-card .card-icon {
+  grid-area: icon;
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  background: var(--accent-soft);
+  color: var(--primary);
+  font-size: 0.82rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 207, 1, 0.55);
+}
+
+.export-format-card.is-selected .card-icon {
+  background: var(--primary);
+  color: var(--surface);
+  box-shadow: none;
+}
+
 .export-format-card strong {
-  font-size: 1rem;
+  grid-area: title;
+  font-size: 1.05rem;
+  line-height: 1.2;
 }
 
 .export-format-card p {
+  grid-area: copy;
   margin: 0;
   color: var(--muted);
   font-size: 0.84rem;
@@ -4870,6 +4961,90 @@ h2 {
   margin-bottom: 16px;
 }
 
+.admin-import-panel,
+.admin-approval-panel,
+.admin-audit-panel,
+.chair-assignment-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.admin-import-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.82fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.admin-import-checks {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-approval-list {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-approval-card {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(220px, 0.6fr) auto;
+  gap: 14px;
+  align-items: end;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  padding: 16px;
+}
+
+.admin-approval-card strong {
+  display: block;
+  color: var(--text);
+}
+
+.admin-approval-card small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.compact-label {
+  margin: 0;
+}
+
+.compact-actions {
+  min-width: 190px;
+  justify-content: flex-end;
+}
+
+.action-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.action-menu-grid .ghost-button {
+  min-height: 46px;
+  justify-content: flex-start;
+}
+
+.action-menu-grid .ghost-button.is-selected {
+  border-color: rgba(138, 37, 44, 0.62);
+  background: rgba(138, 37, 44, 0.08);
+  color: var(--primary);
+}
+
+.account-action-summary {
+  margin-top: 14px;
+}
+
+.admin-archive-filters {
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  margin-bottom: 18px;
+}
+
 .user-table {
   display: grid;
   border: 1px solid var(--line);
@@ -5132,7 +5307,7 @@ h2 {
 .schedule-lock-grid,
 .group-editor-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 14px;
 }
 
@@ -5214,13 +5389,105 @@ h2 {
   line-height: 1.45;
 }
 
+.schedule-lock-panel,
+.case-taxonomy-panel,
+.report-scope-panel,
+.attendance-rules-panel,
+.workflow-panel,
+.chair-import-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.chair-import-panel.dashboard-columns {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+.chair-import-panel .workspace-panel {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+}
+
+.chair-import-panel .panel-heading {
+  align-items: flex-start;
+}
+
+.chair-import-panel .mini-data-table {
+  margin-top: 0;
+}
+
+.schedule-lock-panel .panel-heading,
+.case-taxonomy-panel .panel-heading,
+.report-scope-panel .panel-heading,
+.attendance-rules-panel .panel-heading,
+.workflow-panel .panel-heading,
+.chair-import-panel .panel-heading {
+  margin-bottom: 0;
+}
+
+.workflow-panel > * + *,
+.schedule-lock-panel > * + *,
+.case-taxonomy-panel > * + *,
+.attendance-rules-panel > * + *,
+.report-scope-panel > * + *,
+.clearance-ready-panel > * + * {
+  margin-top: 18px;
+}
+
+.schedule-lock-panel .readonly-note,
+.case-taxonomy-panel .readonly-note {
+  margin-top: 8px;
+}
+
+.case-counter-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.case-counter-card {
+  min-height: 154px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.case-counter-card > span {
+  margin-bottom: 2px;
+}
+
+.case-counter-card strong {
+  margin-bottom: 0;
+}
+
+.case-counter-card p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+}
+
+.case-counter-card p .case-counter-metric {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  border: 1px solid rgba(138, 37, 44, 0.12);
+  border-radius: 999px;
+  background: var(--surface);
+  color: #475467;
+  padding: 5px 8px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
 .import-dropzone {
   display: grid;
-  gap: 10px;
+  gap: 14px;
   border: 1px dashed rgba(138, 37, 44, 0.35);
   border-radius: 8px;
   background: linear-gradient(135deg, rgba(255, 207, 1, 0.12), rgba(138, 37, 44, 0.04));
-  padding: 18px;
+  padding: 22px;
 }
 
 .import-dropzone strong {
@@ -5277,7 +5544,7 @@ h2 {
 
 .assignment-builder {
   display: grid;
-  gap: 14px;
+  gap: 18px;
 }
 
 .assignment-builder .form-grid {
@@ -5427,7 +5694,21 @@ h2 {
   padding: 14px 16px;
 }
 
+.validation-scope-note + .history-filters,
+.validation-scope-note + .student-progress-filters,
+.readonly-note + .history-filters,
+.readonly-note + .form-grid,
+.form-message + .history-filters,
+.form-message + .student-progress-pick-list {
+  margin-top: 18px;
+}
+
+.validation-scope-note.assigned-scope-note {
+  margin-bottom: 20px;
+}
+
 .readonly-note {
+  margin: 0;
   border: 1px solid rgba(255, 207, 1, 0.65);
   border-radius: 8px;
   background: rgba(255, 207, 1, 0.12);
@@ -5483,14 +5764,23 @@ h2 {
 
 .future-ready {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .future-ready .card-icon {
   width: 54px;
   height: 54px;
+}
+
+.future-ready > div:not(.card-icon) {
+  min-width: 0;
+}
+
+.future-ready .status-badge {
+  grid-column: 2;
+  justify-self: start;
 }
 
 @media (max-width: 1180px) {
@@ -5520,6 +5810,10 @@ h2 {
 
   .future-ready {
     grid-template-columns: 1fr;
+  }
+
+  .future-ready .status-badge {
+    grid-column: auto;
   }
 }
 
@@ -6889,6 +7183,11 @@ h2 {
   font-weight: 800;
 }
 
+.live-site-card small + small,
+.live-attendance-row small + small {
+  color: #475467;
+}
+
 .live-site-signal {
   position: relative;
   width: 12px;
@@ -7513,7 +7812,14 @@ h2 {
   .user-management-layout,
   .profile-layout,
   .role-assignment-layout,
+  .admin-import-grid,
+  .admin-approval-card,
+  .admin-archive-filters,
   .readiness-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-progress-workspace .dashboard-stats {
     grid-template-columns: 1fr;
   }
 

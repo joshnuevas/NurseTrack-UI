@@ -1,12 +1,40 @@
 const loginForm = document.querySelector("#login-form");
 const message = document.querySelector("#form-message");
 const nextPageLinks = document.querySelectorAll("[data-next-page]");
-const studentAccount = {
-  email: "maria.cruz@cit.edu",
-  schoolId: "12-3456-789",
-  password: "NurseTrack123",
-  destination: "nursing-student/student-dashboard.html?login=student"
-};
+const mockAccounts = [
+  {
+    role: "student",
+    label: "Nursing Student",
+    email: "maria.cruz@cit.edu",
+    schoolId: "12-3456-789",
+    password: "NurseTrack123",
+    destination: "nursing-student/student-dashboard.html?login=student"
+  },
+  {
+    role: "instructor",
+    label: "Clinical Instructor",
+    email: "reyes@cit.edu",
+    schoolId: "CI-1002",
+    password: "NurseTrack123",
+    destination: "clinical-instructor/instructor-dashboard.html?login=instructor"
+  },
+  {
+    role: "chair",
+    label: "Chair",
+    email: "chair.reyes@cit.edu",
+    schoolId: "CH-1001",
+    password: "NurseTrack123",
+    destination: "admin-manager/admin-dashboard.html?login=chair"
+  },
+  {
+    role: "admin",
+    label: "Admin",
+    email: "admin.santos@cit.edu",
+    schoolId: "AD-1001",
+    password: "NurseTrack123",
+    destination: "admin/admin-dashboard.html?login=admin"
+  }
+];
 
 function setMessage(text, state) {
   message.textContent = text;
@@ -35,19 +63,21 @@ loginForm.addEventListener("submit", (event) => {
   }
 
   const normalizedUserId = userId.toLowerCase();
-  const isStudentAccount =
-    (normalizedUserId === studentAccount.email || userId === studentAccount.schoolId) &&
-    password === studentAccount.password;
+  const account = mockAccounts.find((item) => (
+    normalizedUserId === item.email ||
+    userId.toUpperCase() === item.schoolId.toUpperCase()
+  ) && password === item.password);
 
-  if (!isStudentAccount) {
-    setMessage("Account not found. Use the mock Nursing Student account.", "is-error");
+  if (!account) {
+    setMessage("Account not found. Use one of the mock NurseTrack accounts.", "is-error");
     return;
   }
 
-  setMessage("Signed in successfully. Opening the Nursing Student workspace.", "is-success");
+  window.sessionStorage.setItem("nursetrackRole", account.role);
+  setMessage(`Signed in successfully. Opening the ${account.label} workspace.`, "is-success");
 
   window.setTimeout(() => {
-    window.location.href = studentAccount.destination;
+    window.location.href = account.destination;
   }, 500);
 });
 

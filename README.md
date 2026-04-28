@@ -1,6 +1,6 @@
 # NurseTrack
 
-NurseTrack is a responsive static website prototype for a clinical tracking and scheduling system for nursing students. It includes role-based page groups for Nursing Student, Clinical Instructor, and Admin / Manager views.
+NurseTrack is a responsive static website prototype for a clinical tracking and scheduling system for nursing students. It includes role-based page groups for Nursing Student, Clinical Instructor, Chair, and Admin views.
 
 ## Preview
 
@@ -24,6 +24,7 @@ Because this is a static prototype, no server or database setup is required.
 |-- nursing-student/
 |-- clinical-instructor/
 |-- admin-manager/
+|-- admin/
 |-- assets/
 |-- styles/
 `-- scripts/
@@ -64,20 +65,31 @@ Includes pages for:
 - Notifications
 - Help
 
-### Admin / Manager
+### Chair
 
 Located in `admin-manager/`.
 
 Includes pages for:
 
 - Dashboard
-- User list and user management
-- Role assignment
 - Schedule oversight
-- Validation overview
+- Student progress monitoring
+- Exceptions and overrides
 - Report generation
 - Export pages
 - Notifications
+- Help
+
+### Admin
+
+Located in `admin/`.
+
+Includes pages for:
+
+- Dashboard
+- Manage Users
+- Role Assignment
+- Enrollment Summary / Archive
 - Help
 
 ## Design System

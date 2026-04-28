@@ -1,10 +1,12 @@
 (() => {
   const run = () => {
     const path = window.location.pathname.replace(/\\/g, "/").toLowerCase();
+    const isAdmin = path.includes("/admin/");
     const isChair = path.includes("/admin-manager/");
     const isInstructor = path.includes("/clinical-instructor/");
     const isStudent = path.includes("/nursing-student/");
     const page = path.split("/").pop();
+    const legacyAdminPages = new Set(["user-list-manage-users.html", "user-management.html", "role-assignment.html"]);
 
     const one = (selector) => document.querySelector(selector);
     const all = (selector) => Array.from(document.querySelectorAll(selector));
@@ -13,6 +15,126 @@
       const template = document.createElement("template");
       template.innerHTML = markup.trim();
       return template.content.firstElementChild;
+    };
+
+    const chairNavItems = [
+      { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
+      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-report.html"] },
+      { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html"] },
+      { label: "Exceptions & Overrides", href: "admin-validation.html", pages: ["admin-validation.html", "compliance-summary.html"] },
+      { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] },
+      { label: "Help", href: "admin-help.html", pages: ["admin-help.html"] }
+    ];
+
+    const adminNavItems = [
+      { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
+      { label: "Manage Users", href: "manage-users.html", pages: ["manage-users.html"] },
+      { label: "Role Assignment", href: "role-assignment.html", pages: ["role-assignment.html"] },
+      { label: "Enrollment Summary / Archive", href: "enrollment-archive.html", pages: ["enrollment-archive.html"] },
+      { label: "Help", href: "admin-help.html", pages: ["admin-help.html"] }
+    ];
+
+    const renderSidebarNav = (items) => {
+      const nav = one(".sidebar-nav");
+
+      if (!nav) {
+        return;
+      }
+
+      nav.innerHTML = items.map((item) => {
+        const isActive = item.pages.includes(page);
+        const ariaCurrent = isActive ? ' aria-current="page"' : "";
+        return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${ariaCurrent}><span class="nav-dot"></span>${item.label}</a>`;
+      }).join("");
+
+      window.NurseTrackSidebarIcons?.refresh?.();
+    };
+
+    const replaceMainWithNotice = ({ kicker, title, copy, actionHref, actionLabel }) => {
+      const main = one("main.workspace");
+
+      if (!main) {
+        return;
+      }
+
+      main.className = "workspace dashboard-workspace route-guard-workspace";
+      main.innerHTML = `
+        <section class="workspace-hero dashboard-hero">
+          <div>
+            <p class="section-kicker">${kicker}</p>
+            <h2>${title}</h2>
+            <p>${copy}</p>
+          </div>
+          <a class="primary-button workspace-action button-link" href="${actionHref}">${actionLabel}</a>
+        </section>
+      `;
+    };
+
+    const enforceRoleOwnership = () => {
+      const signedRole = window.sessionStorage?.getItem("nursetrackRole");
+      const routeRole = isAdmin ? "admin" : isChair && legacyAdminPages.has(page) ? "admin" : isChair ? "chair" : isInstructor ? "instructor" : isStudent ? "student" : "";
+
+      if (!signedRole || !routeRole || signedRole === routeRole) {
+        return false;
+      }
+
+      const roleLabels = {
+        admin: "Admin",
+        chair: "Chair",
+        instructor: "Clinical Instructor",
+        student: "Nursing Student"
+      };
+
+      setText(".topbar-title h1", "Access limited");
+      replaceMainWithNotice({
+        kicker: "Role Guard",
+        title: `${roleLabels[routeRole]} access is required for this page.`,
+        copy: `You are signed in as ${roleLabels[signedRole] || signedRole}. This page is owned by the ${roleLabels[routeRole]} role.`,
+        actionHref: "../index.html",
+        actionLabel: "Return to login"
+      });
+
+      return true;
+    };
+
+    const enhanceRoleSidebars = () => {
+      if (isAdmin) {
+        setText(".role-chip", "Admin");
+        setText(".topbar-title p", "Admin Workspace");
+        setText(".sidebar-account strong", "Admin Santos");
+        setText(".sidebar-account span", "System Admin");
+        const avatar = one(".sidebar-account .avatar");
+        if (avatar) {
+          avatar.textContent = "AS";
+        }
+        renderSidebarNav(adminNavItems);
+        return;
+      }
+
+      if (isChair) {
+        renderSidebarNav(chairNavItems);
+      }
+    };
+
+    const enhanceLegacyAdminRouteNotice = () => {
+      if (!isChair || !legacyAdminPages.has(page)) {
+        return false;
+      }
+
+      const targetHref = page === "role-assignment.html" ? "../admin/role-assignment.html" : "../admin/manage-users.html";
+      const targetLabel = page === "role-assignment.html" ? "Open Admin Role Assignment" : "Open Admin Manage Users";
+
+      setText(".topbar-title p", "Chair Workspace");
+      setText(".topbar-title h1", "Admin-only module moved");
+      replaceMainWithNotice({
+        kicker: "Admin-owned Route",
+        title: "This account-management page now belongs to Admin.",
+        copy: "The Chair role handles schedules, student progress, exceptions, overrides, and reports. User management and role assignment are owned by Admin.",
+        actionHref: targetHref,
+        actionLabel: targetLabel
+      });
+
+      return true;
     };
 
     const insertAfterHero = (key, markup) => {
@@ -76,6 +198,61 @@
 
       if (select && Array.from(select.options).some((option) => option.textContent === value)) {
         select.value = value;
+      }
+    };
+
+    const enhanceStudentInstructorTopbar = () => {
+      const actions = one(".topbar-actions");
+      const notificationButton = one(".topbar-actions .notification-button");
+      const isNotificationPage = ["notifications.html", "instructor-notifications.html", "admin-notifications.html"].includes(page);
+
+      if (notificationButton) {
+        notificationButton.classList.toggle("is-active", isNotificationPage);
+        if (isNotificationPage) {
+          notificationButton.setAttribute("aria-current", "page");
+        } else {
+          notificationButton.removeAttribute("aria-current");
+        }
+      }
+
+      if (!isStudent && !isInstructor) {
+        return;
+      }
+
+      all('.sidebar-nav .nav-link[href="view-profile.html"]').forEach((link) => link.remove());
+
+      if (!actions) {
+        return;
+      }
+
+      const profileHref = "view-profile.html";
+      let profileButton = one(".topbar-profile-button");
+
+      if (!profileButton) {
+        profileButton = render(`
+          <a class="icon-button topbar-profile-button button-link" href="${profileHref}" aria-label="Profile" title="Profile">
+            <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 21a8 8 0 0 1 16 0"></path>
+            </svg>
+          </a>
+        `);
+
+        if (notificationButton) {
+          notificationButton.insertAdjacentElement("afterend", profileButton);
+        } else {
+          const logout = one(".topbar-actions .logout-link");
+          actions.insertBefore(profileButton, logout || null);
+        }
+      }
+
+      const isProfilePage = ["view-profile.html", "edit-profile.html", "change-password.html"].includes(page);
+
+      profileButton.classList.toggle("is-active", isProfilePage);
+      if (isProfilePage) {
+        profileButton.setAttribute("aria-current", "page");
+      } else {
+        profileButton.removeAttribute("aria-current");
       }
     };
 
@@ -411,10 +588,10 @@
               </label>
               <label class="form-label" for="case-major-role">
                 Major OR role
-                <select id="case-major-role" name="caseMajorRole">
-                  <option>Not applicable</option>
-                  <option>Scrub cases</option>
-                  <option>Circulating cases</option>
+                <select id="case-major-role" name="caseMajorRole" disabled>
+                  <option value="">Select Major OR role</option>
+                  <option value="Scrub cases">Scrub cases</option>
+                  <option value="Circulating cases">Circulating cases</option>
                 </select>
               </label>
             </div>
@@ -430,18 +607,38 @@
           return;
         }
 
+        const previousSubcategory = subcategory.value;
         const options = category.value === "OR"
           ? ["Select subcategory", "Minor cases", "Major cases"]
-          : ["Select subcategory", "Handled cases", "Assisted cases", "Newborn care", "Labor watch monitoring"];
+          : category.value === "DR"
+            ? ["Select subcategory", "Handled cases", "Assisted cases", "Newborn care", "Labor watch monitoring"]
+            : ["Select subcategory"];
 
-        subcategory.innerHTML = options.map((option) => `<option>${option}</option>`).join("");
+        subcategory.innerHTML = options.map((option) => {
+          const value = option.toLowerCase().startsWith("select ") ? "" : option;
+          return `<option value="${value}">${option}</option>`;
+        }).join("");
+
+        if (options.includes(previousSubcategory)) {
+          subcategory.value = previousSubcategory;
+        }
+
+        const isMajorOrCase = category.value === "OR" && subcategory.value === "Major cases";
 
         if (majorRole) {
-          majorRole.disabled = category.value !== "OR";
+          majorRole.disabled = !isMajorOrCase;
+          majorRole.required = isMajorOrCase;
+
+          if (!isMajorOrCase) {
+            majorRole.value = "";
+          }
+
+          majorRole.closest(".form-label")?.classList.toggle("is-disabled", !isMajorOrCase);
         }
       };
 
       category?.addEventListener("input", syncSubcategory);
+      subcategory?.addEventListener("input", syncSubcategory);
       syncSubcategory();
 
       insertAfterHero("case-taxonomy", `
@@ -454,10 +651,10 @@
             <span class="status-badge status-pending">CI validation required</span>
           </div>
           <div class="case-counter-grid">
-            <div class="case-counter-card"><span>DR</span><strong>Handled cases</strong><p>Required 3 &middot; Completed 1 &middot; Pending 1 &middot; Lacking 1</p></div>
-            <div class="case-counter-card"><span>DR</span><strong>Assisted cases</strong><p>Required 3 &middot; Completed 2 &middot; Pending 0 &middot; Lacking 1</p></div>
-            <div class="case-counter-card"><span>DR</span><strong>Newborn care</strong><p>Required 3 &middot; Completed 2 &middot; Pending 1 &middot; Lacking 0</p></div>
-            <div class="case-counter-card"><span>OR</span><strong>Major scrub/circulating</strong><p>Required 4 &middot; Completed 1 &middot; Pending 1 &middot; Not applicable 1</p></div>
+            <div class="case-counter-card"><span>DR</span><strong>Handled cases</strong><p><span class="case-counter-metric">Required 3</span><span class="case-counter-metric">Completed 1</span><span class="case-counter-metric">Pending 1</span><span class="case-counter-metric">Lacking 1</span></p></div>
+            <div class="case-counter-card"><span>DR</span><strong>Assisted cases</strong><p><span class="case-counter-metric">Required 3</span><span class="case-counter-metric">Completed 2</span><span class="case-counter-metric">Pending 0</span><span class="case-counter-metric">Lacking 1</span></p></div>
+            <div class="case-counter-card"><span>DR</span><strong>Newborn care</strong><p><span class="case-counter-metric">Required 3</span><span class="case-counter-metric">Completed 2</span><span class="case-counter-metric">Pending 1</span><span class="case-counter-metric">Lacking 0</span></p></div>
+            <div class="case-counter-card"><span>OR</span><strong>Major scrub/circulating</strong><p><span class="case-counter-metric">Required 4</span><span class="case-counter-metric">Completed 1</span><span class="case-counter-metric">Pending 1</span><span class="case-counter-metric">Not applicable 1</span></p></div>
           </div>
           <p class="readonly-note">Invalid or unmatched cases should be marked Not Applicable by the reviewer instead of deleted, so the record remains traceable.</p>
         </section>
@@ -481,10 +678,10 @@
             <span class="status-badge status-pending">Monitoring only</span>
           </div>
           <div class="case-counter-grid">
-            <div class="case-counter-card"><span>DR</span><strong>Handled cases</strong><p>Required 3 &middot; Verified 1 &middot; Pending 1 &middot; Lacking 1</p></div>
-            <div class="case-counter-card"><span>DR</span><strong>Labor watch monitoring</strong><p>Required 3 &middot; Verified 2 &middot; Pending 0 &middot; Lacking 1</p></div>
-            <div class="case-counter-card"><span>OR</span><strong>Minor cases</strong><p>Required 2 &middot; Verified 1 &middot; Pending 1 &middot; Lacking 0</p></div>
-            <div class="case-counter-card"><span>OR</span><strong>Major cases</strong><p>Scrub 1 &middot; Circulating 1 &middot; Not applicable 1</p></div>
+            <div class="case-counter-card"><span>DR</span><strong>Handled cases</strong><p><span class="case-counter-metric">Required 3</span><span class="case-counter-metric">Verified 1</span><span class="case-counter-metric">Pending 1</span><span class="case-counter-metric">Lacking 1</span></p></div>
+            <div class="case-counter-card"><span>DR</span><strong>Labor watch monitoring</strong><p><span class="case-counter-metric">Required 3</span><span class="case-counter-metric">Verified 2</span><span class="case-counter-metric">Pending 0</span><span class="case-counter-metric">Lacking 1</span></p></div>
+            <div class="case-counter-card"><span>OR</span><strong>Minor cases</strong><p><span class="case-counter-metric">Required 2</span><span class="case-counter-metric">Verified 1</span><span class="case-counter-metric">Pending 1</span><span class="case-counter-metric">Lacking 0</span></p></div>
+            <div class="case-counter-card"><span>OR</span><strong>Major cases</strong><p><span class="case-counter-metric">Scrub 1</span><span class="case-counter-metric">Circulating 1</span><span class="case-counter-metric">Not applicable 1</span></p></div>
           </div>
         </section>
       `);
@@ -640,14 +837,20 @@
         return;
       }
 
-      setText(".topbar-title h1", "Monitoring and Validation");
+      setText(".topbar-title h1", "Exceptions & Overrides");
+      setText(".workspace-hero .section-kicker", "Exceptions & Overrides");
+      setText(".workspace-hero h2", "Review exceptions, overrides, and special approvals.");
+      setText(
+        ".workspace-hero p:not(.section-kicker)",
+        "Monitor late attendance issues, not-applicable records, returned submissions, extension remarks, and Chair-approved exceptions."
+      );
 
       insertAfterHero("chair-validation-monitoring", `
         <section class="workspace-panel workflow-panel">
           <div class="panel-heading">
             <div>
-              <p class="section-kicker">Chair Monitoring</p>
-              <h2>Records requiring attention</h2>
+              <p class="section-kicker">Chair Exceptions</p>
+              <h2>Records requiring override review</h2>
             </div>
             <span class="status-badge status-pending">Operational review</span>
           </div>
@@ -699,7 +902,7 @@
     };
 
     const enhanceProgressReadiness = () => {
-      if (!["student-progress.html", "instructor-student-view.html", "student-progress-detail.html", "completion-status.html", "pending-requirements.html"].includes(page)) {
+      if (!["student-progress.html", "instructor-student-view.html", "student-progress-detail.html", "completion-status.html", "pending-requirements.html", "chair-student-progress.html"].includes(page)) {
         return;
       }
 
@@ -834,6 +1037,17 @@
         }
       }
     };
+
+    enhanceStudentInstructorTopbar();
+    enhanceRoleSidebars();
+
+    if (enforceRoleOwnership()) {
+      return;
+    }
+
+    if (enhanceLegacyAdminRouteNotice()) {
+      return;
+    }
 
     enhanceChairTerminology();
     enhanceChairSchedules();

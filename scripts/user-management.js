@@ -3,7 +3,6 @@ const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const roleFilter = document.querySelector("#role-filter");
 const statusFilter = document.querySelector("#status-filter");
 const userSearch = document.querySelector("#user-search");
-const userRows = Array.from(document.querySelectorAll(".user-row:not(.user-row-head)"));
 const emptyState = document.querySelector("#user-empty");
 const visibleCount = document.querySelector("#visible-user-count");
 const userMessage = document.querySelector("#user-message");
@@ -15,8 +14,8 @@ const newName = document.querySelector("#new-name");
 const newEmail = document.querySelector("#new-email");
 const newRole = document.querySelector("#new-role");
 const newSection = document.querySelector("#new-section");
-const newIdLabel = newId.closest(".form-label");
-const newIdError = newIdLabel.querySelector(".field-error");
+const newIdLabel = newId?.closest(".form-label");
+const newIdError = newIdLabel?.querySelector(".field-error");
 const activeUserCount = document.querySelector("#active-user-count");
 const pendingUserCount = document.querySelector("#pending-user-count");
 const syncPill = document.querySelector("#user-sync-pill");
@@ -24,34 +23,122 @@ const openAddUserModal = document.querySelector("#open-add-user-modal");
 const addUserModal = document.querySelector("#add-user-modal");
 const actionModal = document.querySelector("#user-action-modal");
 const actionCopy = document.querySelector("#user-action-copy");
+const actionSummary = document.querySelector("#account-action-summary");
+const actionButtons = Array.from(document.querySelectorAll("[data-account-action]"));
 const confirmActionButton = document.querySelector("#confirm-user-action");
 const closeAddUserButtons = document.querySelectorAll("[data-close-modal]");
 const closeActionButtons = document.querySelectorAll("[data-close-action-modal]");
+const editModal = document.querySelector("#edit-user-modal");
+const editForm = document.querySelector("#edit-user-form");
+const editName = document.querySelector("#edit-name");
+const editEmail = document.querySelector("#edit-email");
+const editRole = document.querySelector("#edit-role");
+const editStatus = document.querySelector("#edit-status");
+const editSection = document.querySelector("#edit-section");
+const editUserMessage = document.querySelector("#edit-user-message");
+const closeEditButtons = document.querySelectorAll("[data-close-edit-modal]");
 
-let pendingAction = null;
+let selectedRow = null;
+let selectedAccountAction = "";
 
-function statusText(row) {
-  return row.dataset.status.charAt(0).toUpperCase() + row.dataset.status.slice(1);
+function rows() {
+  return Array.from(document.querySelectorAll(".user-row:not(.user-row-head)"));
+}
+
+function statusText(status) {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function roleLabel(role) {
+  if (role === "instructor") {
+    return "Clinical Instructor";
+  }
+
+  if (role === "chair") {
+    return "Chair";
+  }
+
+  if (role === "admin") {
+    return "Admin";
+  }
+
+  return "Nursing Student";
+}
+
+function roleValue(label) {
+  if (label === "Clinical Instructor") {
+    return "instructor";
+  }
+
+  if (label === "Chair") {
+    return "chair";
+  }
+
+  if (label === "Admin" || label === "System Admin") {
+    return "admin";
+  }
+
+  return "student";
+}
+
+function rowName(row) {
+  return row.querySelector("strong")?.textContent || "Selected user";
+}
+
+function rowEmail(row) {
+  return row.querySelector("small")?.textContent || "";
+}
+
+function rowSchoolId(row) {
+  return row.children[2]?.querySelector("strong")?.textContent || "";
+}
+
+function rowSection(row) {
+  return row.children[2]?.querySelector("small")?.textContent || "";
+}
+
+function setMessage(element, text, state = "") {
+  if (!element) {
+    return;
+  }
+
+  element.textContent = text;
+  element.classList.remove("is-error", "is-success");
+
+  if (state) {
+    element.classList.add(state);
+  }
 }
 
 function updateCounts() {
-  const rows = Array.from(document.querySelectorAll(".user-row:not(.user-row-head)"));
-  const active = rows.filter((row) => row.dataset.status === "active").length;
-  const pending = rows.filter((row) => row.dataset.status === "pending").length;
+  const allRows = rows();
+  const active = allRows.filter((row) => row.dataset.status === "active").length;
+  const pending = allRows.filter((row) => row.dataset.status === "pending").length;
 
-  activeUserCount.textContent = active;
-  pendingUserCount.textContent = pending;
-  syncPill.textContent = `${active} active`;
+  if (activeUserCount) {
+    activeUserCount.textContent = active;
+  }
+
+  if (pendingUserCount) {
+    pendingUserCount.textContent = pending;
+  }
+
+  if (syncPill) {
+    syncPill.textContent = `${active} active`;
+  }
 }
 
 function filterUsers() {
+  if (!roleFilter || !statusFilter || !userSearch || !visibleCount || !emptyState) {
+    return;
+  }
+
   const role = roleFilter.value;
   const status = statusFilter.value;
   const query = userSearch.value.trim().toLowerCase();
-  const rows = Array.from(document.querySelectorAll(".user-row:not(.user-row-head)"));
   let shown = 0;
 
-  rows.forEach((row) => {
+  rows().forEach((row) => {
     const matchesRole = role === "all" || row.dataset.role === role;
     const matchesStatus = status === "all" || row.dataset.status === status;
     const matchesQuery = !query || row.textContent.toLowerCase().includes(query);
@@ -67,100 +154,158 @@ function filterUsers() {
   emptyState.hidden = shown > 0;
 }
 
+function badgeClass(status) {
+  if (status === "active") {
+    return "status-verified";
+  }
+
+  if (status === "pending") {
+    return "status-pending";
+  }
+
+  return "status-rejected";
+}
+
 function setRowStatus(row, status) {
   row.dataset.status = status;
   const badge = row.querySelector(".status-badge");
   const button = row.querySelector(".user-action");
 
-  badge.textContent = statusText(row);
-  badge.className = `status-badge ${status === "active" ? "status-verified" : status === "pending" ? "status-pending" : "status-rejected"}`;
+  if (badge) {
+    badge.textContent = statusText(status);
+    badge.className = `status-badge ${badgeClass(status)}`;
+  }
 
-  if (status === "active") {
-    button.dataset.action = "suspend";
-  } else if (status === "suspended") {
-    button.dataset.action = "restore";
-  } else if (status === "pending") {
-    button.dataset.action = "approve";
+  if (button) {
+    button.dataset.action = status === "active" ? "suspend" : status === "pending" ? "approve" : "restore";
   }
 
   updateCounts();
   filterUsers();
 }
 
-function actionLabel(action) {
-  if (action === "approve") {
-    return "approve";
-  }
-
-  if (action === "restore") {
-    return "restore";
-  }
-
-  return "suspend";
+function setRowRole(row, role) {
+  row.dataset.role = role;
+  row.children[1].textContent = roleLabel(role);
 }
 
 function openModal(modal) {
+  if (!modal) {
+    return;
+  }
+
   modal.hidden = false;
   document.body.classList.add("modal-open");
 }
 
 function closeModal(modal) {
+  if (!modal) {
+    return;
+  }
+
   modal.hidden = true;
   document.body.classList.remove("modal-open");
 }
 
-function openActionConfirmation(button) {
-  const row = button.closest(".user-row");
-  const action = button.dataset.action;
-  const name = row.querySelector("strong").textContent;
+function setActionButtons(row) {
+  const isPending = row.dataset.status === "pending";
+  const isSuspended = row.dataset.status === "suspended";
 
-  pendingAction = { row, action };
-  actionCopy.textContent = `Confirm that you want to ${actionLabel(action)} ${name}. This avoids accidental account changes.`;
+  actionButtons.forEach((button) => {
+    const action = button.dataset.accountAction;
+    button.classList.toggle("is-selected", action === selectedAccountAction);
+    button.hidden =
+      (action === "approve" && !isPending) ||
+      (action === "reject" && !isPending);
+
+    if (action === "toggle") {
+      button.textContent = isSuspended ? "Reactivate User" : "Deactivate User";
+    }
+  });
+}
+
+function openActionMenu(button) {
+  selectedRow = button.closest(".user-row");
+  selectedAccountAction = button.dataset.action === "approve" ? "approve" : "edit";
+
+  if (actionSummary) {
+    actionSummary.innerHTML = `
+      <div class="avatar">${rowName(selectedRow).split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase()}</div>
+      <div>
+        <strong>${rowName(selectedRow)}</strong>
+        <p>${rowSchoolId(selectedRow)} - ${rowSection(selectedRow)} - ${rowEmail(selectedRow)}</p>
+      </div>
+      <span class="status-badge ${badgeClass(selectedRow.dataset.status)}">${statusText(selectedRow.dataset.status)}</span>
+    `;
+  }
+
+  if (actionCopy) {
+    actionCopy.textContent = "Choose whether to edit details, change role/status, reset password, or approve/reject this account.";
+  }
+
+  setActionButtons(selectedRow);
   openModal(actionModal);
 }
 
-function applyPendingAction() {
-  if (!pendingAction) {
+function fillEditForm(row) {
+  if (!row || !editForm) {
     return;
   }
 
-  const { row, action } = pendingAction;
-  const name = row.querySelector("strong").textContent;
+  editName.value = rowName(row);
+  editEmail.value = rowEmail(row);
+  editRole.value = row.dataset.role;
+  editStatus.value = row.dataset.status;
+  editSection.value = rowSection(row);
+  setMessage(editUserMessage, "Review changes before saving.");
+}
 
-  if (action === "approve" || action === "restore") {
-    setRowStatus(row, "active");
-    userMessage.textContent = `${name} is now active.`;
-    userMessage.classList.add("is-success");
+function applySelectedAction() {
+  if (!selectedRow || !selectedAccountAction) {
+    setMessage(userMessage, "Choose an account action first.", "is-error");
+    return;
+  }
+
+  const name = rowName(selectedRow);
+
+  if (selectedAccountAction === "edit" || selectedAccountAction === "role" || selectedAccountAction === "status") {
+    fillEditForm(selectedRow);
     closeModal(actionModal);
-    pendingAction = null;
+    openModal(editModal);
     return;
   }
 
-  setRowStatus(row, "suspended");
-  userMessage.textContent = `${name} has been suspended.`;
-  userMessage.classList.add("is-success");
+  if (selectedAccountAction === "reset") {
+    setMessage(userMessage, `Password reset link prepared for ${name}.`, "is-success");
+  } else if (selectedAccountAction === "approve") {
+    setRowStatus(selectedRow, "active");
+    setMessage(userMessage, `${name} approved and activated.`, "is-success");
+  } else if (selectedAccountAction === "reject") {
+    selectedRow.remove();
+    updateCounts();
+    filterUsers();
+    setMessage(userMessage, `${name} rejected and removed from pending accounts.`, "is-success");
+  } else if (selectedAccountAction === "toggle") {
+    const nextStatus = selectedRow.dataset.status === "suspended" ? "active" : "suspended";
+    setRowStatus(selectedRow, nextStatus);
+    setMessage(userMessage, `${name} is now ${statusText(nextStatus)}.`, "is-success");
+  }
+
   closeModal(actionModal);
-  pendingAction = null;
+  selectedRow = null;
+  selectedAccountAction = "";
 }
 
 function validateNewId() {
-  const isValid = /^\d{2}-\d{4}-\d{3}$/.test(newId.value.trim());
+  if (!newId || !newIdLabel || !newIdError) {
+    return true;
+  }
+
+  const isValid = /^\d{2}-\d{4}-\d{3}$/.test(newId.value.trim()) || /^[A-Z]{2}-\d{4}$/i.test(newId.value.trim());
   newIdLabel.classList.toggle("has-error", !isValid);
   newId.setAttribute("aria-invalid", String(!isValid));
   newIdError.hidden = isValid;
   return isValid;
-}
-
-function roleValue(label) {
-  if (label === "Clinical Instructor") {
-    return "instructor";
-  }
-
-  if (label === "Chair") {
-    return "admin";
-  }
-
-  return "student";
 }
 
 function addPendingUser() {
@@ -185,27 +330,36 @@ function addPendingUser() {
   userTable.append(row);
 }
 
-menuButton.addEventListener("click", () => {
+menuButton?.addEventListener("click", () => {
   document.body.classList.add("sidebar-open");
 });
 
-sidebarBackdrop.addEventListener("click", () => {
+sidebarBackdrop?.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
 [roleFilter, statusFilter, userSearch].forEach((control) => {
-  control.addEventListener("input", filterUsers);
+  control?.addEventListener("input", filterUsers);
 });
 
-userTable.addEventListener("click", (event) => {
+userTable?.addEventListener("click", (event) => {
   const button = event.target.closest(".user-action");
 
   if (button) {
-    openActionConfirmation(button);
+    openActionMenu(button);
   }
 });
 
-openAddUserModal.addEventListener("click", () => openModal(addUserModal));
+actionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedAccountAction = button.dataset.accountAction;
+    setActionButtons(selectedRow);
+  });
+});
+
+confirmActionButton?.addEventListener("click", applySelectedAction);
+
+openAddUserModal?.addEventListener("click", () => openModal(addUserModal));
 
 closeAddUserButtons.forEach((button) => {
   button.addEventListener("click", () => closeModal(addUserModal));
@@ -214,25 +368,26 @@ closeAddUserButtons.forEach((button) => {
 closeActionButtons.forEach((button) => {
   button.addEventListener("click", () => {
     closeModal(actionModal);
-    pendingAction = null;
+    selectedRow = null;
+    selectedAccountAction = "";
   });
 });
 
-confirmActionButton.addEventListener("click", applyPendingAction);
+closeEditButtons.forEach((button) => {
+  button.addEventListener("click", () => closeModal(editModal));
+});
 
-newId.addEventListener("input", () => {
+newId?.addEventListener("input", () => {
   if (newId.value.trim()) {
     validateNewId();
   }
 });
 
-userForm.addEventListener("submit", (event) => {
+userForm?.addEventListener("submit", (event) => {
   event.preventDefault();
 
   if (!userForm.checkValidity() || !validateNewId()) {
-    newUserMessage.textContent = "Complete all fields and use the correct ID format.";
-    newUserMessage.classList.remove("is-success");
-    newUserMessage.classList.add("is-error");
+    setMessage(newUserMessage, "Complete all fields and use the correct ID format.", "is-error");
     return;
   }
 
@@ -240,13 +395,32 @@ userForm.addEventListener("submit", (event) => {
   updateCounts();
   filterUsers();
 
-  newUserMessage.textContent = "Account created successfully.";
-  newUserMessage.classList.remove("is-error");
-  newUserMessage.classList.add("is-success");
+  setMessage(newUserMessage, "Account created successfully and sent to pending approval.", "is-success");
   closeModal(addUserModal);
   userForm.reset();
-  newIdLabel.classList.remove("has-error");
-  newIdError.hidden = true;
+  newIdLabel?.classList.remove("has-error");
+  if (newIdError) {
+    newIdError.hidden = true;
+  }
+});
+
+editForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  if (!selectedRow || !editForm.checkValidity()) {
+    setMessage(editUserMessage, "Complete all edit fields before saving.", "is-error");
+    return;
+  }
+
+  selectedRow.children[0].querySelector("strong").textContent = editName.value.trim();
+  selectedRow.children[0].querySelector("small").textContent = editEmail.value.trim();
+  selectedRow.children[2].querySelector("small").textContent = editSection.value.trim();
+  setRowRole(selectedRow, editRole.value);
+  setRowStatus(selectedRow, editStatus.value);
+  setMessage(userMessage, `${editName.value.trim()} account details updated.`, "is-success");
+  closeModal(editModal);
+  selectedRow = null;
+  selectedAccountAction = "";
 });
 
 updateCounts();

@@ -25,10 +25,9 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
-          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
-          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
           <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
@@ -68,10 +67,10 @@
           <section class="workspace-hero dashboard-hero">
             <div>
               <p class="section-kicker">Chair alerts</p>
-              <h2>Review account, role, report, and schedule updates.</h2>
-              <p>Keep track of access requests, role changes, export status, and items that need Chair attention.</p>
+              <h2>Review progress, exception, report, and schedule updates.</h2>
+              <p>Keep track of schedule coverage, override requests, export status, and items that need Chair attention.</p>
             </div>
-            <a class="primary-button workspace-action button-link" href="user-list-manage-users.html">Open user list</a>
+            <a class="primary-button workspace-action button-link" href="chair-student-progress.html">Open Student Progress</a>
           </section>
 
           <section class="dashboard-stats" aria-label="Chair notification summary">
@@ -87,21 +86,21 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Accounts</span>
+                <span class="card-icon">Exceptions</span>
                 <span class="status-badge status-pending">Pending</span>
               </div>
-              <h3>Accounts</h3>
-              <p>Requests awaiting review</p>
+              <h3>Exceptions</h3>
+              <p>Requests awaiting Chair review</p>
               <strong class="stat-value">3</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Roles</span>
+                <span class="card-icon">Progress</span>
                 <span class="status-badge status-verified">Updated</span>
               </div>
-              <h3>Roles</h3>
-              <p>Recent access changes</p>
+              <h3>Progress</h3>
+              <p>Recent readiness changes</p>
               <strong class="stat-value">2</strong>
             </article>
 
@@ -127,18 +126,18 @@
               </div>
 
               <div class="requirement-list">
-                <a class="requirement-item action-item" href="user-list-manage-users.html">
+                <a class="requirement-item action-item" href="admin-validation.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>Three account requests need review</strong>
-                    <p>Check pending users before they receive workspace access.</p>
+                    <strong>Three exceptions need review</strong>
+                    <p>Check pending late attendance and override items before they affect progress.</p>
                   </div>
                 </a>
-                <a class="requirement-item action-item" href="role-assignment.html">
+                <a class="requirement-item action-item" href="chair-student-progress.html">
                   <span class="requirement-status"></span>
                   <div>
-                    <strong>Role assignment updated</strong>
-                    <p>One instructor account was changed and saved successfully.</p>
+                    <strong>Student readiness updated</strong>
+                    <p>One student moved to Ready for Clearance in the progress list.</p>
                   </div>
                 </a>
                 <a class="requirement-item action-item" href="generate-report.html">
@@ -175,11 +174,11 @@
                       <p>Return to the Chair overview.</p>
                     </div>
                   </a>
-                  <a class="requirement-item action-item" href="user-list-manage-users.html">
+                  <a class="requirement-item action-item" href="chair-student-progress.html">
                     <span class="requirement-status"></span>
                     <div>
-                      <strong>User List / Manage Users</strong>
-                      <p>Open account and status management.</p>
+                      <strong>Student Progress</strong>
+                      <p>Search student completion and readiness status.</p>
                     </div>
                   </a>
                   <a class="requirement-item action-item" href="export-page.html">

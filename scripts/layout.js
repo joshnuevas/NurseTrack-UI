@@ -9,6 +9,7 @@ const sidebarRole = document.querySelector("#sidebar-role");
 const activityTitle = document.querySelector("#activity-title");
 const activityList = document.querySelector("#activity-list");
 const topbarNotifications = document.querySelector("#topbar-notifications");
+const topbarProfile = document.querySelector("#topbar-profile");
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 
@@ -21,6 +22,7 @@ const roleContent = {
     copy: "Your duty hours, case entries, and schedule updates are ready for review.",
     action: "Record duty hours",
     notifications: "nursing-student/notifications.html",
+    profile: "nursing-student/view-profile.html",
     activity: "Recent updates",
     items: [
       ["Duty hour entry verified", "Medical ward shift marked as verified."],
@@ -36,6 +38,7 @@ const roleContent = {
     copy: "Pending submissions, schedule updates, and student progress are ready for review.",
     action: "Review submissions",
     notifications: "clinical-instructor/instructor-notifications.html",
+    profile: "clinical-instructor/view-profile.html",
     activity: "Instructor queue",
     items: [
       ["5 duty entries need validation", "Review student time records before they appear in progress summaries."],
@@ -63,6 +66,7 @@ function setRole(role) {
   heroCopy.textContent = content.copy;
   heroAction.textContent = content.action;
   topbarNotifications.href = content.notifications;
+  topbarProfile.href = content.profile;
   activityTitle.textContent = content.activity;
 
   activityList.innerHTML = content.items.map(([title, copy]) => `

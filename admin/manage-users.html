@@ -21,22 +21,21 @@
           </div>
         </div>
 
-        <div class="role-chip">Chair</div>
+        <div class="role-chip">Admin</div>
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
-          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
-          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
-          <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+          <a class="nav-link is-active" href="manage-users.html"><span class="nav-dot"></span>Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="enrollment-archive.html"><span class="nav-dot"></span>Enrollment Summary / Archive</a>
           <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">CR</div>
+          <div class="avatar">AS</div>
           <div>
-            <strong>Chair Reyes</strong>
-            <span>Chair</span>
+            <strong>Admin Santos</strong>
+            <span>System Admin</span>
           </div>
         </div>
       </aside>
@@ -50,14 +49,14 @@
           <div class="topbar-title">
             <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
             <div>
-              <p>Chair Workspace</p>
+              <p>Admin Workspace</p>
               <h1>Manage Users</h1>
             </div>
           </div>
 
           <div class="topbar-actions">
             <span class="sync-pill" id="user-sync-pill">24 active</span>
-            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+            <a class="icon-button notification-button button-link" href="admin-help.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
@@ -65,9 +64,9 @@
         <main class="workspace user-management-workspace">
           <section class="workspace-hero dashboard-hero user-management-hero">
             <div>
-              <p class="section-kicker">User List</p>
-              <h2>Manage accounts, roles, and access status.</h2>
-              <p>Review account requests, update roles, and keep student and instructor records organized.</p>
+              <p class="section-kicker">Manage Users</p>
+              <h2>Manage accounts, access, and account status.</h2>
+              <p>Add, edit, deactivate, and review student, CI, Chair, and Admin accounts from the Admin workspace.</p>
             </div>
             <button class="primary-button workspace-action" id="open-add-user-modal" type="button">Add User</button>
           </section>
@@ -95,6 +94,30 @@
             </article>
           </section>
 
+          <section class="workspace-panel admin-import-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Import Support</p>
+                <h2>Import users or student master list</h2>
+              </div>
+              <span class="status-badge status-pending">Review before saving</span>
+            </div>
+            <div class="admin-import-grid">
+              <div class="import-dropzone">
+                <strong>Upload Student Master List</strong>
+                <p>Accepted data: school ID, full name, email, section, role, status, and enrollment batch.</p>
+                <div class="button-row">
+                  <button class="ghost-button" type="button">Choose file</button>
+                  <button class="primary-button" type="button">Review Imported Accounts</button>
+                </div>
+              </div>
+              <div class="workflow-grid admin-import-checks">
+                <div class="workflow-card"><span>DU</span><strong>Duplicates</strong><p>Detect duplicate school IDs or email addresses before account creation.</p></div>
+                <div class="workflow-card"><span>MR</span><strong>Missing roles</strong><p>Flag accounts that do not have Student, CI, Chair, or Admin role data.</p></div>
+              </div>
+            </div>
+          </section>
+
           <section class="user-management-layout user-management-layout-wide">
             <article class="workspace-panel">
               <div class="panel-heading">
@@ -112,7 +135,8 @@
                     <option value="all">All roles</option>
                     <option value="student">Student</option>
                     <option value="instructor">Instructor</option>
-                    <option value="admin">Chair</option>
+                    <option value="chair">Chair</option>
+                    <option value="admin">Admin</option>
                   </select>
                 </label>
 
@@ -197,7 +221,7 @@
                   <span><button class="icon-button kebab-button user-action" type="button" data-action="suspend" aria-label="Open account action" title="Actions"><svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg></button></span>
                 </div>
 
-                <div class="user-row" data-role="admin" data-status="active">
+                <div class="user-row" data-role="chair" data-status="active">
                   <span>
                     <strong>Chair Reyes</strong>
                     <small>chair.reyes@cit.edu</small>
@@ -272,7 +296,7 @@
                     <strong>Dean Villanueva</strong>
                     <small>dean.villanueva@cit.edu</small>
                   </span>
-                  <span>Chair</span>
+                  <span>System Admin</span>
                   <span>
                     <strong>AD-1002</strong>
                     <small>College Office</small>
@@ -326,6 +350,7 @@
                       <option>Nursing Student</option>
                       <option>Clinical Instructor</option>
                       <option>Chair</option>
+                      <option>Admin</option>
                     </select>
                   </label>
 
@@ -347,16 +372,73 @@
           <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="user-action-title">
             <div class="modal-heading">
               <div>
-                <p class="section-kicker">Confirm Action</p>
+                <p class="section-kicker">Account Actions</p>
                 <h2 id="user-action-title">Review Account Change</h2>
               </div>
               <button class="icon-button modal-close" type="button" data-close-action-modal aria-label="Close confirmation modal">x</button>
             </div>
-            <p id="user-action-copy" class="modal-copy">Confirm this account update before applying the change.</p>
+            <p id="user-action-copy" class="modal-copy">Choose an account action before applying the change.</p>
+            <div class="selected-user-card account-action-summary" id="account-action-summary"></div>
+            <div class="action-menu-grid">
+              <button class="ghost-button" type="button" data-account-action="edit">Edit User</button>
+              <button class="ghost-button" type="button" data-account-action="role">Change Role</button>
+              <button class="ghost-button" type="button" data-account-action="reset">Reset Password</button>
+              <button class="ghost-button" type="button" data-account-action="status">Change User Status</button>
+              <button class="ghost-button" type="button" data-account-action="approve">Approve Pending</button>
+              <button class="ghost-button" type="button" data-account-action="reject">Reject Pending</button>
+              <button class="ghost-button" type="button" data-account-action="toggle">Deactivate / Reactivate</button>
+            </div>
             <div class="modal-actions">
               <button class="ghost-button" type="button" data-close-action-modal>Cancel</button>
-              <button class="primary-button" type="button" id="confirm-user-action">Confirm</button>
+              <button class="primary-button" type="button" id="confirm-user-action">Apply selected action</button>
             </div>
+          </section>
+        </div>
+
+        <div class="modal-backdrop" id="edit-user-modal" hidden>
+          <section class="modal-card account-modal" role="dialog" aria-modal="true" aria-labelledby="edit-user-title">
+            <div class="modal-heading">
+              <div>
+                <p class="section-kicker">Edit User</p>
+                <h2 id="edit-user-title">Update account details</h2>
+              </div>
+              <button class="icon-button modal-close" type="button" data-close-edit-modal aria-label="Close Edit User modal">x</button>
+            </div>
+            <form class="user-form" id="edit-user-form" novalidate>
+              <label class="form-label" for="edit-name">
+                Full name
+                <input id="edit-name" type="text" required>
+              </label>
+              <label class="form-label" for="edit-email">
+                School email
+                <input id="edit-email" type="email" required>
+              </label>
+              <label class="form-label" for="edit-role">
+                Role
+                <select id="edit-role" required>
+                  <option value="student">Nursing Student</option>
+                  <option value="instructor">Clinical Instructor</option>
+                  <option value="chair">Chair</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </label>
+              <label class="form-label" for="edit-status">
+                Status
+                <select id="edit-status" required>
+                  <option value="active">Active</option>
+                  <option value="pending">Pending</option>
+                  <option value="suspended">Suspended</option>
+                </select>
+              </label>
+              <label class="form-label" for="edit-section">
+                Section or department
+                <input id="edit-section" type="text" required>
+              </label>
+              <div id="edit-user-message" class="form-message" role="status" aria-live="polite">
+                Review changes before saving.
+              </div>
+              <button class="primary-button workspace-action" type="submit">Save user changes</button>
+            </form>
           </section>
         </div>
       </div>

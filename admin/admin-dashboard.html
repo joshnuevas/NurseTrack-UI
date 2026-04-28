@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Admin</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link is-active" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="manage-users.html"><span class="nav-dot"></span>Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="enrollment-archive.html"><span class="nav-dot"></span>Enrollment Summary / Archive</a>
+          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">AS</div>
+          <div>
+            <strong>Admin Santos</strong>
+            <span>System Admin</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Admin Workspace</p>
+              <h1>Dashboard</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="icon-button notification-button button-link" href="admin-help.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace dashboard-workspace">
+          <section class="workspace-hero dashboard-hero">
+            <div>
+              <p class="section-kicker">Admin Overview</p>
+              <h2>Manage system accounts and access control.</h2>
+              <p>Admin handles user accounts, role assignment, Chair assignment, and enrollment/archive visibility.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="manage-users.html">Manage Users</a>
+          </section>
+
+          <section class="dashboard-stats" aria-label="Admin dashboard summary">
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">Users</span>
+                <span class="status-badge status-verified">Active</span>
+              </div>
+              <h3>Active accounts</h3>
+              <p>Students, CIs, Chairs, and Admins enabled</p>
+              <strong class="stat-value">32</strong>
+            </article>
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">Pending</span>
+                <span class="status-badge status-pending">Review</span>
+              </div>
+              <h3>Pending accounts</h3>
+              <p>Accounts waiting for approval or rejection</p>
+              <strong class="stat-value" id="admin-pending-count">3</strong>
+              <a class="text-link" href="#pending-approvals">Review queue</a>
+            </article>
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">Students</span>
+                <span class="status-badge status-verified">Current</span>
+              </div>
+              <h3>Students</h3>
+              <p>Current student accounts in the system</p>
+              <strong class="stat-value">18</strong>
+            </article>
+            <article class="workspace-card stat-card">
+              <div class="workspace-card-header">
+                <span class="card-icon">CI</span>
+                <span class="status-badge status-verified">Active</span>
+              </div>
+              <h3>Instructors</h3>
+              <p>Clinical Instructor accounts enabled</p>
+              <strong class="stat-value">6</strong>
+            </article>
+          </section>
+
+          <section class="workspace-panel admin-approval-panel" id="pending-approvals">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Pending Account Approval</p>
+                <h2>Review account requests before access is granted</h2>
+              </div>
+              <span class="status-badge status-pending" id="admin-pending-badge">3 pending</span>
+            </div>
+
+            <div class="admin-approval-list" id="admin-approval-list">
+              <article class="admin-approval-card" data-pending-account data-name="Juan Dela Cruz" data-role="student">
+                <div>
+                  <strong>Juan Dela Cruz</strong>
+                  <small>24-0001-001 - BSN 2B - juan.delacruz@cit.edu</small>
+                </div>
+                <label class="form-label compact-label">
+                  Assign role
+                  <select>
+                    <option value="student">Student</option>
+                    <option value="instructor">Clinical Instructor</option>
+                    <option value="chair">Chair</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </label>
+                <div class="button-row compact-actions">
+                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
+                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
+                </div>
+              </article>
+
+              <article class="admin-approval-card" data-pending-account data-name="Prof. Dela Cruz" data-role="instructor">
+                <div>
+                  <strong>Prof. Dela Cruz</strong>
+                  <small>CI-1007 - Community Health - dela.cruz@cit.edu</small>
+                </div>
+                <label class="form-label compact-label">
+                  Assign role
+                  <select>
+                    <option value="instructor">Clinical Instructor</option>
+                    <option value="student">Student</option>
+                    <option value="chair">Chair</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </label>
+                <div class="button-row compact-actions">
+                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
+                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
+                </div>
+              </article>
+
+              <article class="admin-approval-card" data-pending-account data-name="Rhea Navarro" data-role="student">
+                <div>
+                  <strong>Rhea Navarro</strong>
+                  <small>24-0001-018 - BSN 1A - rhea.navarro@cit.edu</small>
+                </div>
+                <label class="form-label compact-label">
+                  Assign role
+                  <select>
+                    <option value="student">Student</option>
+                    <option value="instructor">Clinical Instructor</option>
+                    <option value="chair">Chair</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </label>
+                <div class="button-row compact-actions">
+                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
+                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
+                </div>
+              </article>
+            </div>
+
+            <div id="admin-approval-message" class="form-message" role="status" aria-live="polite">
+              Select approve or reject after confirming the account role.
+            </div>
+          </section>
+
+          <section class="dashboard-columns">
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Account Control</p>
+                  <h2>Admin responsibilities</h2>
+                </div>
+                <span class="status-badge status-verified">Admin only</span>
+              </div>
+              <div class="requirement-list">
+                <a class="requirement-item action-item" href="manage-users.html">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Manage Users</strong>
+                    <p>Add, edit, deactivate, approve, or restore user accounts.</p>
+                  </div>
+                </a>
+                <a class="requirement-item action-item" href="role-assignment.html">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Role Assignment</strong>
+                    <p>Assign Student, Clinical Instructor, Chair, and Admin access.</p>
+                  </div>
+                </a>
+              </div>
+            </article>
+
+            <article class="workspace-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="section-kicker">Enrollment</p>
+                  <h2>Summary and archive</h2>
+                </div>
+                <span class="status-badge status-pending">Read-only summary</span>
+              </div>
+              <div class="requirement-list">
+                <a class="requirement-item action-item" href="enrollment-archive.html">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Enrollment Summary / Archive</strong>
+                    <p>View enrollment-related totals and archived student summaries.</p>
+                  </div>
+                </a>
+                <a class="requirement-item action-item" href="role-assignment.html">
+                  <span class="requirement-status"></span>
+                  <div>
+                    <strong>Chair assignment</strong>
+                    <p>Assign or review who owns the Chair workflow role.</p>
+                  </div>
+                </a>
+              </div>
+            </article>
+          </section>
+
+          <section class="workspace-panel admin-audit-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Activity Log</p>
+                <h2>Recent account audit trail</h2>
+              </div>
+              <span class="status-badge status-verified">Tracked</span>
+            </div>
+            <div class="activity-list" id="admin-audit-list">
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>User created</strong>
+                  <p>Admin Santos added Rhea Navarro as a pending student account.</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>Chair assigned</strong>
+                  <p>Chair Reyes is currently assigned as Chair for the Nursing workflow.</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <span class="activity-marker"></span>
+                <div>
+                  <strong>Role changed</strong>
+                  <p>Prof. Dela Cruz was reviewed for Clinical Instructor access.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/admin-dashboard.js"></script>
+    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

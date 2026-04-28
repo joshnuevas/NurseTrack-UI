@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Admin Help</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+  </head>
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+        <div class="role-chip">Admin</div>
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="manage-users.html"><span class="nav-dot"></span>Manage Users</a>
+          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
+          <a class="nav-link" href="enrollment-archive.html"><span class="nav-dot"></span>Enrollment Summary / Archive</a>
+          <a class="nav-link is-active" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+        </nav>
+        <div class="sidebar-account">
+          <div class="avatar">AS</div>
+          <div>
+            <strong>Admin Santos</strong>
+            <span>System Admin</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Admin Workspace</p>
+              <h1>Help Center</h1>
+            </div>
+          </div>
+          <div class="topbar-actions">
+            <span class="sync-pill">5 topics</span>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace help-workspace">
+          <section class="workspace-hero dashboard-hero help-hero">
+            <div>
+              <p class="section-kicker">Admin Help</p>
+              <h2>Find system account and role-management support.</h2>
+              <p>Admin help focuses on Manage Users, Role Assignment, Chair assignment, access control, and enrollment archive visibility.</p>
+            </div>
+            <a class="primary-button workspace-action button-link" href="manage-users.html">Open Manage Users</a>
+          </section>
+
+          <section class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Topics</p>
+                <h2>Admin areas</h2>
+              </div>
+              <span class="status-badge status-verified">Admin only</span>
+            </div>
+            <div class="help-topic-grid">
+              <a class="help-topic-card" href="admin-dashboard.html">
+                <span>DB</span>
+                <div>
+                  <strong>Dashboard</strong>
+                  <p>Open the Admin overview for account and archive activity.</p>
+                </div>
+              </a>
+              <a class="help-topic-card" href="manage-users.html">
+                <span>MU</span>
+                <div>
+                  <strong>Manage Users</strong>
+                  <p>Add, edit, deactivate, approve, or restore portal accounts.</p>
+                </div>
+              </a>
+              <a class="help-topic-card" href="role-assignment.html">
+                <span>RA</span>
+                <div>
+                  <strong>Role Assignment</strong>
+                  <p>Assign Student, CI, Chair, and Admin access.</p>
+                </div>
+              </a>
+              <a class="help-topic-card" href="enrollment-archive.html">
+                <span>EA</span>
+                <div>
+                  <strong>Enrollment Summary / Archive</strong>
+                  <p>Review enrollment-related totals and previous student summaries.</p>
+                </div>
+              </a>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

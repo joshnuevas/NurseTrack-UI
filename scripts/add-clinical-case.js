@@ -27,7 +27,7 @@ function hasRequiredFields(formData) {
 
   const hasBaseFields = fields.every((field) => String(formData.get(field) || "").trim());
   const isMajorCase = formData.get("caseSubcategory") === "Major cases";
-  const hasMajorRole = !isMajorCase || formData.get("caseMajorRole") !== "Not applicable";
+  const hasMajorRole = !isMajorCase || String(formData.get("caseMajorRole") || "").trim();
 
   return hasBaseFields && hasMajorRole;
 }

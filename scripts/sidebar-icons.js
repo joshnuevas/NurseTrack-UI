@@ -31,6 +31,12 @@
       <circle cx="12" cy="13" r="2"></circle>
       <path d="M12 15v5"></path>
     `,
+    "manage users": `
+      <circle cx="9" cy="8" r="3"></circle>
+      <path d="M3.5 19a5.5 5.5 0 0 1 11 0"></path>
+      <circle cx="17" cy="10" r="2.5"></circle>
+      <path d="M14.5 19a4.5 4.5 0 0 1 6.5-4"></path>
+    `,
     profile: `
       <circle cx="12" cy="8" r="4"></circle>
       <path d="M4 21a8 8 0 0 1 16 0"></path>
@@ -84,6 +90,17 @@
       <path d="M4 19h16"></path>
       <path d="m7 15 4-4 3 3 5-7"></path>
     `,
+    "enrollment summary / archive": `
+      <path d="M5 4h14v16H5z"></path>
+      <path d="M8 8h8"></path>
+      <path d="M8 12h8"></path>
+      <path d="M8 16h5"></path>
+    `,
+    "exceptions & overrides": `
+      <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"></path>
+      <path d="M12 8v5"></path>
+      <path d="M12 16h.01"></path>
+    `,
     submissions: `
       <path d="M4 4h16v12H4z"></path>
       <path d="M4 16l4-4h8l4 4"></path>
@@ -116,24 +133,29 @@
     <path d="M8 12h8"></path>
   `;
 
-  document.querySelectorAll(".sidebar-nav .nav-link").forEach((link) => {
-    if (link.querySelector(".nav-icon")) {
-      return;
-    }
+  const refresh = () => {
+    document.querySelectorAll(".sidebar-nav .nav-link").forEach((link) => {
+      if (link.querySelector(".nav-icon")) {
+        return;
+      }
 
-    const label = link.textContent.trim().toLowerCase();
-    const dot = link.querySelector(".nav-dot");
-    const icon = dot || document.createElement("span");
-    icon.className = "nav-icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        ${icons[label] || fallbackIcon}
-      </svg>
-    `;
+      const label = link.textContent.trim().toLowerCase();
+      const dot = link.querySelector(".nav-dot");
+      const icon = dot || document.createElement("span");
+      icon.className = "nav-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          ${icons[label] || fallbackIcon}
+        </svg>
+      `;
 
-    if (!dot) {
-      link.prepend(icon);
-    }
-  });
+      if (!dot) {
+        link.prepend(icon);
+      }
+    });
+  };
+
+  window.NurseTrackSidebarIcons = { refresh };
+  refresh();
 })();

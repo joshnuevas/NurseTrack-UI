@@ -21,17 +21,26 @@ const resetButton = document.querySelector("#reset-role-assignment");
 const form = document.querySelector("#role-assignment-form");
 const accessInputs = Array.from(document.querySelectorAll("#access-options input"));
 const roleToast = document.querySelector("#role-toast");
+const chairCandidate = document.querySelector("#chair-candidate");
+const assignChairButton = document.querySelector("#assign-chair-role");
+const removeChairButton = document.querySelector("#remove-chair-role");
+const chairAssignmentStatus = document.querySelector("#chair-assignment-status");
+const chairAssignmentMessage = document.querySelector("#chair-assignment-message");
+const currentChairName = document.querySelector("#current-chair-name");
+const currentChairMeta = document.querySelector("#current-chair-meta");
 
 const permissions = {
   student: ["dashboard", "duties", "cases", "schedule", "reports"],
   instructor: ["dashboard", "schedule", "validation", "reports"],
-  admin: ["dashboard", "duties", "cases", "schedule", "validation", "users", "reports", "roles"]
+  chair: ["dashboard", "schedule", "validation", "reports"],
+  admin: ["dashboard", "users", "roles", "reports"]
 };
 
 const roleLabels = {
   student: "Student access",
   instructor: "Instructor access",
-  admin: "Chair access"
+  chair: "Chair access",
+  admin: "Admin access"
 };
 
 let selectedCard = document.querySelector(".role-user-card.is-selected");
@@ -91,6 +100,51 @@ function showTopToast(text) {
   toastTimer = window.setTimeout(() => {
     roleToast.hidden = true;
   }, 2800);
+}
+
+function setChairAssignmentMessage(text, state) {
+  if (!chairAssignmentMessage) {
+    return;
+  }
+
+  chairAssignmentMessage.textContent = text;
+  chairAssignmentMessage.classList.remove("is-error", "is-success");
+
+  if (state) {
+    chairAssignmentMessage.classList.add(state);
+  }
+}
+
+function userCardByName(name) {
+  return userCards.find((card) => card.dataset.name === name);
+}
+
+function updateCardRole(card, role) {
+  if (!card) {
+    return;
+  }
+
+  card.dataset.role = role;
+  card.querySelector("small").textContent = `${roleLabels[role].replace(" access", "")} - ${card.dataset.section}`;
+
+  if (card === selectedCard) {
+    savedRole = role;
+    setRole(role, false);
+  }
+}
+
+function refreshChairAssignment(name) {
+  const card = userCardByName(name);
+
+  if (!card) {
+    return;
+  }
+
+  currentChairName.textContent = card.dataset.name;
+  currentChairMeta.textContent = `${card.dataset.id} - ${card.dataset.section} - ${card.dataset.email}`;
+  chairAssignmentStatus.textContent = "Chair active";
+  chairAssignmentStatus.classList.add("status-verified");
+  chairAssignmentStatus.classList.remove("status-pending");
 }
 
 function setRole(role, markUnsaved) {
@@ -202,6 +256,41 @@ form.addEventListener("submit", (event) => {
   setMessage(`${selectedCard.dataset.name} role and access updated successfully.`, "is-success");
   syncPill.textContent = "Updated successfully";
   showTopToast(`${selectedCard.dataset.name} Role Updated Successfully`);
+});
+
+assignChairButton?.addEventListener("click", () => {
+  const name = chairCandidate.value;
+  const card = userCardByName(name);
+
+  if (!card) {
+    setChairAssignmentMessage("Select a valid account before assigning Chair.", "is-error");
+    return;
+  }
+
+  userCards
+    .filter((item) => item.dataset.role === "chair" && item !== card)
+    .forEach((item) => updateCardRole(item, "instructor"));
+
+  updateCardRole(card, "chair");
+  refreshChairAssignment(name);
+  setChairAssignmentMessage(`${name} is now assigned as Chair.`, "is-success");
+  showTopToast(`${name} assigned as Chair`);
+});
+
+removeChairButton?.addEventListener("click", () => {
+  const card = userCardByName(currentChairName.textContent);
+
+  if (!card) {
+    setChairAssignmentMessage("No current Chair account found.", "is-error");
+    return;
+  }
+
+  updateCardRole(card, "instructor");
+  chairAssignmentStatus.textContent = "No Chair selected";
+  chairAssignmentStatus.classList.remove("status-verified");
+  chairAssignmentStatus.classList.add("status-pending");
+  setChairAssignmentMessage(`${card.dataset.name} Chair role removed. Assign a new Chair before publishing workflow changes.`, "is-success");
+  showTopToast(`${card.dataset.name} Chair role removed`);
 });
 
 selectUser(selectedCard);

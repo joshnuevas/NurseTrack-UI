@@ -7,6 +7,7 @@ const endDate = document.querySelector("#end-date");
 const sectionFilter = document.querySelector("#section-filter");
 const siteFilter = document.querySelector("#site-filter");
 const formatFilter = document.querySelector("#format-filter");
+const studentSearch = document.querySelector("#student-search");
 const message = document.querySelector("#report-message");
 const previewTitle = document.querySelector("#preview-title");
 const previewPeriod = document.querySelector("#preview-period");
@@ -19,6 +20,81 @@ const quickGenerate = document.querySelector("#quick-generate");
 const resetReport = document.querySelector("#reset-report");
 const exportCsv = document.querySelector("#export-csv");
 const exportPdf = document.querySelector("#export-pdf");
+
+const studentReportRecords = [
+  {
+    name: "Maria Cruz",
+    section: "BSN 3A",
+    id: "12-3456-789",
+    site: "Cebu City Medical Center",
+    metrics: {
+      "Compliance Summary": ["1 student record", "18", "3", "1"],
+      "Duty Report": ["42 duty hours", "38", "3", "1"],
+      "Case Report": ["18 case logs", "14", "3", "1"],
+      "Schedule Report": ["5 assigned schedules", "5", "0", "0"]
+    }
+  },
+  {
+    name: "Josh Anton Nuevas",
+    section: "BSN 3A",
+    id: "12-3456-812",
+    site: "Cebu City Medical Center",
+    metrics: {
+      "Compliance Summary": ["1 student record", "16", "4", "2"],
+      "Duty Report": ["39 duty hours", "34", "4", "1"],
+      "Case Report": ["16 case logs", "12", "3", "1"],
+      "Schedule Report": ["5 assigned schedules", "4", "1", "0"]
+    }
+  },
+  {
+    name: "Treasure Abadinas",
+    section: "BSN 3A",
+    id: "12-3456-845",
+    site: "Vicente Sotto Medical Center",
+    metrics: {
+      "Compliance Summary": ["1 student record", "19", "2", "0"],
+      "Duty Report": ["45 duty hours", "43", "2", "0"],
+      "Case Report": ["19 case logs", "17", "2", "0"],
+      "Schedule Report": ["5 assigned schedules", "5", "0", "0"]
+    }
+  },
+  {
+    name: "Andrea Gomez",
+    section: "BSN 3B",
+    id: "12-3456-902",
+    site: "Community Health Center",
+    metrics: {
+      "Compliance Summary": ["1 student record", "17", "3", "1"],
+      "Duty Report": ["40 duty hours", "36", "3", "1"],
+      "Case Report": ["17 case logs", "13", "3", "1"],
+      "Schedule Report": ["4 assigned schedules", "4", "0", "0"]
+    }
+  },
+  {
+    name: "Lichael Ursulo",
+    section: "BSN 3C",
+    id: "12-3456-976",
+    site: "Skills Laboratory",
+    metrics: {
+      "Compliance Summary": ["1 student record", "15", "4", "1"],
+      "Duty Report": ["37 duty hours", "32", "4", "1"],
+      "Case Report": ["15 case logs", "11", "3", "1"],
+      "Schedule Report": ["4 assigned schedules", "4", "0", "0"]
+    }
+  },
+  {
+    name: "Angela Neri",
+    section: "BSN 3C",
+    id: "12-3456-988",
+    site: "Skills Laboratory",
+    metrics: {
+      "Compliance Summary": ["1 student record", "14", "5", "1"],
+      "Duty Report": ["35 duty hours", "30", "5", "0"],
+      "Case Report": ["14 case logs", "10", "3", "1"],
+      "Schedule Report": ["4 assigned schedules", "3", "1", "0"]
+    }
+  }
+];
 
 const reportMetrics = document.body.dataset.reportScope === "student" ? {
   "Compliance Summary": ["42 records", "31", "9", "2"],
@@ -66,15 +142,34 @@ function setMessage(text, state) {
 }
 
 function updatePreview() {
-  const metrics = reportMetrics[reportType.value] || reportMetrics["Compliance Summary"];
+  const studentQuery = studentSearch?.value.trim() || "";
+  const studentRecord = studentQuery ? findStudentRecord(studentQuery) : null;
+  const defaultMetrics = reportMetrics[reportType.value] || reportMetrics["Compliance Summary"];
+  const metrics = studentQuery
+    ? studentRecord?.metrics[reportType.value] || ["1 student record", "1", "0", "0"]
+    : defaultMetrics;
+  const studentScope = studentRecord
+    ? `${studentRecord.name} (${studentRecord.section})`
+    : studentQuery;
 
   previewTitle.textContent = reportType.value;
   previewPeriod.textContent = `${formatDate(startDate.value)} - ${formatDate(endDate.value)}`;
-  previewScope.textContent = `${sectionFilter.value} - ${siteFilter.value}`;
+  previewScope.textContent = studentQuery
+    ? `${studentScope} - ${studentRecord?.site || siteFilter.value}`
+    : `${sectionFilter.value} - ${siteFilter.value}`;
   previewCount.textContent = metrics[0];
   previewCompleted.textContent = metrics[1];
   previewPending.textContent = metrics[2];
   previewAction.textContent = metrics[3];
+}
+
+function findStudentRecord(query) {
+  const normalized = query.toLowerCase();
+
+  return studentReportRecords.find((student) => {
+    const searchable = `${student.name} ${student.section} ${student.id}`.toLowerCase();
+    return normalized.includes(student.name.toLowerCase()) || searchable.includes(normalized);
+  });
 }
 
 function generatePreview() {
@@ -85,7 +180,11 @@ function generatePreview() {
   }
 
   updatePreview();
-  setMessage(`${reportType.value} preview generated successfully.`, "is-success");
+  const studentQuery = studentSearch?.value.trim();
+  const studentRecord = studentQuery ? findStudentRecord(studentQuery) : null;
+  const target = studentQuery ? ` for ${studentRecord?.name || studentQuery}` : "";
+
+  setMessage(`${reportType.value} preview generated${target} successfully.`, "is-success");
 }
 
 menuButton.addEventListener("click", () => {
@@ -96,7 +195,7 @@ sidebarBackdrop.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[reportType, startDate, endDate, sectionFilter, siteFilter].forEach((control) => {
+[reportType, startDate, endDate, sectionFilter, siteFilter, studentSearch].filter(Boolean).forEach((control) => {
   control.addEventListener("input", updatePreview);
 });
 

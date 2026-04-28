@@ -3,6 +3,7 @@ const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const filterButtons = Array.from(document.querySelectorAll("[data-record-filter]"));
 const recordItems = Array.from(document.querySelectorAll("#student-record-list .submission-item"));
 const recordMessage = document.querySelector("#record-message");
+const assignedInstructor = document.querySelector(".sidebar-account strong")?.textContent.trim() || "Prof. Reyes";
 
 const students = {
   "maria-cruz": {
@@ -12,6 +13,7 @@ const students = {
     section: "BSN 3A",
     site: "Cebu City Medical Center",
     area: "Ward B",
+    assignedCi: "Prof. Reyes",
     status: "In progress",
     duty: 67,
     cases: 58,
@@ -25,6 +27,7 @@ const students = {
     section: "BSN 3A",
     site: "Cebu City Medical Center",
     area: "Delivery Room",
+    assignedCi: "Prof. Reyes",
     status: "Completed",
     duty: 100,
     cases: 100,
@@ -38,6 +41,7 @@ const students = {
     section: "BSN 3A",
     site: "Vicente Sotto Medical Center",
     area: "Delivery Room",
+    assignedCi: "Prof. Reyes",
     status: "On track",
     duty: 74,
     cases: 70,
@@ -51,6 +55,7 @@ const students = {
     section: "BSN 3B",
     site: "Community Health Center",
     area: "Health Teaching",
+    assignedCi: "Prof. Reyes",
     status: "Needs action",
     duty: 50,
     cases: 42,
@@ -64,6 +69,7 @@ const students = {
     section: "BSN 4A",
     site: "Skills Laboratory",
     area: "Simulation Duty",
+    assignedCi: "Prof. Reyes",
     status: "In progress",
     duty: 82,
     cases: 66,
@@ -82,6 +88,25 @@ function statusClass(status) {
   }
 
   return "status-pending";
+}
+
+function showAccessDenied() {
+  const main = document.querySelector("main.workspace");
+
+  if (!main) {
+    return;
+  }
+
+  main.innerHTML = `
+    <section class="workspace-hero dashboard-hero">
+      <div>
+        <p class="section-kicker">Assigned Student Access</p>
+        <h2>This student is not assigned to ${assignedInstructor}.</h2>
+        <p>Clinical Instructors can view progress only for students in their assigned schedule scope.</p>
+      </div>
+      <a class="primary-button workspace-action button-link" href="instructor-student-view.html">Back to assigned students</a>
+    </section>
+  `;
 }
 
 function setText(id, text) {
@@ -166,4 +191,10 @@ filterButtons.forEach((button) => {
 
 const params = new URLSearchParams(window.location.search);
 const studentKey = params.get("student") || "maria-cruz";
-applyStudent(students[studentKey] || students["maria-cruz"]);
+const selectedStudent = students[studentKey];
+
+if (!selectedStudent || selectedStudent.assignedCi !== assignedInstructor) {
+  showAccessDenied();
+} else {
+  applyStudent(selectedStudent);
+}

@@ -27,7 +27,7 @@ form.addEventListener("submit", (event) => {
   const requiredFields = ["caseDate", "caseCategory", "caseSubcategory", "clinicalSite", "dutyArea", "caseCode", "clinicalInstructor", "procedureTitle", "revisionNote"];
   const missingField = requiredFields.some((field) => !String(formData.get(field) || "").trim());
   const isMajorCase = formData.get("caseSubcategory") === "Major cases";
-  const missingMajorRole = isMajorCase && formData.get("caseMajorRole") === "Not applicable";
+  const missingMajorRole = isMajorCase && !String(formData.get("caseMajorRole") || "").trim();
 
   if (missingField || missingMajorRole) {
     setMessage("Please complete the DR/OR category, subcategory, and revision note.", "is-error");

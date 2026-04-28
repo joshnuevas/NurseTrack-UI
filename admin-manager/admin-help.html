@@ -25,12 +25,11 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="user-list-manage-users.html"><span class="nav-dot"></span>User List / Manage Users</a>
-          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
-          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Validation</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link is-active" href="admin-help.html"><span class="nav-dot"></span>Help</a>
+          <a class="nav-link is-active" href="admin-help.html" aria-current="page"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
@@ -57,7 +56,7 @@
           </div>
 
           <div class="topbar-actions">
-            <span class="sync-pill">7 topics</span>
+            <span class="sync-pill">6 topics</span>
             <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
@@ -68,7 +67,7 @@
             <div>
               <p class="section-kicker">Help Center</p>
               <h2>Find Chair tools and support actions.</h2>
-              <p>Search account, role, schedule, validation, reporting, notification, and export topics.</p>
+              <p>Search schedule, student progress, exceptions, reporting, notification, and export topics.</p>
             </div>
             <a class="primary-button workspace-action button-link" href="#support-request">Request support</a>
           </section>
@@ -76,7 +75,7 @@
           <section class="workspace-panel help-search-panel">
             <label class="form-label" for="help-search">
               Search help topics
-              <input id="help-search" type="search" placeholder="Search users, roles, validation, reports">
+              <input id="help-search" type="search" placeholder="Search schedules, progress, exceptions, reports">
             </label>
             <div id="help-search-message" class="form-message" role="status" aria-live="polite">
               Showing all help topics.
@@ -91,29 +90,15 @@
                     <p class="section-kicker">Topics</p>
                     <h2>Chair areas</h2>
                   </div>
-                  <span class="status-badge status-verified" id="visible-topic-count">7 visible</span>
+                  <span class="status-badge status-verified" id="visible-topic-count">6 visible</span>
                 </div>
 
                 <div class="help-topic-grid" id="help-topic-grid">
-                  <a class="help-topic-card" href="admin-dashboard.html" data-topic="dashboard overview admin manager status">
+                  <a class="help-topic-card" href="admin-dashboard.html" data-topic="dashboard overview chair workflow status">
                     <span>DB</span>
                     <div>
                       <strong>Dashboard</strong>
-                      <p>Open the Chair overview for users, reports, and recent activity.</p>
-                    </div>
-                  </a>
-                  <a class="help-topic-card" href="user-list-manage-users.html" data-topic="user list manage accounts status registration">
-                    <span>US</span>
-                    <div>
-                      <strong>User management</strong>
-                      <p>Review accounts, manage status, and check registration details.</p>
-                    </div>
-                  </a>
-                  <a class="help-topic-card" href="role-assignment.html" data-topic="role assignment permissions access student instructor chair">
-                    <span>RA</span>
-                    <div>
-                      <strong>Role assignment</strong>
-                      <p>Assign account access and review role permissions.</p>
+                      <p>Open the Chair overview for schedules, student progress, reports, and recent activity.</p>
                     </div>
                   </a>
                   <a class="help-topic-card" href="admin-schedules.html" data-topic="schedules assignment conflict clinical site coverage">
@@ -123,11 +108,18 @@
                       <p>Monitor duty assignments, coverage, and conflicts.</p>
                     </div>
                   </a>
-                  <a class="help-topic-card" href="admin-validation.html" data-topic="validation approval rejection pending compliance status">
-                    <span>VA</span>
+                  <a class="help-topic-card" href="chair-student-progress.html" data-topic="student progress readiness completion incomplete clearance enrollment">
+                    <span>SP</span>
                     <div>
-                      <strong>Validation</strong>
-                      <p>Monitor approvals, returned records, pending items, and completion status.</p>
+                      <strong>Student Progress</strong>
+                      <p>Search students and monitor completion, incompletion, and readiness status.</p>
+                    </div>
+                  </a>
+                  <a class="help-topic-card" href="admin-validation.html" data-topic="exceptions overrides approval late attendance special approvals">
+                    <span>EX</span>
+                    <div>
+                      <strong>Exceptions & Overrides</strong>
+                      <p>Review late attendance, override approvals, special cases, and extension remarks.</p>
                     </div>
                   </a>
                   <a class="help-topic-card" href="generate-report.html" data-topic="reports export pdf csv compliance duty case schedule">
@@ -160,17 +152,17 @@
                 </div>
 
                 <div class="help-faq-list" id="help-faq-list">
-                  <details class="help-faq-item" open data-topic="role assignment access permissions">
-                    <summary>Where do I update account roles?</summary>
-                    <p>Open Role Assignment, choose a user, select the correct access type, and save the role.</p>
+                  <details class="help-faq-item" open data-topic="student progress readiness completion">
+                    <summary>Where can I search for a specific student?</summary>
+                    <p>Open Student Progress to search students, review completion status, and check readiness indicators.</p>
                   </details>
                   <details class="help-faq-item" data-topic="schedule conflict coverage">
                     <summary>Where can I check schedule conflicts?</summary>
                     <p>Open Schedules or Schedule Report to review conflict status and site coverage.</p>
                   </details>
-                  <details class="help-faq-item" data-topic="validation pending returned approved">
-                    <summary>Where do I monitor validation status?</summary>
-                    <p>Open Validation for the Chair summary, then use duty, case, or compliance reports for detail.</p>
+                  <details class="help-faq-item" data-topic="exceptions pending returned approved">
+                    <summary>Where do I review exceptions?</summary>
+                    <p>Open Exceptions & Overrides for late attendance issues, not-applicable items, and Chair override review.</p>
                   </details>
                   <details class="help-faq-item" data-topic="report export pdf csv">
                     <summary>Where are exports prepared?</summary>
@@ -195,10 +187,9 @@
                     Topic
                     <select id="request-topic" required>
                       <option value="">Select topic</option>
-                      <option>User management</option>
-                      <option>Role assignment</option>
                       <option>Schedules</option>
-                      <option>Validation</option>
+                      <option>Student Progress</option>
+                      <option>Exceptions & Overrides</option>
                       <option>Reports</option>
                     </select>
                   </label>

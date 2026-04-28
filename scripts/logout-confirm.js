@@ -70,6 +70,7 @@
   cancelButton?.addEventListener("click", closeDialog);
 
   proceedButton?.addEventListener("click", () => {
+    window.sessionStorage.removeItem("nursetrackRole");
     window.location.href = targetHref || "../index.html";
   });
 
