@@ -27,7 +27,7 @@
           <a class="nav-link is-active" href="admin-dashboard.html" aria-current="page"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
           <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
-          <a class="nav-link" href="admin-validation.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
+          <a class="nav-link" href="compliance-summary.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
           <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
@@ -72,49 +72,7 @@
             <a class="primary-button workspace-action button-link" href="admin-schedules.html">Open schedules</a>
           </section>
 
-          <section class="dashboard-stats" aria-label="Chair dashboard summary">
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Students</span>
-                <span class="status-badge status-verified">Active</span>
-              </div>
-              <h3>Students</h3>
-              <p>Students monitored across current clinical rotations</p>
-              <strong class="stat-value">24</strong>
-            </article>
-
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Exceptions</span>
-                <span class="status-badge status-pending">Pending</span>
-              </div>
-              <h3>Exceptions</h3>
-              <p>Late attendance and override requests waiting for action</p>
-              <strong class="stat-value">3</strong>
-            </article>
-
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Compliance</span>
-                <span class="status-badge status-verified">Ready</span>
-              </div>
-              <h3>Compliance</h3>
-              <p>Completion summaries available for review</p>
-              <strong class="stat-value">42</strong>
-            </article>
-
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Exports</span>
-                <span class="status-badge status-pending">Queue</span>
-              </div>
-              <h3>Exports</h3>
-              <p>Prepared PDF and CSV files this week</p>
-              <strong class="stat-value">12</strong>
-            </article>
-          </section>
-
-          <section class="dashboard-columns">
+          <section class="dashboard-columns chair-dashboard-actions">
             <article class="workspace-panel">
               <div class="panel-heading">
                 <div>
@@ -139,45 +97,11 @@
                     <p>Search students and monitor completion, incompletion, and readiness status.</p>
                   </div>
                 </a>
-                <a class="requirement-item action-item" href="admin-validation.html">
+                <a class="requirement-item action-item" href="compliance-summary.html">
                   <span class="requirement-status"></span>
                   <div>
                     <strong>Exceptions & Overrides</strong>
                     <p>Review late attendance, special approvals, and override remarks.</p>
-                  </div>
-                </a>
-              </div>
-            </article>
-
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Reports</p>
-                  <h2>Monitoring Summary</h2>
-                </div>
-                <span class="status-badge status-verified">Ready</span>
-              </div>
-
-              <div class="requirement-list">
-                <a class="requirement-item action-item" href="compliance-summary.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Compliance Summary</strong>
-                    <p>View completion status across tracked records.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="schedule-report.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Schedule Report</strong>
-                    <p>Review assignments, coverage, and schedule issues.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="generate-report.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Generate Report</strong>
-                    <p>Prepare filtered PDF or CSV report previews.</p>
                   </div>
                 </a>
               </div>
@@ -190,7 +114,6 @@
                 <p class="section-kicker">Recent Activity</p>
                 <h2>Chair Queue</h2>
               </div>
-              <a class="ghost-button button-link" href="admin-notifications.html">View notifications</a>
             </div>
 
             <div class="activity-list">

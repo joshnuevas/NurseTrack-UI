@@ -21,9 +21,9 @@ function setView(view) {
 }
 
 function filterItems(items) {
-  const status = statusFilter.value;
-  const area = areaFilter.value;
-  const query = scheduleSearch.value.trim().toLowerCase();
+  const status = statusFilter?.value || "all";
+  const area = areaFilter?.value || "all";
+  const query = scheduleSearch?.value.trim().toLowerCase() || "";
   let visibleCount = 0;
 
   items.forEach((item) => {
@@ -59,7 +59,7 @@ viewButtons.forEach((button) => {
   button.addEventListener("click", () => setView(button.dataset.managementView));
 });
 
-[statusFilter, areaFilter, scheduleSearch].forEach((control) => {
+[statusFilter, areaFilter, scheduleSearch].filter(Boolean).forEach((control) => {
   control.addEventListener("input", filterSchedules);
 });
 

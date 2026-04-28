@@ -44,8 +44,10 @@ sidebarBackdrop.addEventListener("click", () => {
   control.addEventListener("input", filterCompliance);
 });
 
-refreshButton.addEventListener("click", () => {
+refreshButton?.addEventListener("click", () => {
   filterCompliance();
   message.textContent = "Compliance summary updated.";
   message.classList.add("is-success");
 });
+
+filterCompliance();

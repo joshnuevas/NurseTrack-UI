@@ -19,9 +19,9 @@
 
     const chairNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
-      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-report.html"] },
+      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
       { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html"] },
-      { label: "Exceptions & Overrides", href: "admin-validation.html", pages: ["admin-validation.html", "compliance-summary.html"] },
+      { label: "Exceptions & Overrides", href: "compliance-summary.html", pages: ["admin-validation.html", "compliance-summary.html"] },
       { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] },
       { label: "Help", href: "admin-help.html", pages: ["admin-help.html"] }
     ];
@@ -201,6 +201,178 @@
       }
     };
 
+    const normalizeSidebarBrandLink = () => {
+      const brand = one(".sidebar-brand");
+
+      if (!brand) {
+        return;
+      }
+
+      const href = isStudent || isChair || isInstructor ? "about.html" : isAdmin ? "../about.html" : "about.html";
+
+      if (brand.tagName.toLowerCase() === "a") {
+        brand.setAttribute("href", href);
+        brand.setAttribute("aria-label", "About NurseTrack");
+        return;
+      }
+
+      const link = render(`<a class="${brand.className}" href="${href}" aria-label="About NurseTrack"></a>`);
+      link.innerHTML = brand.innerHTML;
+      brand.replaceWith(link);
+    };
+
+    const simplifyTopbarActions = () => {
+      const isNotificationPage = ["notifications.html", "instructor-notifications.html", "admin-notifications.html"].includes(page);
+
+      if (isNotificationPage) {
+        all(".topbar-actions .ghost-button").forEach((button) => button.remove());
+      }
+    };
+
+    const removePanelByHeading = (patterns) => {
+      all(".workspace-panel").forEach((panel) => {
+        const heading = panel.querySelector(".panel-heading h2");
+        const kicker = panel.querySelector(".panel-heading .section-kicker");
+        const label = `${kicker?.textContent || ""} ${heading?.textContent || ""}`.trim();
+
+        if (patterns.some((pattern) => pattern.test(label))) {
+          panel.remove();
+        }
+      });
+    };
+
+    const simplifyRepeatedExtras = () => {
+      removePanelByHeading([
+        /validation actions/i,
+        /follow-up queue/i,
+        /chair controls/i
+      ]);
+
+      if (!isAdmin && !isChair) {
+        return;
+      }
+
+      removePanelByHeading([
+        /report actions/i,
+        /open report views/i,
+        /report links/i,
+        /recent exports/i,
+        /chair actions/i,
+        /^links\s+continue$/i
+      ]);
+
+      if (page === "role-assignment.html") {
+        all(".dashboard-stats .stat-card").forEach((card) => {
+          const label = card.querySelector("span")?.textContent.trim();
+
+          if (label === "Changes") {
+            card.remove();
+          }
+        });
+      }
+
+      if (isChair && ["compliance-summary.html", "schedule-report.html", "duty-report.html", "case-report.html", "generate-report.html"].includes(page)) {
+        all("select option").forEach((option) => {
+          if (/^all\s+/i.test(option.textContent.trim())) {
+            option.remove();
+          }
+        });
+
+        all("select").forEach((select) => {
+          select.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+      }
+    };
+
+    const simplifyHelpPages = () => {
+      if (!page.endsWith("help.html")) {
+        return;
+      }
+
+      one(".help-search-panel")?.remove();
+      one(".help-hero .workspace-action")?.remove();
+      setText(".help-hero h2", "Find answers for the main workflow.");
+      setText(".help-hero p:not(.section-kicker)", "Choose a topic to open the page related to your role.");
+      all(".help-main-stack > .workspace-panel").slice(1).forEach((panel) => panel.remove());
+      one(".help-layout .duty-side-panel")?.remove();
+
+      const helpLayout = one(".help-layout");
+      if (helpLayout) {
+        helpLayout.className = "simple-help-layout";
+      }
+    };
+
+    const simplifyNotificationCategories = () => {
+      if (!["notifications.html", "instructor-notifications.html"].includes(page)) {
+        return;
+      }
+
+      removePanelByHeading([/quick filters\s+notification type/i]);
+
+      const typeFilter = one("#type-filter");
+      const statusFilter = one("#status-filter");
+      const firstCard = one("#notification-list .notification-card");
+
+      all("#type-filter option[value='all'], #status-filter option[value='all']").forEach((option) => option.remove());
+
+      if (typeFilter && firstCard?.dataset.type) {
+        typeFilter.value = firstCard.dataset.type;
+      }
+
+      if (statusFilter && firstCard?.dataset.status) {
+        statusFilter.value = firstCard.dataset.status;
+      }
+
+      [typeFilter, statusFilter].filter(Boolean).forEach((select) => {
+        select.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    };
+
+    const simplifyAssignedSchedulePage = () => {
+      if (page !== "schedule-management.html") {
+        return;
+      }
+
+      one(".schedule-management-workspace > .dashboard-stats")?.remove();
+      one(".schedule-management-layout .duty-side-panel")?.remove();
+      one(".workspace-hero > .status-badge")?.remove();
+
+      const layout = one(".schedule-management-layout");
+      if (layout) {
+        layout.className = "simple-report-layout";
+      }
+    };
+
+    const simplifyChairGuide4 = () => {
+      if (!isChair) {
+        return;
+      }
+
+      if (page === "admin-dashboard.html") {
+        removePanelByHeading([/reports\s+monitoring summary/i, /workflow\s+chair controls/i]);
+        all('a[href="admin-validation.html"]').forEach((link) => {
+          link.setAttribute("href", "compliance-summary.html");
+        });
+      }
+
+      if (page === "chair-student-progress.html") {
+        one(".chair-student-progress-workspace > .dashboard-stats")?.remove();
+        const hero = one(".student-progress-lookup-hero");
+        if (hero) {
+          hero.classList.add("guide4-direct-hero");
+        }
+      }
+    };
+
+    const redirectDeprecatedChairValidation = () => {
+      if (!isChair || page !== "admin-validation.html") {
+        return false;
+      }
+
+      window.location.replace("compliance-summary.html");
+      return true;
+    };
+
     const enhanceStudentInstructorTopbar = () => {
       const actions = one(".topbar-actions");
       const notificationButton = one(".topbar-actions .notification-button");
@@ -248,6 +420,10 @@
 
       const isProfilePage = ["view-profile.html", "edit-profile.html", "change-password.html"].includes(page);
 
+      if (notificationButton && profileButton.previousElementSibling !== notificationButton) {
+        notificationButton.insertAdjacentElement("afterend", profileButton);
+      }
+
       profileButton.classList.toggle("is-active", isProfilePage);
       if (isProfilePage) {
         profileButton.setAttribute("aria-current", "page");
@@ -285,45 +461,14 @@
         "Upload students and groupings, assign groups to hospitals, areas, shifts, and CIs, then adjust membership when capacity changes."
       );
 
-      insertAfterHero("chair-schedule-workflow", `
-        <section class="workflow-panel workspace-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Required Workflow</p>
-              <h2>Chair-centered schedule control</h2>
-            </div>
-            <span class="status-badge status-verified">Operational control</span>
-          </div>
-          <div class="workflow-grid">
-            <div class="workflow-card">
-              <span>01</span>
-              <strong>Import students and groups</strong>
-              <p>Use Excel files for student lists, groupings, and schedule templates.</p>
-            </div>
-            <div class="workflow-card">
-              <span>02</span>
-              <strong>Assign groups</strong>
-              <p>Set hospital, area, shift, assigned CI, term, rotation, and remarks.</p>
-            </div>
-            <div class="workflow-card">
-              <span>03</span>
-              <strong>Edit after upload</strong>
-              <p>Add, remove, split, or reassign students when hospital capacity changes.</p>
-            </div>
-            <div class="workflow-card">
-              <span>04</span>
-              <strong>Monitor exceptions</strong>
-              <p>Review late, absent, unverified, not applicable, and overridden records.</p>
-            </div>
-          </div>
-        </section>
-      `);
+      one('[data-consultation="chair-schedule-workflow"]')?.remove();
+      one(".schedule-management-workspace > .dashboard-stats")?.remove();
 
-      const stats = one(".dashboard-stats");
+      const hero = one(".workspace-hero");
 
-      if (stats && !one('[data-consultation="chair-import"]')) {
-        stats.insertAdjacentElement("afterend", render(`
-          <section class="dashboard-columns chair-import-panel" data-consultation="chair-import">
+      if (hero && !one('[data-consultation="chair-import"]')) {
+        hero.insertAdjacentElement("afterend", render(`
+          <section id="chair-schedule-maker" class="dashboard-columns chair-import-panel" data-consultation="chair-import">
             <article class="workspace-panel">
               <div class="panel-heading">
                 <div>
@@ -495,28 +640,7 @@
         "Schedules are published by the Chair. You can view your hospital, area, assigned CI, shift, rotation, and reminders."
       );
 
-      insertAfterHero("student-schedule-lock", `
-        <section class="workspace-panel schedule-lock-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Assigned Schedule</p>
-              <h2>Published duty assignment</h2>
-            </div>
-            <span class="status-badge status-verified">View only</span>
-          </div>
-          <div class="schedule-source-strip">
-            <strong>Source:</strong>
-            <span>Chair-published schedule &middot; Excel grouping import &middot; CI assignment verified</span>
-          </div>
-          <div class="schedule-lock-grid">
-            <div class="schedule-lock-card"><span>HS</span><strong>Cebu City Medical Center</strong><p>Hospital assignment</p></div>
-            <div class="schedule-lock-card"><span>AR</span><strong>Ward B</strong><p>Area of Assignment</p></div>
-            <div class="schedule-lock-card"><span>CI</span><strong>Prof. Reyes</strong><p>Assigned CI</p></div>
-            <div class="schedule-lock-card"><span>SH</span><strong>7:00 AM - 3:00 PM</strong><p>Assigned shift window</p></div>
-          </div>
-          <p class="readonly-note">Students can view schedules only. Schedule creation, reassignment, and group editing are handled by the Chair.</p>
-        </section>
-      `);
+      one('[data-consultation="student-schedule-lock"]')?.remove();
     };
 
     const enhanceDutyEntry = () => {
@@ -1038,10 +1162,21 @@
       }
     };
 
+    normalizeSidebarBrandLink();
+    simplifyTopbarActions();
     enhanceStudentInstructorTopbar();
     enhanceRoleSidebars();
+    simplifyRepeatedExtras();
+    simplifyHelpPages();
+    simplifyNotificationCategories();
+    simplifyAssignedSchedulePage();
+    simplifyChairGuide4();
 
     if (enforceRoleOwnership()) {
+      return;
+    }
+
+    if (redirectDeprecatedChairValidation()) {
       return;
     }
 
@@ -1059,9 +1194,6 @@
     enhanceInstructorValidation();
     enhanceAttendanceMonitoring();
     enhanceInstructorScheduling();
-    enhanceChairValidation();
-    enhanceReports();
-    enhanceProgressReadiness();
     removeStudentDutyHours();
   };
 

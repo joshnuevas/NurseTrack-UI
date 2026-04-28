@@ -47,7 +47,7 @@ sidebarBackdrop.addEventListener("click", () => {
   control.addEventListener("input", filterScheduleRows);
 });
 
-exportButton.addEventListener("click", () => {
+exportButton?.addEventListener("click", () => {
   filterScheduleRows();
   message.textContent = "Schedule report export is ready.";
   message.classList.add("is-success");

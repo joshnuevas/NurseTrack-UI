@@ -160,11 +160,15 @@ function setRole(role, markUnsaved) {
   updatePermissionPreview(role);
 
   hasUnsavedRole = markUnsaved && role !== savedRole;
-  pendingRoleCount.textContent = hasUnsavedRole ? "1" : "0";
+  if (pendingRoleCount) {
+    pendingRoleCount.textContent = hasUnsavedRole ? "1" : "0";
+  }
   assignmentStatus.textContent = hasUnsavedRole ? "Unsaved" : "Saved";
   assignmentStatus.classList.toggle("status-verified", !hasUnsavedRole);
   assignmentStatus.classList.toggle("status-pending", hasUnsavedRole);
-  syncPill.textContent = hasUnsavedRole ? "Unsaved role" : "1 selected";
+  if (syncPill) {
+    syncPill.textContent = hasUnsavedRole ? "Unsaved role" : "1 selected";
+  }
 }
 
 function selectUser(card) {
@@ -223,11 +227,15 @@ roleInputs.forEach((input) => {
 accessInputs.forEach((input) => {
   input.addEventListener("change", () => {
     hasUnsavedRole = true;
-    pendingRoleCount.textContent = "1";
+    if (pendingRoleCount) {
+      pendingRoleCount.textContent = "1";
+    }
     assignmentStatus.textContent = "Unsaved";
     assignmentStatus.classList.remove("status-verified");
     assignmentStatus.classList.add("status-pending");
-    syncPill.textContent = "Unsaved access";
+    if (syncPill) {
+      syncPill.textContent = "Unsaved access";
+    }
     updatePermissionPreview(activeRole());
     setMessage("Access selection updated. Save to apply these permissions.");
   });
@@ -248,13 +256,17 @@ form.addEventListener("submit", (event) => {
   selectedCard.querySelector("small").textContent = `${roleLabels[role].replace(" access", "")} - ${selectedCard.dataset.section}`;
   savedRole = role;
   hasUnsavedRole = false;
-  pendingRoleCount.textContent = "0";
+  if (pendingRoleCount) {
+    pendingRoleCount.textContent = "0";
+  }
   assignmentStatus.textContent = "Saved";
   assignmentStatus.classList.add("status-verified");
   assignmentStatus.classList.remove("status-pending");
   updatePermissionPreview(role);
   setMessage(`${selectedCard.dataset.name} role and access updated successfully.`, "is-success");
-  syncPill.textContent = "Updated successfully";
+  if (syncPill) {
+    syncPill.textContent = "Updated successfully";
+  }
   showTopToast(`${selectedCard.dataset.name} Role Updated Successfully`);
 });
 

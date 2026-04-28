@@ -316,6 +316,9 @@ h2 {
 .status-badge {
   display: inline-flex;
   align-items: center;
+  justify-self: start;
+  width: max-content;
+  max-width: 100%;
   min-height: 28px;
   padding: 6px 10px;
   border-radius: 999px;
@@ -875,18 +878,13 @@ h2 {
   padding: 22px 22px 28px;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-color: var(--accent) rgba(255, 255, 255, 0.14);
+  scrollbar-width: none;
   z-index: 20;
-  animation: sidebarGradientFlow 22s linear infinite;
+  animation: none;
 }
 
 .app-sidebar::before {
-  content: "";
-  position: absolute;
-  inset: -12% -72%;
-  z-index: -1;
-  background: linear-gradient(100deg, transparent 0 34%, rgba(255, 207, 1, 0.14) 43%, rgba(255, 255, 255, 0.1) 49%, transparent 60%);
-  animation: sidebarGoldSweep 8s ease-in-out infinite;
+  display: none;
 }
 
 .app-sidebar::after {
@@ -936,7 +934,7 @@ h2 {
 }
 
 .app-sidebar::-webkit-scrollbar {
-  width: 10px;
+  width: 0;
 }
 
 .app-sidebar::-webkit-scrollbar-track {
@@ -1221,15 +1219,7 @@ h2 {
 }
 
 .sync-pill {
-  min-height: 34px;
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  background: #ecfdf3;
-  color: var(--success);
-  padding: 7px 11px;
-  font-size: 0.78rem;
-  font-weight: 800;
+  display: none;
 }
 
 .ghost-button,
@@ -1310,7 +1300,8 @@ h2 {
 }
 
 .workspace {
-  padding: clamp(20px, 4vw, 34px);
+  align-content: start;
+  padding: clamp(24px, 4vw, 42px);
 }
 
 .workspace-hero,
@@ -1326,8 +1317,8 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  padding: clamp(20px, 4vw, 30px);
+  gap: 28px;
+  padding: clamp(24px, 4vw, 34px);
   animation: fadeUp 520ms ease both;
 }
 
@@ -1360,6 +1351,33 @@ h2 {
   min-width: 250px;
   padding-inline: 30px;
   white-space: nowrap;
+}
+
+.hero-action-stack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  min-width: 300px;
+}
+
+.admin-schedule-maker-button,
+.admin-schedule-report-button {
+  min-width: 250px;
+  padding-inline: 28px;
+  white-space: nowrap;
+}
+
+.chair-import-panel {
+  scroll-margin-top: 112px;
+}
+
+.chair-dashboard-actions {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.guide4-direct-hero {
+  margin-bottom: 24px;
 }
 
 .admin-validation-hero .validation-hero-action {
@@ -1512,7 +1530,7 @@ h2 {
 .dashboard-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
 .profile-workspace > .dashboard-stats {
@@ -6359,7 +6377,18 @@ h2 {
 }
 
 .role-assignment-segment {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 8px;
+}
+
+.simple-report-layout,
+.simple-notifications-layout,
+.simple-help-layout,
+.simple-compliance-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
 }
 
 .access-fieldset {
@@ -6525,11 +6554,26 @@ h2 {
   gap: 4px;
 }
 
+.compliance-row span:nth-child(5) {
+  grid-template-columns: minmax(110px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.compliance-row span:nth-child(5) .progress-track {
+  width: 100%;
+}
+
 .compliance-row small {
   color: var(--muted);
   font-size: 0.73rem;
   font-weight: 800;
   line-height: 1.35;
+}
+
+.compliance-row span:nth-child(5) small {
+  color: #475467;
+  line-height: 1;
 }
 
 .compliance-message {
