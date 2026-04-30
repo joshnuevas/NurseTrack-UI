@@ -25,18 +25,17 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link is-active" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">PR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Prof. Reyes</strong>
+            <strong>Reyes</strong>
             <span>Clinical Instructor</span>
           </div>
         </div>
@@ -64,15 +63,6 @@
         </header>
 
         <main class="workspace schedule-management-workspace ci-assigned-schedules-workspace">
-          <section class="workspace-hero dashboard-hero">
-            <div>
-              <p class="section-kicker">Assigned schedules</p>
-              <h2>View your assigned clinical duty schedules.</h2>
-              <p>Monitor Chair-published rotations for your assigned groups, hospitals, duty areas, and shift windows.</p>
-            </div>
-            <span class="status-badge status-verified">View only</span>
-          </section>
-
           <section class="dashboard-stats ci-assigned-schedule-stats" aria-label="Assigned schedule summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
@@ -96,12 +86,12 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Today</span>
-                <span class="status-badge status-verified">On duty</span>
+                <span class="card-icon">Upcoming</span>
+                <span class="status-badge status-verified">Scheduled</span>
               </div>
-              <h3>Today's shift</h3>
-              <p>Ward B rotation, 7:00 AM - 3:00 PM</p>
-              <strong class="stat-value">8</strong>
+              <h3>Upcoming shifts</h3>
+              <p>Total future duty assignments</p>
+              <strong class="stat-value">3</strong>
             </article>
 
             <article class="workspace-card stat-card">
@@ -119,8 +109,7 @@
             <article class="workspace-panel schedule-calendar-panel">
               <div class="panel-heading">
                 <div>
-                  <p class="section-kicker">Assigned rotations</p>
-                  <h2>Schedule calendar and list</h2>
+                  <h2>Schedule Calendar and List</h2>
                 </div>
                 <div class="schedule-view-tabs" aria-label="Assigned schedule view">
                   <button class="state-tab is-active" type="button" data-management-view="calendar">Calendar</button>
@@ -128,70 +117,120 @@
                 </div>
               </div>
 
-              <div class="management-calendar ci-assigned-calendar" id="calendar-view">
-                <div class="management-day">
-                  <span>Mon 20</span>
-                  <p>No assigned duty</p>
-                </div>
-                <div class="management-day has-duty" data-status="active" data-area="Delivery Room">
-                  <span>Tue 21</span>
-                  <strong>Delivery Room</strong>
-                  <p>BSN 3A</p>
-                </div>
-                <div class="management-day">
-                  <span>Wed 22</span>
-                  <p>Monitoring day</p>
-                </div>
-                <div class="management-day has-duty" data-status="upcoming" data-area="Pediatric Ward">
-                  <span>Thu 23</span>
-                  <strong>Pediatric Ward</strong>
+              <div class="calendar-month-heading">
+                <strong>May 2026</strong>
+                <span>Chair-published assigned rotations</span>
+              </div>
+
+              <div class="history-filters" aria-label="Schedule filters" id="list-filters" hidden>
+                <label class="form-label" for="schedule-search">
+                  Search
+                  <input id="schedule-search" type="search" placeholder="Search duty, hospital, or time">
+                </label>
+              </div>
+
+              <div class="management-calendar ci-assigned-calendar ci-month-calendar" id="calendar-view">
+                <span class="calendar-weekday">Sun</span>
+                <span class="calendar-weekday">Mon</span>
+                <span class="calendar-weekday">Tue</span>
+                <span class="calendar-weekday">Wed</span>
+                <span class="calendar-weekday">Thu</span>
+                <span class="calendar-weekday">Fri</span>
+                <span class="calendar-weekday">Sat</span>
+
+                <div class="management-day is-muted"><span>26</span></div>
+                <div class="management-day is-muted"><span>27</span></div>
+                <div class="management-day is-muted"><span>28</span></div>
+                <div class="management-day is-muted"><span>29</span></div>
+                <div class="management-day is-muted is-today"><span>30</span><small>Today</small></div>
+                <div class="management-day"><span>1</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>2</span><p>No assigned duty</p></div>
+
+                <div class="management-day"><span>3</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>4</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>5</span><p>No assigned duty</p></div>
+                <a class="management-day has-duty action-item" href="assigned-roster.html?rotation=pediatric-ward" data-area="Pedia Pulmo Ward">
+                  <span>6</span>
+                  <strong>Pedia Pulmo Ward</strong>
                   <p>BSN 3B</p>
-                </div>
-                <div class="management-day has-duty" data-status="active" data-area="Ward B">
-                  <span>Fri 24</span>
-                  <strong>Ward B</strong>
+                  <small>View roster</small>
+                </a>
+                <div class="management-day"><span>7</span><p>Monitoring day</p></div>
+                <a class="management-day has-duty action-item" href="assigned-roster.html?rotation=ward-b" data-area="Emergency Room">
+                  <span>8</span>
+                  <strong>Emergency Room</strong>
                   <p>BSN 3A</p>
-                </div>
-                <div class="management-day has-duty" data-status="updated" data-area="Operating Room">
-                  <span>Sat 25</span>
+                  <small>View roster</small>
+                </a>
+                <a class="management-day has-duty action-item" href="assigned-roster.html?rotation=operating-room" data-area="Operating Room">
+                  <span>9</span>
                   <strong>Operating Room</strong>
                   <p>BSN 4A</p>
-                </div>
-                <div class="management-day">
-                  <span>Sun 26</span>
-                  <p>No assigned duty</p>
-                </div>
+                  <small>View roster</small>
+                </a>
+
+                <div class="management-day"><span>10</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>11</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>12</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>13</span><p>Monitoring day</p></div>
+                <div class="management-day"><span>14</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>15</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>16</span><p>No assigned duty</p></div>
+
+                <div class="management-day"><span>17</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>18</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>19</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>20</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>21</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>22</span><p>Monitoring day</p></div>
+                <div class="management-day"><span>23</span><p>No assigned duty</p></div>
+
+                <div class="management-day"><span>24</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>25</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>26</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>27</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>28</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>29</span><p>No assigned duty</p></div>
+                <div class="management-day"><span>30</span><p>No assigned duty</p></div>
+                
+                <div class="management-day"><span>31</span><p>No assigned duty</p></div>
+                <div class="management-day is-muted"><span>1</span></div>
+                <div class="management-day is-muted"><span>2</span></div>
+                <div class="management-day is-muted"><span>3</span></div>
+                <div class="management-day is-muted"><span>4</span></div>
+                <div class="management-day is-muted"><span>5</span></div>
+                <div class="management-day is-muted"><span>6</span></div>
               </div>
 
               <div class="management-list" id="list-view" hidden>
-                <div class="management-row" data-status="active" data-area="Ward B">
+                <div class="management-row" data-area="Pedia Pulmo Ward">
                   <div>
-                    <strong>Ward B Rotation</strong>
-                    <p>Cebu City Medical Center - Apr 24 - 7:00 AM - 3:00 PM</p>
+                    <strong>Pedia Pulmo Ward Rotation</strong>
+                    <p>VSMMC - May 6 - 8:00 AM - 4:00 PM</p>
                   </div>
-                  <span class="status-badge status-verified">Active</span>
-                  <a class="text-link" href="instructor-student-view.html">View roster</a>
+                  <span class="status-badge status-pending">Upcoming</span>
+                  <a class="text-link" href="assigned-roster.html?rotation=pediatric-ward">View roster</a>
                 </div>
-                <div class="management-row" data-status="active" data-area="Delivery Room">
+                <div class="management-row" data-area="Emergency Room">
                   <div>
-                    <strong>Delivery Room Rotation</strong>
-                    <p>Cebu City Medical Center - Apr 21 - 6:00 AM - 2:00 PM</p>
+                    <strong>Emergency Room Rotation</strong>
+                    <p>CCMC - May 8 - 7:00 AM - 3:00 PM</p>
                   </div>
-                  <span class="status-badge status-verified">Active</span>
-                  <a class="text-link" href="live-attendance-tracker.html">Open attendance</a>
+                  <span class="status-badge status-pending">Upcoming</span>
+                  <a class="text-link" href="assigned-roster.html?rotation=ward-b">View roster</a>
                 </div>
-                <div class="management-row" data-status="updated" data-area="Operating Room">
+                <div class="management-row" data-area="Operating Room">
                   <div>
                     <strong>Operating Room Duty</strong>
-                    <p>Vicente Sotto Memorial Medical Center - Apr 25 - 8:00 AM - 5:00 PM</p>
+                    <p>VSMMC - May 9 - 8:00 AM - 5:00 PM</p>
                   </div>
-                  <span class="status-badge status-pending">Updated</span>
-                  <a class="text-link" href="instructor-student-view.html">View roster</a>
+                  <span class="status-badge status-pending">Upcoming</span>
+                  <a class="text-link" href="assigned-roster.html?rotation=operating-room">View roster</a>
                 </div>
               </div>
 
               <div id="schedule-empty" class="empty-state" hidden>
-                No assigned schedules match the selected filters.
+                No assigned upcoming schedules match the selected filters.
               </div>
             </article>
 
@@ -199,18 +238,19 @@
               <article class="workspace-panel">
                 <div class="panel-heading">
                   <div>
-                    <p class="section-kicker">Current duty</p>
-                    <h2>Ward B Rotation</h2>
+                    <p class="section-kicker">Next assigned duty</p>
+                    <h2>Pedia Pulmo Ward Rotation</h2>
                   </div>
-                  <span class="status-badge status-verified">Active</span>
+                  <span class="status-badge status-pending">Upcoming</span>
                 </div>
 
                 <div class="schedule-assignment-list">
-                  <div class="detail-row"><span>Hospital</span><strong>Cebu City Medical Center</strong></div>
-                  <div class="detail-row"><span>Area of Assignment</span><strong>Ward B</strong></div>
-                  <div class="detail-row"><span>Shift time</span><strong>7:00 AM - 3:00 PM</strong></div>
-                  <div class="detail-row"><span>Assigned group</span><strong>BSN 3A - Group 2</strong></div>
-                  <div class="detail-row"><span>Assigned students</span><strong>8 students</strong></div>
+                  <div class="detail-row"><span>Hospital</span><strong>VSMMC</strong></div>
+                  <div class="detail-row"><span>Area of Assignment</span><strong>Pedia Pulmo Ward</strong></div>
+                  <div class="detail-row"><span>Date</span><strong>May 6, 2026</strong></div>
+                  <div class="detail-row"><span>Shift time</span><strong>8:00 AM - 4:00 PM</strong></div>
+                  <div class="detail-row"><span>Assigned group</span><strong>BSN 3B - Group 1</strong></div>
+                  <div class="detail-row"><span>Assigned students</span><strong>10 students</strong></div>
                 </div>
               </article>
 
@@ -224,21 +264,14 @@
                 </div>
 
                 <div class="requirement-list compact-list">
-                  <a class="requirement-item action-item" href="live-attendance-tracker.html">
+                  <a class="requirement-item action-item" href="assigned-roster.html?rotation=pediatric-ward">
                     <span class="requirement-status"></span>
                     <div>
-                      <strong>Open live attendance</strong>
-                      <p>Monitor check-ins for the assigned duty location.</p>
+                      <strong>View assigned roster</strong>
+                      <p>Open the students connected to your upcoming schedule.</p>
                     </div>
                   </a>
-                  <a class="requirement-item action-item" href="instructor-student-view.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>View assigned students</strong>
-                      <p>Check students connected to your schedule.</p>
-                    </div>
-                  </a>
-                  <div class="readonly-note compact-note">Schedule creation, global edits, reassignment, and group changes are handled by the Chair.</div>
+                  <div class="readonly-note compact-note">Schedule creation, global edits, reassignment, and group changes are handled by the Chair. You can only view upcoming rotations.</div>
                 </div>
               </article>
             </aside>

@@ -25,18 +25,17 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">PR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Prof. Reyes</strong>
+            <strong>Reyes</strong>
             <span>Clinical Instructor</span>
           </div>
         </div>
@@ -78,7 +77,7 @@
               <input class="visually-hidden" id="profile-photo-input" type="file" accept="image/*">
               <div>
                 <p class="section-kicker">Edit Profile</p>
-                <h2>Update your instructor account information.</h2>
+                <h2>Update your account information.</h2>
                 <p>Keep contact details, department, and clinical assignment records current.</p>
                 <div class="profile-chip-row">
                   <span class="status-badge status-verified">Active account</span>
@@ -123,31 +122,6 @@
                   Mobile number
                   <input id="mobile-number" name="mobileNumber" type="tel" value="+63 917 880 1902" required>
                 </label>
-
-                <label class="form-label" for="department">
-                  Department
-                  <input id="department" name="department" type="text" value="College of Nursing" required>
-                </label>
-
-                <label class="form-label" for="clinical-area">
-                  Assigned area
-                  <input id="clinical-area" name="clinicalArea" type="text" value="Ward B" required>
-                </label>
-
-                <label class="form-label" for="clinical-site">
-                  Primary clinical site
-                  <select id="clinical-site" name="clinicalSite" required>
-                    <option>Cebu City Medical Center</option>
-                    <option>Vicente Sotto Medical Center</option>
-                    <option>Community Health Center</option>
-                    <option>Skills Laboratory</option>
-                  </select>
-                </label>
-
-                <label class="form-label" for="office-hours">
-                  Office hours
-                  <input id="office-hours" name="officeHours" type="text" value="Mon - Fri, 8:00 AM - 4:00 PM" required>
-                </label>
               </div>
 
               <div id="edit-profile-message" class="form-message" role="status" aria-live="polite">
@@ -188,38 +162,6 @@
                 </div>
               </article>
 
-              <article class="workspace-panel">
-                <div class="panel-heading">
-                  <div>
-                    <p class="section-kicker">Continue</p>
-                    <h2>Instructor tools</h2>
-                  </div>
-                </div>
-
-                <div class="requirement-list compact-list">
-                  <a class="requirement-item action-item" href="view-profile.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>View profile</strong>
-                      <p>Return to the profile summary.</p>
-                    </div>
-                  </a>
-                  <a class="requirement-item action-item" href="review-submissions.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Review submissions</strong>
-                      <p>Open validation work queue.</p>
-                    </div>
-                  </a>
-                  <a class="requirement-item action-item" href="instructor-notifications.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Notifications</strong>
-                      <p>Check account and validation updates.</p>
-                    </div>
-                  </a>
-                </div>
-              </article>
             </aside>
           </section>
         </main>

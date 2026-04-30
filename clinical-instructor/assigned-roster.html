@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Assigned Roster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
+    <style>
+      .assigned-roster-table {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: #ffffff;
+      }
+
+      .assigned-roster-row {
+        display: grid;
+        grid-template-columns: 0.45fr 2.75fr 1.4fr 1.45fr 1.65fr;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        text-decoration: none;
+        color: inherit;
+        transition: background-color 0.2s;
+      }
+
+      .assigned-roster-row > div,
+      .assigned-roster-row > span {
+        font-family: 'Kumbh Sans', sans-serif !important;
+        font-size: 1rem;
+        color: #1e293b;
+      }
+
+      .assigned-roster-row:last-child {
+        border-bottom: none;
+      }
+
+      .assigned-roster-head {
+        background-color: #f8fafc;
+      }
+
+      .assigned-roster-head span {
+        font-weight: 800 !important;
+        color: #1e293b !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.875rem;
+      }
+
+      .assigned-roster-row:not(.assigned-roster-head):hover {
+        background-color: #f8fafc;
+      }
+
+      .roster-student-cell {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 1rem;
+      }
+
+      .status-neutral {
+        background-color: #f1f5f9;
+        color: #475569;
+      }
+    </style>
+  </head>
+
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Clinical Instructor</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
+          <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
+        </nav>
+
+        <<div class="sidebar-account">
+          <div class="avatar">CR</div>
+          <div>
+            <strong>Reyes</strong>
+            <span>Clinical Instructor</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Assigned Schedules</p>
+              <h1>Assigned Roster</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="icon-button notification-button button-link" href="instructor-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace assigned-roster-workspace">
+          <section class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <h2 id="roster-heading">Emergency Room Rotation</h2>
+              </div>
+              <span class="status-badge status-verified" id="roster-status">Active</span>
+            </div>
+
+            <div class="detail-summary-grid">
+              <div>
+                <span>Hospital</span>
+                <strong id="roster-hospital">CCMC</strong>
+              </div>
+              <div>
+                <span>Area of Assignment</span>
+                <strong id="roster-area">Emergency Room</strong>
+              </div>
+              <div>
+                <span>Shift time</span>
+                <strong id="roster-shift">7:00 AM - 3:00 PM</strong>
+              </div>
+              <div>
+                <span>Assigned group</span>
+                <strong id="roster-group">BSN 3A - Group 2</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="workspace-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Assigned Students</h2>
+              </div>
+              <span class="status-badge status-pending" id="roster-count">Loading...</span>
+            </div>
+
+            <div class="assigned-roster-table" id="assigned-roster-table" aria-label="Assigned student roster">
+              <div class="assigned-roster-row assigned-roster-head">
+                <span>No.</span>
+                <span>Student</span>
+                <span>Section</span>
+                <span>Duty</span>
+                <span>Validation</span>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/assigned-roster.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

@@ -25,18 +25,17 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link is-active" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">PR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Prof. Reyes</strong>
+            <strong>Reyes</strong>
             <span>Clinical Instructor</span>
           </div>
         </div>
@@ -66,175 +65,38 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <p class="section-kicker">Review queue</p>
-              <h2>Good evening, Prof. Reyes.</h2>
-              <p>Student submissions, schedule updates, and compliance summaries are ready for review.</p>
+              <h2>Good evening, Clinical Instructor Reyes.</h2>
+              <p>Clinical case submissions, student appeals, schedule updates, and progress summaries are ready for review.</p>
             </div>
-            <a class="primary-button workspace-action button-link" href="review-submissions.html">Review submissions</a>
+            <a class="primary-button workspace-action button-link" href="select-validation-user.html">Review cases</a>
           </section>
 
-          <section class="dashboard-stats" aria-label="Instructor dashboard summary">
-            <article class="workspace-card stat-card">
+          <section class="dashboard-stats" aria-label="Instructor dashboard summary" style="display: flex; gap: 1.5rem; justify-content: space-between;">
+            <article class="workspace-card stat-card" style="flex: 1;">
               <div class="workspace-card-header">
-                <span class="card-icon">Duty validations</span>
+                <span class="card-icon icon-only" aria-label="Case validations">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8"></path><path d="M7 8h10"></path><path d="M7 12h7"></path><path d="M6 3h12v18H6z"></path></svg>
+                </span>
                 <span class="status-badge status-pending">Pending</span>
               </div>
-              <h3>Duty validations</h3>
-              <p>12 entries awaiting approval</p>
-              <div class="progress-track"><span style="width: 72%"></span></div>
-              <strong class="stat-value">12</strong>
-            </article>
-
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Case validations</span>
-                <span class="status-badge status-pending">Pending</span>
-              </div>
-              <h3>Case validations</h3>
-              <p>8 checklist submissions need review</p>
+              <h3>Case Validations</h3>
+              <p>8 clinical case submissions need review</p>
               <div class="progress-track"><span style="width: 48%"></span></div>
               <strong class="stat-value">8</strong>
             </article>
 
-            <article class="workspace-card stat-card">
+            <article class="workspace-card stat-card" style="flex: 1;">
               <div class="workspace-card-header">
-                <span class="card-icon">Class compliance</span>
-                <span class="status-badge status-verified">On track</span>
+                <span class="card-icon icon-only" aria-label="Student appeals">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H8l-4 4V5Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path><path d="m15 17 2 2 4-5"></path></svg>
+                </span>
+                <span class="status-badge status-pending">Open</span>
               </div>
-              <h3>Class compliance</h3>
-              <p>31 of 42 students are on track</p>
-              <div class="progress-track"><span style="width: 74%"></span></div>
-              <strong class="stat-value">74%</strong>
+              <h3>Student Appeals</h3>
+              <p>4 concerns are waiting for recommendation</p>
+              <div class="progress-track"><span style="width: 52%"></span></div>
+              <strong class="stat-value">4</strong>
             </article>
-
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Schedule conflicts</span>
-                <span class="status-badge status-rejected">Conflict</span>
-              </div>
-              <h3>Schedule conflicts</h3>
-              <p>2 assignments need adjustment</p>
-              <div class="notification-mini">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </article>
-          </section>
-
-          <section class="dashboard-columns instructor-columns">
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Needs review</p>
-                  <h2>Pending submissions</h2>
-                </div>
-                <button class="icon-button kebab-button" type="button" aria-label="Pending submission actions" title="Actions">
-                  <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8"></circle><circle cx="12" cy="12" r="1.8"></circle><circle cx="12" cy="19" r="1.8"></circle></svg>
-                </button>
-              </div>
-
-              <div class="review-list">
-                <div class="review-item">
-                  <div class="avatar small-avatar">JA</div>
-                  <div>
-                    <strong>Josh Anton Nuevas</strong>
-                    <p>Duty hours - Ward B rotation</p>
-                  </div>
-                  <span class="status-badge status-pending">Pending</span>
-                </div>
-                <div class="review-item">
-                  <div class="avatar small-avatar">TA</div>
-                  <div>
-                    <strong>Treasure Abadinas</strong>
-                    <p>Clinical case - Maternal care</p>
-                  </div>
-                  <span class="status-badge status-pending">Pending</span>
-                </div>
-                <div class="review-item">
-                  <div class="avatar small-avatar">ZT</div>
-                  <div>
-                    <strong>Zander Aligato</strong>
-                    <p>Checklist - Medication administration</p>
-                  </div>
-                  <span class="status-badge status-pending">Pending</span>
-                </div>
-              </div>
-
-              <div class="pagination-note">20 total submissions queued for review.</div>
-            </article>
-
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Schedule</p>
-                  <h2>Duty assignment status</h2>
-                </div>
-                <span class="status-badge status-rejected">2 conflicts</span>
-              </div>
-
-              <div class="schedule-warning">
-                <div class="warning-icon">!</div>
-                <div>
-                  <strong>Conflict detected</strong>
-                  <p>Two students are assigned to Ward B during a limited-capacity slot.</p>
-                </div>
-              </div>
-
-              <div class="requirement-list">
-                <div class="requirement-item">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Ward B rotation</strong>
-                    <p>Capacity review needed before final assignment</p>
-                  </div>
-                </div>
-                <div class="requirement-item">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Delivery room slot</strong>
-                    <p>One student pending instructor confirmation</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </section>
-
-          <section class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Monitoring</p>
-                <h2>Student progress overview</h2>
-              </div>
-              <a class="ghost-button button-link" href="instructor-student-view.html">View all students</a>
-            </div>
-
-            <div class="student-table" role="table" aria-label="Student progress overview">
-              <div class="student-row student-row-head" role="row">
-                <span role="columnheader">Student</span>
-                <span role="columnheader">Duty hours</span>
-                <span role="columnheader">Cases</span>
-                <span role="columnheader">Status</span>
-              </div>
-              <div class="student-row" role="row">
-                <span role="cell">Maria Cruz</span>
-                <span role="cell">48 / 72</span>
-                <span role="cell">14 / 24</span>
-                <span role="cell"><span class="status-badge status-pending">In progress</span></span>
-              </div>
-              <div class="student-row" role="row">
-                <span role="cell">Lichael Ursulo</span>
-                <span role="cell">72 / 72</span>
-                <span role="cell">24 / 24</span>
-                <span role="cell"><span class="status-badge status-verified">Completed</span></span>
-              </div>
-              <div class="student-row" role="row">
-                <span role="cell">Jay Tiongzon</span>
-                <span role="cell">36 / 72</span>
-                <span role="cell">10 / 24</span>
-                <span role="cell"><span class="status-badge status-pending">Pending</span></span>
-              </div>
-            </div>
           </section>
         </main>
       </div>

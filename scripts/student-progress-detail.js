@@ -1,82 +1,80 @@
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const filterButtons = Array.from(document.querySelectorAll("[data-record-filter]"));
-const recordItems = Array.from(document.querySelectorAll("#student-record-list .submission-item"));
+const recordList = document.querySelector("#student-record-list");
 const recordMessage = document.querySelector("#record-message");
-const assignedInstructor = document.querySelector(".sidebar-account strong")?.textContent.trim() || "Prof. Reyes";
+const pendingCaseLink = document.querySelector("#pending-case-link");
+const weeklyDutyList = document.querySelector("#weekly-duty-list");
+const weeklyDutyDays = document.querySelector("#weekly-duty-days");
+const weeklyDutyHours = document.querySelector("#weekly-duty-hours");
+const weeklyDutyOvertime = document.querySelector("#weekly-duty-overtime");
+const weeklyDutyOvertimeBadge = document.querySelector("#weekly-duty-overtime-badge");
+const weeklyDutyOverviewTitle = document.querySelector("#weekly-duty-overview-title");
+const weeklyDutyOverviewCopy = document.querySelector("#weekly-duty-overview-copy");
+const weeklyDutyMessage = document.querySelector("#weekly-duty-message");
+const instructorData = window.NurseTrackInstructorData;
 
-const students = {
+let recordItems = [];
+
+const fallbackStudents = {
   "maria-cruz": {
     name: "Maria Cruz",
     initials: "MC",
     id: "12-3456-789",
     section: "BSN 3A",
-    site: "Cebu City Medical Center",
-    area: "Ward B",
-    assignedCi: "Prof. Reyes",
+    site: "CCMC",
+    area: "Emergency Room",
     status: "In progress",
-    duty: 67,
-    cases: 58,
-    procedures: 65,
+    extensionDays: 11,
     pending: 14
-  },
-  "licheal-ursulo": {
-    name: "Lichael Ursulo",
-    initials: "LU",
-    id: "23-1788-402",
-    section: "BSN 3A",
-    site: "Cebu City Medical Center",
-    area: "Delivery Room",
-    assignedCi: "Prof. Reyes",
-    status: "Completed",
-    duty: 100,
-    cases: 100,
-    procedures: 96,
-    pending: 0
-  },
-  "treasure-abadinas": {
-    name: "Treasure Abadinas",
-    initials: "TA",
-    id: "22-1845-103",
-    section: "BSN 3A",
-    site: "Vicente Sotto Medical Center",
-    area: "Delivery Room",
-    assignedCi: "Prof. Reyes",
-    status: "On track",
-    duty: 74,
-    cases: 70,
-    procedures: 72,
-    pending: 6
-  },
-  "jay-tiongzon": {
-    name: "Jay Tiongzon",
-    initials: "JT",
-    id: "23-1782-221",
-    section: "BSN 3B",
-    site: "Community Health Center",
-    area: "Health Teaching",
-    assignedCi: "Prof. Reyes",
-    status: "Needs action",
-    duty: 50,
-    cases: 42,
-    procedures: 48,
-    pending: 18
-  },
-  "andrea-gomez": {
-    name: "Andrea Gomez",
-    initials: "AG",
-    id: "20-4408-332",
-    section: "BSN 4A",
-    site: "Skills Laboratory",
-    area: "Simulation Duty",
-    assignedCi: "Prof. Reyes",
-    status: "In progress",
-    duty: 82,
-    cases: 66,
-    procedures: 76,
-    pending: 9
   }
 };
+
+const students = instructorData?.students || fallbackStudents;
+
+const weeklyDutyByStudent = {
+  "maria-cruz": [
+    { day: "Monday", date: "Apr 20", area: "Emergency Room", hours: 8, overtime: 0 },
+    { day: "Tuesday", date: "Apr 21", area: "Emergency Room", hours: 9.5, overtime: 1.5 },
+    { day: "Thursday", date: "Apr 23", area: "Operating Room", hours: 8, overtime: 0 },
+    { day: "Friday", date: "Apr 24", area: "Operating Room", hours: 10, overtime: 2 }
+  ],
+  "treasure-abadinas": [
+    { day: "Monday", date: "Apr 20", area: "Delivery Room", hours: 8, overtime: 0 },
+    { day: "Wednesday", date: "Apr 22", area: "Delivery Room", hours: 9, overtime: 1 },
+    { day: "Thursday", date: "Apr 23", area: "Delivery Room", hours: 8, overtime: 0 },
+    { day: "Friday", date: "Apr 24", area: "Delivery Room", hours: 9.5, overtime: 1.5 }
+  ],
+  "licheal-ursulo": [
+    { day: "Monday", date: "Apr 20", area: "Delivery Room", hours: 8, overtime: 0 },
+    { day: "Tuesday", date: "Apr 21", area: "Delivery Room", hours: 8, overtime: 0 },
+    { day: "Wednesday", date: "Apr 22", area: "Pedia Pulmo Ward", hours: 8, overtime: 0 }
+  ],
+  "nicole-dela-pena": [
+    { day: "Tuesday", date: "Apr 21", area: "Medical Ward", hours: 8, overtime: 0 },
+    { day: "Wednesday", date: "Apr 22", area: "Medical Ward", hours: 8.5, overtime: 0.5 },
+    { day: "Friday", date: "Apr 24", area: "Medical Ward", hours: 8, overtime: 0 }
+  ],
+  "carlo-fernandez": [
+    { day: "Monday", date: "Apr 20", area: "Operating Room", hours: 8, overtime: 0 },
+    { day: "Wednesday", date: "Apr 22", area: "Operating Room", hours: 10, overtime: 2 },
+    { day: "Friday", date: "Apr 24", area: "Operating Room", hours: 8, overtime: 0 }
+  ]
+};
+
+function defaultWeeklyDuty(student) {
+  return [
+    { day: "Monday", date: "Apr 20", area: student.area || "Assigned area", hours: 8, overtime: 0 },
+    { day: "Wednesday", date: "Apr 22", area: student.area || "Assigned area", hours: 8, overtime: 0 },
+    { day: "Friday", date: "Apr 24", area: student.area || "Assigned area", hours: 8.5, overtime: 0.5 }
+  ];
+}
+
+function formatHours(hours) {
+  const cleanHours = Number.isInteger(hours) ? hours : Number(hours).toFixed(1);
+
+  return Number(hours) === 1 ? `${cleanHours} hr` : `${cleanHours} hrs`;
+}
 
 function statusClass(status) {
   if (status === "Completed" || status === "On track") {
@@ -90,78 +88,171 @@ function statusClass(status) {
   return "status-pending";
 }
 
-function showAccessDenied() {
-  const main = document.querySelector("main.workspace");
-
-  if (!main) {
-    return;
-  }
-
-  main.innerHTML = `
-    <section class="workspace-hero dashboard-hero">
-      <div>
-        <p class="section-kicker">Assigned Student Access</p>
-        <h2>This student is not assigned to ${assignedInstructor}.</h2>
-        <p>Clinical Instructors can view progress only for students in their assigned schedule scope.</p>
-      </div>
-      <a class="primary-button workspace-action button-link" href="instructor-student-view.html">Back to assigned students</a>
-    </section>
-  `;
+function recordStatusMeta(status) {
+  return instructorData?.statusMeta?.[status] || {
+    label: status.charAt(0).toUpperCase() + status.slice(1),
+    badgeClass: status === "approved" ? "status-verified" : status === "rejected" ? "status-rejected" : "status-pending",
+    actionLabel: status === "pending" ? "Review" : "View"
+  };
 }
 
 function setText(id, text) {
-  document.querySelector(`#${id}`).textContent = text;
+  const element = document.querySelector(`#${id}`);
+
+  if (element) {
+    element.textContent = text;
+  }
 }
 
-function setTrack(id, value) {
-  document.querySelector(`#${id}`).style.width = `${value}%`;
+function buildCaseSelectionUrl(studentKey, student) {
+  const params = new URLSearchParams({
+    student: studentKey,
+    name: student.name,
+    id: student.id,
+    section: student.section,
+    area: student.area || ""
+  });
+
+  return `clinical-case-selection.html?${params.toString()}`;
 }
 
-function applyStudent(student) {
-  const dutyAccepted = Math.round((72 * student.duty) / 100);
-  const caseApproved = Math.round((24 * student.cases) / 100);
-  const procedureComplete = Math.round((48 * student.procedures) / 100);
-
+function applyStudent(student, studentKey) {
   setText("progress-avatar", student.initials);
   setText("progress-name", student.name);
-  setText("progress-meta", `${student.section} - Student ID ${student.id} - ${student.site} rotation`);
+  setText("progress-meta", `${student.section} - Student ID ${student.id}`);
 
   const statusBadge = document.querySelector("#progress-status");
-  statusBadge.textContent = student.status;
-  statusBadge.className = `status-badge ${statusClass(student.status)}`;
 
-  setText("duty-summary", `${dutyAccepted} of 72 hours accepted`);
-  setTrack("duty-track", student.duty);
-  setText("duty-value", `${student.duty}%`);
+  if (statusBadge) {
+    statusBadge.textContent = student.status;
+    statusBadge.className = `status-badge ${statusClass(student.status)}`;
+  }
 
-  setText("case-summary", `${caseApproved} of 24 case logs approved`);
-  setTrack("case-track", student.cases);
-  setText("case-value", `${student.cases}%`);
+  setText("duty-summary", `${student.extensionDays} extension days recorded`);
+  setText("case-summary", "All required DR and OR cases completed");
+  setText("pending-summary", `${student.pending} records need instructor or student action`);
 
-  setText("procedure-summary", `${procedureComplete} of 48 checklist items completed`);
-  setTrack("procedure-track", student.procedures);
-  setText("procedure-value", `${student.procedures}%`);
+  const followUpCount = document.querySelector("#follow-up-count");
 
-  setText("pending-value", student.pending);
-  setText("duty-breakdown", `${dutyAccepted} verified - ${Math.max(0, 72 - dutyAccepted)} remaining duty hours`);
-  setTrack("duty-breakdown-track", student.duty);
-  setText("case-breakdown", `${caseApproved} approved - ${Math.max(0, 24 - caseApproved)} remaining case logs`);
-  setTrack("case-breakdown-track", student.cases);
-  setText("procedure-breakdown", `${procedureComplete} completed - ${Math.max(0, 48 - procedureComplete)} remaining checklist items`);
-  setTrack("procedure-breakdown-track", student.procedures);
+  if (followUpCount) {
+    followUpCount.textContent = `${student.pending} open`;
+  }
 
-  setText("profile-section", student.section);
-  setText("profile-student-id", student.id);
-  setText("profile-site", student.site);
-  setText("profile-area", student.area);
-  setText("follow-up-count", `${student.pending} open`);
+  if (pendingCaseLink) {
+    pendingCaseLink.href = buildCaseSelectionUrl(studentKey, student);
+  }
+}
+
+function renderStudentRecords(studentKey) {
+  if (!recordList || !instructorData?.cases) {
+    recordItems = Array.from(document.querySelectorAll("#student-record-list .submission-item"));
+    return;
+  }
+
+  const records = instructorData.cases.getByStudent(studentKey);
+
+  recordList.innerHTML = "";
+
+  records.forEach((record) => {
+    const meta = recordStatusMeta(record.status);
+    const item = document.createElement("article");
+    const actionUrl = instructorData.buildCaseUrl(record.id, {
+      from: "progress",
+      student: studentKey
+    });
+
+    item.className = "submission-item";
+    item.dataset.status = record.status;
+    item.innerHTML = `
+      <div class="avatar small-avatar">${record.studentInitials}</div>
+      <div class="submission-copy">
+        <strong>${record.title}</strong>
+        <p>${record.summary}</p>
+      </div>
+      <span class="status-badge ${meta.badgeClass}">${meta.label}</span>
+      <a class="text-link" href="${actionUrl}">${meta.actionLabel}</a>
+    `;
+
+    recordList.appendChild(item);
+  });
+
+  recordItems = Array.from(recordList.querySelectorAll(".submission-item"));
+}
+
+function renderWeeklyDuty(studentKey, student) {
+  if (!weeklyDutyList) {
+    return;
+  }
+
+  const dutyEntries = weeklyDutyByStudent[studentKey] || defaultWeeklyDuty(student);
+  const totalHours = dutyEntries.reduce((sum, entry) => sum + entry.hours, 0);
+  const totalOvertime = dutyEntries.reduce((sum, entry) => sum + entry.overtime, 0);
+
+  weeklyDutyList.innerHTML = dutyEntries.map((entry) => {
+    const hasOvertime = entry.overtime > 0;
+    const badgeClass = hasOvertime ? "status-rejected" : "status-verified";
+    const badgeLabel = hasOvertime ? `Overtime +${formatHours(entry.overtime)}` : "No overtime";
+    const [month = "", dayNumber = ""] = entry.date.split(" ");
+
+    return `
+      <article class="weekly-duty-row ${hasOvertime ? "has-overtime" : ""}">
+        <div class="weekly-duty-date-chip">
+          <span>${month}</span>
+          <strong>${dayNumber}</strong>
+        </div>
+
+        <div class="weekly-duty-copy">
+          <strong>${entry.day}</strong>
+          <p>${entry.area}</p>
+        </div>
+
+        <span class="status-badge ${badgeClass}">${badgeLabel}</span>
+
+        <div class="weekly-duty-hour-stack">
+          <span>${formatHours(entry.hours)}</span>
+          <small>Duty hours</small>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  if (weeklyDutyDays) {
+    weeklyDutyDays.textContent = dutyEntries.length;
+  }
+
+  if (weeklyDutyHours) {
+    weeklyDutyHours.textContent = formatHours(totalHours);
+  }
+
+  if (weeklyDutyOvertime) {
+    weeklyDutyOvertime.textContent = formatHours(totalOvertime);
+  }
+
+  if (weeklyDutyOvertimeBadge) {
+    weeklyDutyOvertimeBadge.textContent = `${formatHours(totalOvertime)} OT`;
+    weeklyDutyOvertimeBadge.className = `status-badge ${totalOvertime > 0 ? "status-rejected" : "status-verified"}`;
+  }
+
+  if (weeklyDutyOverviewTitle) {
+    weeklyDutyOverviewTitle.textContent = `${formatHours(totalHours)} recorded`;
+  }
+
+  if (weeklyDutyOverviewCopy) {
+    weeklyDutyOverviewCopy.textContent = totalOvertime > 0
+      ? `${formatHours(totalOvertime)} overtime across ${dutyEntries.length} duty day${dutyEntries.length === 1 ? "" : "s"}.`
+      : `No overtime across ${dutyEntries.length} duty day${dutyEntries.length === 1 ? "" : "s"}.`;
+  }
+
+  if (weeklyDutyMessage) {
+    weeklyDutyMessage.textContent = `${student.name} completed ${formatHours(totalHours)} across ${dutyEntries.length} duty day${dutyEntries.length === 1 ? "" : "s"} this week, with ${formatHours(totalOvertime)} overtime.`;
+  }
 }
 
 function filterRecords(filter) {
   let visibleCount = 0;
 
   recordItems.forEach((item) => {
-    const isVisible = filter === "all" || item.dataset.status === filter;
+    const isVisible = item.dataset.status === filter;
     item.hidden = !isVisible;
 
     if (isVisible) {
@@ -169,17 +260,22 @@ function filterRecords(filter) {
     }
   });
 
-  const label = filter === "all" ? "recent" : filter;
-  recordMessage.textContent = `Showing ${visibleCount} ${label} record${visibleCount === 1 ? "" : "s"}.`;
+  if (recordMessage) {
+    recordMessage.textContent = `Showing ${visibleCount} ${filter} record${visibleCount === 1 ? "" : "s"}.`;
+  }
 }
 
-menuButton.addEventListener("click", () => {
-  document.body.classList.add("sidebar-open");
-});
+if (menuButton) {
+  menuButton.addEventListener("click", () => {
+    document.body.classList.add("sidebar-open");
+  });
+}
 
-sidebarBackdrop.addEventListener("click", () => {
-  document.body.classList.remove("sidebar-open");
-});
+if (sidebarBackdrop) {
+  sidebarBackdrop.addEventListener("click", () => {
+    document.body.classList.remove("sidebar-open");
+  });
+}
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -191,10 +287,19 @@ filterButtons.forEach((button) => {
 
 const params = new URLSearchParams(window.location.search);
 const studentKey = params.get("student") || "maria-cruz";
-const selectedStudent = students[studentKey];
+const selectedStudent = students[studentKey] || students["maria-cruz"];
 
-if (!selectedStudent || selectedStudent.assignedCi !== assignedInstructor) {
-  showAccessDenied();
-} else {
-  applyStudent(selectedStudent);
+applyStudent(selectedStudent, studentKey);
+renderStudentRecords(studentKey);
+renderWeeklyDuty(studentKey, selectedStudent);
+
+const defaultFilterButton =
+  document.querySelector("[data-record-filter].is-active") ||
+  document.querySelector("[data-record-filter='approved']") ||
+  filterButtons[0];
+
+if (defaultFilterButton) {
+  filterButtons.forEach((item) => item.classList.remove("is-active"));
+  defaultFilterButton.classList.add("is-active");
+  filterRecords(defaultFilterButton.dataset.recordFilter);
 }

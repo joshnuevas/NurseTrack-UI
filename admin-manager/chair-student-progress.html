@@ -9,7 +9,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/nursetrack.css">
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
+    <style>
+      .student-progress-pick-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: #ffffff;
+      }
+
+      .student-progress-pick-card {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        border-radius: 0;
+        box-shadow: none;
+        text-decoration: none;
+        color: inherit;
+        transition: background-color 0.2s;
+      }
+
+      .student-progress-pick-card:hover {
+        background-color: #f8fafc;
+      }
+
+      .student-progress-pick-card:last-child {
+        border-bottom: none;
+      }
+
+      .student-progress-pick-card > span:nth-child(2) {
+        flex: 1;
+        margin-left: 1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+      }
+
+      .student-progress-pick-card small {
+        color: #64748b;
+        font-size: 0.875rem;
+      }
+    </style>
   </head>
+
   <body class="app-body">
     <div class="app-shell">
       <aside class="app-sidebar" aria-label="Primary navigation">
@@ -22,20 +68,19 @@
         </div>
 
         <div class="role-chip">Chair</div>
-
         <nav class="sidebar-nav">
           <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link is-active" href="chair-student-progress.html" aria-current="page"><span class="nav-dot"></span>Student Progress</a>
-          <a class="nav-link" href="compliance-summary.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
+          <a class="nav-link" href="clinical-cases-view.html"><span class="nav-dot"></span>Clinical Cases View</a>
+          <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
-
         <div class="sidebar-account">
           <div class="avatar">CR</div>
           <div>
-            <strong>Chair Reyes</strong>
+            <strong>Reyes</strong>
             <span>Chair</span>
           </div>
         </div>
@@ -57,136 +102,186 @@
 
           <div class="topbar-actions">
             <span class="sync-pill">Updated now</span>
-            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
+            <a class="icon-button topbar-profile-button button-link" href="view-profile.html" aria-label="Profile" title="Profile">
+              <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </a>
+
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
 
-        <main class="workspace chair-student-progress-workspace">
-          <section class="workspace-hero dashboard-hero student-progress-lookup-hero">
-            <div>
-              <p class="section-kicker">Student Progress</p>
-              <h2>Search students and monitor readiness across groups.</h2>
-              <p>Chair can review broader compliance status, incomplete requirements, duty-hour standing, clinical cases, and clearance readiness indicators.</p>
-            </div>
-            <span class="status-badge status-pending">Readiness view</span>
-          </section>
-
-          <section class="dashboard-stats" aria-label="Chair student progress summary">
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Complete</span>
-                <span class="status-badge status-verified">Ready</span>
-              </div>
-              <h3>Complete</h3>
-              <p>Students with completed tracked requirements</p>
-              <strong class="stat-value" id="chair-progress-complete">2</strong>
-            </article>
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Incomplete</span>
-                <span class="status-badge status-rejected">Needs action</span>
-              </div>
-              <h3>Incomplete</h3>
-              <p>Students with duty, case, or validation gaps</p>
-              <strong class="stat-value" id="chair-progress-incomplete">2</strong>
-            </article>
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Clearance</span>
-                <span class="status-badge status-pending">Indicator</span>
-              </div>
-              <h3>Ready for Clearance</h3>
-              <p>Compliance-ready status for review visibility</p>
-              <strong class="stat-value" id="chair-progress-clearance">1</strong>
-            </article>
-          </section>
-
+        <main class="workspace instructor-student-workspace">
           <section class="workspace-panel student-progress-search-panel">
             <div class="panel-heading">
               <div>
-                <p class="section-kicker">Search Students</p>
-                <h2>Broader compliance and readiness list</h2>
+                <h2>All-Section Student List</h2>
               </div>
-              <span class="status-badge status-verified" id="chair-student-count">5 visible</span>
+              <span class="status-badge status-verified" id="student-progress-count">0 visible</span>
             </div>
 
-            <div class="history-filters student-progress-filters" aria-label="Chair student progress filters">
-              <label class="form-label" for="chair-student-search">
+            <div class="history-filters student-progress-filters" aria-label="Student progress search filters">
+              <label class="form-label" for="student-progress-search">
                 Search
-                <input id="chair-student-search" type="search" placeholder="Search name, ID, section, CI, duty area">
+                <input id="student-progress-search" type="search" placeholder="Search name, student ID, section, or duty area">
               </label>
-              <label class="form-label" for="chair-student-section">
+
+              <label class="form-label" for="student-progress-section">
                 Section
-                <select id="chair-student-section">
-                  <option value="all">All sections</option>
+                <select id="student-progress-section">
                   <option value="BSN 3A">BSN 3A</option>
                   <option value="BSN 3B">BSN 3B</option>
+                  <option value="BSN 3C">BSN 3C</option>
                   <option value="BSN 4A">BSN 4A</option>
                 </select>
               </label>
-              <label class="form-label" for="chair-student-readiness">
-                Readiness
-                <select id="chair-student-readiness">
-                  <option value="all">All statuses</option>
-                  <option value="Incomplete">Incomplete</option>
-                  <option value="Complete">Complete</option>
-                  <option value="Ready for Clearance">Ready for Clearance</option>
-                  <option value="Ready for Enrollment">Ready for Enrollment</option>
+
+              <label class="form-label" for="student-progress-status">
+                Standing
+                <select id="student-progress-status">
+                  <option value="all">All standings</option>
+                  <option value="In progress">In progress</option>
+                  <option value="On track">On track</option>
+                  <option value="Needs action">Needs action</option>
+                  <option value="Completed">Completed</option>
                 </select>
               </label>
             </div>
 
-            <div class="student-progress-pick-list chair-student-progress-list" id="chair-student-list">
-              <article class="student-progress-pick-card" data-chair-student-card data-name="Maria Cruz" data-id="12-3456-789" data-section="BSN 3A" data-ci="Prof. Reyes" data-area="Ward B" data-readiness="Incomplete">
-                <span class="avatar small-avatar">MC</span>
-                <span>
-                  <strong>Maria Cruz</strong>
-                  <small>BSN 3A - Ward B - Prof. Reyes</small>
-                  <small>Duty 67% - Cases 58% - Pending 14</small>
-                </span>
-                <mark class="status-badge status-rejected">Incomplete</mark>
-              </article>
-              <article class="student-progress-pick-card" data-chair-student-card data-name="Lichael Ursulo" data-id="23-1788-402" data-section="BSN 3A" data-ci="Prof. Reyes" data-area="Delivery Room" data-readiness="Ready for Clearance">
-                <span class="avatar small-avatar">LU</span>
-                <span>
-                  <strong>Lichael Ursulo</strong>
-                  <small>BSN 3A - Delivery Room - Prof. Reyes</small>
-                  <small>Duty 100% - Cases 100% - Pending 0</small>
-                </span>
-                <mark class="status-badge status-pending">Ready for Clearance</mark>
-              </article>
-              <article class="student-progress-pick-card" data-chair-student-card data-name="Treasure Abadinas" data-id="22-1845-103" data-section="BSN 3A" data-ci="Prof. Dela Cruz" data-area="Delivery Room" data-readiness="Complete">
+            <div class="student-progress-pick-list" id="student-progress-pick-list">
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=treasure-abadinas" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Treasure Abadinas" data-initials="TA" data-id="22-1845-103" data-section="BSN 3A" data-site="SAMCH" data-area="Delivery Room" data-status="On track">
                 <span class="avatar small-avatar">TA</span>
-                <span>
-                  <strong>Treasure Abadinas</strong>
-                  <small>BSN 3A - Delivery Room - Prof. Dela Cruz</small>
-                  <small>Duty 92% - Cases 100% - Pending 0</small>
-                </span>
-                <mark class="status-badge status-verified">Complete</mark>
-              </article>
-              <article class="student-progress-pick-card" data-chair-student-card data-name="Jay Tiongzon" data-id="23-1782-221" data-section="BSN 3B" data-ci="Prof. Lim" data-area="Community Health" data-readiness="Incomplete">
+                <span><strong>Treasure Abadinas</strong><small>BSN 3A - 22-1845-103 - Delivery Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=maria-cruz" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Maria Cruz" data-initials="MC" data-id="12-3456-789" data-section="BSN 3A" data-site="CCMC" data-area="Emergency Room" data-status="In progress">
+                <span class="avatar small-avatar">MC</span>
+                <span><strong>Maria Cruz</strong><small>BSN 3A - 12-3456-789 - Emergency Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=licheal-ursulo" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Lichael Ursulo" data-initials="LU" data-id="23-1788-402" data-section="BSN 3A" data-site="SAMCH" data-area="Delivery Room" data-status="Completed">
+                <span class="avatar small-avatar">LU</span>
+                <span><strong>Lichael Ursulo</strong><small>BSN 3A - 23-1788-402 - Delivery Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">Completed</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=nicole-dela-pena" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Nicole Dela Pena" data-initials="ND" data-id="23-1023-441" data-section="BSN 3A" data-site="Vicente Mendiola Center for Health Infirmary" data-area="Medical Ward" data-status="On track">
+                <span class="avatar small-avatar">ND</span>
+                <span><strong>Nicole Dela Pena</strong><small>BSN 3A - 23-1023-441 - Medical Ward</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=carlo-fernandez" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Carlo Fernandez" data-initials="CF" data-id="23-1188-902" data-section="BSN 3A" data-site="VSMMC" data-area="OR Main" data-status="In progress">
+                <span class="avatar small-avatar">CF</span>
+                <span><strong>Carlo Fernandez</strong><small>BSN 3A - 23-1188-902 - Operating Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=zander-aligato" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Zander Aligato" data-initials="ZA" data-id="21-7740-118" data-section="BSN 3B" data-site="CCMC" data-area="Emergency Room" data-status="On track">
+                <span class="avatar small-avatar">ZA</span>
+                <span><strong>Zander Aligato</strong><small>BSN 3B - 21-7740-118 - Emergency Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=jay-tiongzon" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Jay Tiongzon" data-initials="JT" data-id="23-1782-221" data-section="BSN 3B" data-site="CHN Brgy. Dumlog" data-area="Community Health Nursing Area" data-status="Needs action">
                 <span class="avatar small-avatar">JT</span>
-                <span>
-                  <strong>Jay Tiongzon</strong>
-                  <small>BSN 3B - Community Health - Prof. Lim</small>
-                  <small>Duty 50% - Cases 42% - Pending 18</small>
-                </span>
-                <mark class="status-badge status-rejected">Incomplete</mark>
-              </article>
-              <article class="student-progress-pick-card" data-chair-student-card data-name="Andrea Gomez" data-id="20-4408-332" data-section="BSN 4A" data-ci="Prof. Reyes" data-area="Skills Laboratory" data-readiness="Ready for Enrollment">
+                <span><strong>Jay Tiongzon</strong><small>BSN 3B - 23-1782-221 - Community Health Nursing Area</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-rejected">Needs action</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=hannah-bautista" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Hannah Bautista" data-initials="HB" data-id="22-2451-667" data-section="BSN 3B" data-site="CCMC" data-area="Pedia Pulmo Ward" data-status="On track">
+                <span class="avatar small-avatar">HB</span>
+                <span><strong>Hannah Bautista</strong><small>BSN 3B - 22-2451-667 - Pedia Pulmo Ward</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=rafael-castillo" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Rafael Castillo" data-initials="RC" data-id="22-8820-431" data-section="BSN 3B" data-site="VSMMC" data-area="OR Main" data-status="In progress">
+                <span class="avatar small-avatar">RC</span>
+                <span><strong>Rafael Castillo</strong><small>BSN 3B - 22-8820-431 - Operating Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=bea-montes" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Bea Montes" data-initials="BM" data-id="23-5531-208" data-section="BSN 3B" data-site="CHN Brgy. Dumlog" data-area="Community Health Nursing Area" data-status="Needs action">
+                <span class="avatar small-avatar">BM</span>
+                <span><strong>Bea Montes</strong><small>BSN 3B - 23-5531-208 - Community Health Nursing Area</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-rejected">Needs action</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=janine-aquino" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Janine Aquino" data-initials="JA" data-id="22-6102-719" data-section="BSN 3C" data-site="SAMCH" data-area="Delivery Room" data-status="On track">
+                <span class="avatar small-avatar">JA</span>
+                <span><strong>Janine Aquino</strong><small>BSN 3C - 22-6102-719 - Delivery Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=miguel-reyes" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Miguel Reyes" data-initials="MR" data-id="23-4190-778" data-section="BSN 3C" data-site="Vicente Mendiola Center for Health Infirmary" data-area="Medical Ward" data-status="In progress">
+                <span class="avatar small-avatar">MR</span>
+                <span><strong>Miguel Reyes</strong><small>BSN 3C - 23-4190-778 - Medical Ward</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=patricia-uy" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Patricia Uy" data-initials="PU" data-id="22-7304-122" data-section="BSN 3C" data-site="CCMC" data-area="Emergency Room" data-status="Needs action">
+                <span class="avatar small-avatar">PU</span>
+                <span><strong>Patricia Uy</strong><small>BSN 3C - 22-7304-122 - Emergency Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-rejected">Needs action</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=sean-villamor" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Sean Villamor" data-initials="SV" data-id="23-9055-310" data-section="BSN 3C" data-site="VSMMC" data-area="OR Main" data-status="In progress">
+                <span class="avatar small-avatar">SV</span>
+                <span><strong>Sean Villamor</strong><small>BSN 3C - 23-9055-310 - Operating Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=leah-tan" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Leah Tan" data-initials="LT" data-id="23-6718-235" data-section="BSN 3C" data-site="CCMC" data-area="NICU" data-status="Completed">
+                <span class="avatar small-avatar">LT</span>
+                <span><strong>Leah Tan</strong><small>BSN 3C - 23-6718-235 - NICU</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">Completed</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=andrea-gomez" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Andrea Gomez" data-initials="AG" data-id="20-4408-332" data-section="BSN 4A" data-site="Vicente Mendiola Center for Health Infirmary" data-area="Emergency Room" data-status="In progress">
                 <span class="avatar small-avatar">AG</span>
-                <span>
-                  <strong>Andrea Gomez</strong>
-                  <small>BSN 4A - Skills Laboratory - Prof. Reyes</small>
-                  <small>Duty 100% - Cases 100% - Pending 0</small>
-                </span>
-                <mark class="status-badge status-verified">Ready for Enrollment</mark>
-              </article>
+                <span><strong>Andrea Gomez</strong><small>BSN 4A - 20-4408-332 - Emergency Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=mark-hernandez" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Mark Hernandez" data-initials="MH" data-id="21-5409-882" data-section="BSN 4A" data-site="PSH" data-area="Operating Room" data-status="On track">
+                <span class="avatar small-avatar">MH</span>
+                <span><strong>Mark Hernandez</strong><small>BSN 4A - 21-5409-882 - Operating Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">On track</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=camille-navarro" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Camille Navarro" data-initials="CN" data-id="21-3091-450" data-section="BSN 4A" data-site="CCHD" data-area="Community Health / Duty Area" data-status="Completed">
+                <span class="avatar small-avatar">CN</span>
+                <span><strong>Camille Navarro</strong><small>BSN 4A - 21-3091-450 - Community Health Nursing Area</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-verified">Completed</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=daniel-ong" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Daniel Ong" data-initials="DO" data-id="21-7782-944" data-section="BSN 4A" data-site="CCMC" data-area="Pedia Pulmo Ward" data-status="In progress">
+                <span class="avatar small-avatar">DO</span>
+                <span><strong>Daniel Ong</strong><small>BSN 4A - 21-7782-944 - Pedia Pulmo Ward</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-pending">In progress</mark>
+              </a>
+
+              <a class="student-progress-pick-card" href="student-progress-detail.html?student=sophia-ramos" data-student-progress-card data-assigned-ci="Prof. Reyes" data-name="Sophia Ramos" data-initials="SR" data-id="21-6607-301" data-section="BSN 4A" data-site="CCMC" data-area="Emergency Room" data-status="Needs action">
+                <span class="avatar small-avatar">SR</span>
+                <span><strong>Sophia Ramos</strong><small>BSN 4A - 21-6607-301 - Emergency Room</small><small>Assigned CI: Prof. Reyes</small></span>
+                <mark class="status-badge status-rejected">Needs action</mark>
+              </a>
             </div>
 
-            <div id="chair-student-empty" class="empty-state" hidden>
-              No students match the selected filters.
+            <div id="student-progress-empty" class="empty-state" hidden>
+              No assigned students match the selected filters.
             </div>
           </section>
         </main>

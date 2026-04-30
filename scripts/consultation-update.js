@@ -19,19 +19,30 @@
 
     const chairNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
-      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
-      { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html"] },
-      { label: "Exceptions & Overrides", href: "compliance-summary.html", pages: ["admin-validation.html", "compliance-summary.html"] },
-      { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] },
-      { label: "Help", href: "admin-help.html", pages: ["admin-help.html"] }
+      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-maker.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
+      { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
+      { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html", "student-progress-detail.html"] },
+      { label: "Clinical Cases View", href: "clinical-cases-view.html", pages: ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"] },
+      { label: "CI Recommendations", href: "student-appeals.html", pages: ["student-appeals.html"] },
+      { label: "Overtime Details", href: "overtime-details.html", pages: ["overtime-details.html"] },
+      { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] }
     ];
 
     const adminNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
       { label: "Manage Users", href: "manage-users.html", pages: ["manage-users.html"] },
       { label: "Role Assignment", href: "role-assignment.html", pages: ["role-assignment.html"] },
-      { label: "Enrollment Summary / Archive", href: "enrollment-archive.html", pages: ["enrollment-archive.html"] },
-      { label: "Help", href: "admin-help.html", pages: ["admin-help.html"] }
+      { label: "Enrollment Summary / Archive", href: "enrollment-archive.html", pages: ["enrollment-archive.html"] }
+    ];
+
+    const instructorNavItems = [
+      { label: "Dashboard", href: "instructor-dashboard.html", pages: ["instructor-dashboard.html"] },
+      { label: "Assigned Schedules", href: "schedule-management.html", pages: ["schedule-management.html", "assigned-roster.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html"] },
+      { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
+      { label: "Clinical Cases Review", href: "select-validation-user.html", pages: ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "validation-history.html"] },
+      { label: "Student Progress", href: "instructor-student-view.html", pages: ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"] },
+      { label: "Student Appeals", href: "student-appeals.html", pages: ["student-appeals.html"] },
+      { label: "Reports", href: "instructor-reports.html", pages: ["instructor-reports.html"] }
     ];
 
     const renderSidebarNav = (items) => {
@@ -113,6 +124,11 @@
 
       if (isChair) {
         renderSidebarNav(chairNavItems);
+        return;
+      }
+
+      if (isInstructor) {
+        renderSidebarNav(instructorNavItems);
       }
     };
 
@@ -129,7 +145,7 @@
       replaceMainWithNotice({
         kicker: "Admin-owned Route",
         title: "This account-management page now belongs to Admin.",
-        copy: "The Chair role handles schedules, student progress, exceptions, overrides, and reports. User management and role assignment are owned by Admin.",
+        copy: "The Chair role handles schedules, student progress, and reports. User management and role assignment are owned by Admin.",
         actionHref: targetHref,
         actionLabel: targetLabel
       });
@@ -199,6 +215,92 @@
       if (select && Array.from(select.options).some((option) => option.textContent === value)) {
         select.value = value;
       }
+    };
+
+    const hospitalWardMap = {
+      VSMMC: ["SP St 201", "SP ST 301", "VND 401", "VNDE 401", "VNDE 501", "IDTM 101", "CFI 101", "OR Main", "Main Station 205"],
+      LCH: ["3rd Floor", "4th Floor"],
+      PSH: ["3B Station", "4th Floor", "5th Floor", "Operating Room", "Intensive Care Unit"],
+      CCMC: ["Pedia Pulmo Ward", "NICU", "Emergency Room", "Operating Room"],
+      CBS: ["Male Ward", "Female Ward"],
+      SAMCH: ["Operating Room", "Delivery Room"],
+      MMC: ["Delivery Room"],
+      VMH: ["Delivery Room"],
+      ECS: ["Outpatient Department"],
+      CCHD: ["Community Health / Duty Area"],
+      CSMC: [],
+      "Mactan Medical Hospital": [],
+      "Vicente Mendiola Center for Health Infirmary": ["Emergency Room", "Medical Ward", "Delivery Room"],
+      "Healing Hands Dialysis Center": ["Dialysis Center"],
+      "Mabolo Birthing Center": ["Birthing Center"],
+      "Inayawan Birthing Center": ["Birthing Center"],
+      "Quiot Birthing Center": ["Birthing Center"],
+      "Tejero Birthing Center": ["Birthing Center"],
+      "CHN Brgy. Dumlog": ["Community Health Nursing Area"],
+      "Preventive Promotive Brgy. Lagtang": ["Community Health / Preventive Promotive Area"],
+      "Psycare Basak San Nicolas": ["Psychiatric Duty Area"]
+    };
+
+    const hospitalNames = Object.keys(hospitalWardMap);
+
+    const normalizeHospitalWardSelects = () => {
+      const attendanceSiteFilter = one("#attendance-site-filter");
+      if (attendanceSiteFilter) {
+        const previousSite = hospitalNames.includes(attendanceSiteFilter.value) ? attendanceSiteFilter.value : hospitalNames[0];
+        attendanceSiteFilter.innerHTML = hospitalNames.map((hospital) => `<option value="${hospital}">${hospital}</option>`).join("");
+        attendanceSiteFilter.value = previousSite;
+      }
+
+      const pairs = [
+        ["#clinical-site", "#duty-area"],
+        ["#selected-schedule-hospital", "#selected-schedule-area"],
+        ["#manual-hospital", "#manual-area"]
+      ];
+
+      pairs.forEach(([hospitalSelector, areaSelector]) => {
+        const hospitalSelect = one(hospitalSelector);
+        const areaSelect = one(areaSelector);
+
+        if (!hospitalSelect) {
+          return;
+        }
+
+        const previousHospital = hospitalNames.includes(hospitalSelect.value) ? hospitalSelect.value : hospitalNames[0];
+        const hasPlaceholder = Array.from(hospitalSelect.options).some((option) => option.value === "");
+
+        hospitalSelect.innerHTML = [
+          ...(hasPlaceholder ? ['<option value="">Select clinical site</option>'] : []),
+          ...hospitalNames.map((hospital) => `<option value="${hospital}">${hospital}</option>`)
+        ].join("");
+        hospitalSelect.value = previousHospital;
+
+        if (!areaSelect) {
+          return;
+        }
+
+        const syncAreas = () => {
+          const wards = hospitalWardMap[hospitalSelect.value] || [];
+          const previousArea = areaSelect.value;
+          const hasAreaPlaceholder = Array.from(areaSelect.options).some((option) => option.value === "");
+          areaSelect.innerHTML = [
+            ...(hasAreaPlaceholder ? ['<option value="">Select duty area</option>'] : []),
+            ...wards.map((ward) => `<option value="${ward}">${ward}</option>`)
+          ].join("");
+
+          if (wards.includes(previousArea)) {
+            areaSelect.value = previousArea;
+          } else if (wards.length > 0) {
+            areaSelect.value = wards[0];
+          } else {
+            areaSelect.value = "";
+          }
+
+          areaSelect.disabled = wards.length === 0;
+        };
+
+        hospitalSelect.addEventListener("change", syncAreas);
+        syncAreas();
+      });
     };
 
     const normalizeSidebarBrandLink = () => {
@@ -271,7 +373,7 @@
         });
       }
 
-      if (isChair && ["compliance-summary.html", "schedule-report.html", "duty-report.html", "case-report.html", "generate-report.html"].includes(page)) {
+      if (isChair && ["schedule-report.html", "duty-report.html", "case-report.html", "generate-report.html"].includes(page)) {
         all("select option").forEach((option) => {
           if (/^all\s+/i.test(option.textContent.trim())) {
             option.remove();
@@ -350,9 +452,6 @@
 
       if (page === "admin-dashboard.html") {
         removePanelByHeading([/reports\s+monitoring summary/i, /workflow\s+chair controls/i]);
-        all('a[href="admin-validation.html"]').forEach((link) => {
-          link.setAttribute("href", "compliance-summary.html");
-        });
       }
 
       if (page === "chair-student-progress.html") {
@@ -364,14 +463,7 @@
       }
     };
 
-    const redirectDeprecatedChairValidation = () => {
-      if (!isChair || page !== "admin-validation.html") {
-        return false;
-      }
-
-      window.location.replace("compliance-summary.html");
-      return true;
-    };
+    const redirectDeprecatedChairValidation = () => false;
 
     const enhanceStudentInstructorTopbar = () => {
       const actions = one(".topbar-actions");
@@ -439,7 +531,7 @@
 
       setText(".role-chip", "Chair");
       setText(".topbar-title p", "Chair Workspace");
-      setText(".sidebar-account strong", "Chair Reyes");
+      setText(".sidebar-account strong", "Reyes");
       setText(".sidebar-account span", "Chair");
       document.title = document.title.replace("Admin", "Chair");
 
@@ -453,156 +545,11 @@
         return;
       }
 
-      setText(".topbar-title h1", "Chair Scheduling");
-      setText(".workspace-hero .section-kicker", "Chair Scheduling");
-      setText(".workspace-hero h2", "Create schedules and manage group assignments.");
-      setText(
-        ".workspace-hero p:not(.section-kicker)",
-        "Upload students and groupings, assign groups to hospitals, areas, shifts, and CIs, then adjust membership when capacity changes."
-      );
-
       one('[data-consultation="chair-schedule-workflow"]')?.remove();
+      one('[data-consultation="chair-import"]')?.remove();
+      one('[data-consultation="chair-schedule-maker-panel"]')?.remove();
+      one(".workspace-hero")?.remove();
       one(".schedule-management-workspace > .dashboard-stats")?.remove();
-
-      const hero = one(".workspace-hero");
-
-      if (hero && !one('[data-consultation="chair-import"]')) {
-        hero.insertAdjacentElement("afterend", render(`
-          <section id="chair-schedule-maker" class="dashboard-columns chair-import-panel" data-consultation="chair-import">
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Excel Import</p>
-                  <h2>Student list and grouping upload</h2>
-                </div>
-                <span class="status-badge status-pending">Review required</span>
-              </div>
-              <div class="import-dropzone">
-                <strong>Drop Excel or CSV file here</strong>
-                <p>Accepted data: student ID, full name, section, group, RLE/rotation, semester, and remarks. Imported records stay editable before publishing.</p>
-                <div class="button-row">
-                  <button class="ghost-button" type="button">Choose file</button>
-                  <button class="primary-button" type="button">Review import</button>
-                </div>
-              </div>
-              <div class="mini-data-table" aria-label="Imported grouping preview">
-                <div class="mini-data-row mini-data-head">
-                  <span>Group</span><span>Students</span><span>Hospital</span><span>Shift</span><span>Status</span>
-                </div>
-                <div class="mini-data-row">
-                  <span>BSN 3A - Group 1<small>RLE 203 / OB Rotation</small></span>
-                  <span>10 students<small>Can split by 5</small></span>
-                  <span>Cebu City Medical Center<small>Delivery Room</small></span>
-                  <span>6:00 AM - 2:00 PM<small>Morning duty</small></span>
-                  <span><span class="status-badge status-verified">Ready</span></span>
-                </div>
-                <div class="mini-data-row">
-                  <span>BSN 3A - Group 2<small>RLE 203 / OB Rotation</small></span>
-                  <span>12 students<small>Capacity review</small></span>
-                  <span>Vicente Sotto Medical Center<small>Ward B</small></span>
-                  <span>2:00 PM - 10:00 PM<small>PM duty</small></span>
-                  <span><span class="status-badge status-rejected">Split needed</span></span>
-                </div>
-              </div>
-            </article>
-
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Assignment Builder</p>
-                  <h2>Create group schedule</h2>
-                </div>
-                <span class="status-badge status-pending">Draft</span>
-              </div>
-              <div class="assignment-builder">
-                <div class="form-grid">
-                  <label class="form-label">Semester / Term
-                    <select><option>2nd Semester 2025-2026</option><option>Summer 2026</option></select>
-                  </label>
-                  <label class="form-label">Rotation / RLE
-                    <select><option>RLE 203 - OB Rotation</option><option>RLE 201 - Medical-Surgical</option><option>RLE 301 - Community Health</option></select>
-                  </label>
-                </div>
-                <div class="form-grid">
-                  <label class="form-label">Hospital
-                    <select><option>Cebu City Medical Center</option><option>Vicente Sotto Medical Center</option><option>Community Health Center</option></select>
-                  </label>
-                  <label class="form-label">Area of Assignment
-                    <select><option>Delivery Room</option><option>Ward B</option><option>Operating Room</option><option>Pediatric Ward</option></select>
-                  </label>
-                </div>
-                <div class="form-grid">
-                  <label class="form-label">Shift
-                    <select><option>6:00 AM - 2:00 PM</option><option>7:00 AM - 3:00 PM</option><option>8:00 AM - 5:00 PM</option><option>2:00 PM - 10:00 PM</option></select>
-                  </label>
-                  <label class="form-label">Assigned CI
-                    <select><option>Prof. Reyes</option><option>Prof. Dela Cruz</option><option>Prof. Santos</option><option>Prof. Lim</option></select>
-                  </label>
-                </div>
-                <div class="form-grid">
-                  <label class="form-label">Student Group
-                    <select><option>BSN 3A - Group 1</option><option>BSN 3A - Group 2</option><option>Custom group</option></select>
-                  </label>
-                  <label class="form-label">Group Size
-                    <select><option>By 5</option><option>By 10</option><option>Custom capacity</option></select>
-                  </label>
-                </div>
-                <label class="form-label">Remarks
-                  <textarea rows="3" placeholder="Capacity note, hospital rule, section split, or special instruction"></textarea>
-                </label>
-                <div class="button-row">
-                  <button class="ghost-button" type="button">Preview assignment</button>
-                  <button class="primary-button" type="button">Publish schedule</button>
-                </div>
-              </div>
-            </article>
-          </section>
-        `));
-      }
-
-      appendMain("chair-group-editor", `
-        <section class="dashboard-columns">
-          <article class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Editable Grouping</p>
-                <h2>Manage group membership</h2>
-              </div>
-              <span class="status-badge status-pending">Flexible capacity</span>
-            </div>
-            <div class="group-editor-grid">
-              <div class="group-editor-card"><span>5</span><strong>Split by 5</strong><p>Use for hospitals with small area limits.</p></div>
-              <div class="group-editor-card"><span>10</span><strong>Split by 10</strong><p>Use for standard duty rotations.</p></div>
-              <div class="group-editor-card"><span>+</span><strong>Add student</strong><p>Add late enrollees or completion-duty students.</p></div>
-              <div class="group-editor-card"><span>RW</span><strong>Reassign</strong><p>Move students or groups when schedules change.</p></div>
-            </div>
-            <div class="student-pill-list">
-              <div class="student-pill"><div><strong>Maria Cruz</strong><small>12-3456-789 &middot; BSN 3A &middot; Group 1</small></div><button class="ghost-button" type="button">Move</button></div>
-              <div class="student-pill"><div><strong>Josh Anton Nuevas</strong><small>18-2719-104 &middot; BSN 3A &middot; Group 1</small></div><button class="ghost-button" type="button">Remove</button></div>
-              <div class="student-pill"><div><strong>Treasure Abadinas</strong><small>22-1845-103 &middot; BSN 3A &middot; Group 2</small></div><button class="ghost-button" type="button">Move</button></div>
-            </div>
-          </article>
-
-          <article class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Overrides</p>
-                <h2>Late and attendance exceptions</h2>
-              </div>
-              <span class="status-badge status-pending">Chair approval</span>
-            </div>
-            <div class="attendance-rule-grid">
-              <div class="attendance-rule-card"><span>LT</span><strong>Late</strong><p>Detected from shift start time and CI session.</p></div>
-              <div class="attendance-rule-card"><span>AB</span><strong>Absent</strong><p>No verified time-in within allowed window.</p></div>
-              <div class="attendance-rule-card"><span>OV</span><strong>Override</strong><p>Chair can justify CI delay, hospital issue, or approved exception.</p></div>
-              <div class="attendance-rule-card"><span>EX</span><strong>Extension</strong><p>Track extension days, reason, related record, and approval status.</p></div>
-            </div>
-            <label class="form-label">Override remarks
-              <textarea rows="4" placeholder="Reason for attendance adjustment, late exception, or extension approval"></textarea>
-            </label>
-          </article>
-        </section>
-      `);
     };
 
     const enhanceUserImportPages = () => {
@@ -660,10 +607,10 @@
         "Attendance is tied to the Chair-published schedule, assigned location, and CI verification. Submit records only for your assigned duty."
       );
 
-      replaceSelectOptions("#clinical-site", ["Select clinical site", "Cebu City Medical Center", "Vicente Sotto Memorial Medical Center", "Community Health Center"]);
-      replaceSelectOptions("#duty-area", ["Select duty area", "Ward B", "Delivery Room", "Operating Room", "Pediatric Ward"]);
-      setSelectValue("#clinical-site", "Cebu City Medical Center");
-      setSelectValue("#duty-area", "Ward B");
+      replaceSelectOptions("#clinical-site", ["Select clinical site", "CCMC", "VSMMC", "CHN Brgy. Dumlog"]);
+      replaceSelectOptions("#duty-area", ["Select duty area", "Emergency Room", "Delivery Room", "Operating Room", "Pedia Pulmo Ward"]);
+      setSelectValue("#clinical-site", "CCMC");
+      setSelectValue("#duty-area", "Emergency Room");
 
       const instructor = one("#clinical-instructor");
       if (instructor) {
@@ -676,7 +623,7 @@
         message.insertAdjacentElement("beforebegin", render(`
           <div class="attendance-rules-panel integration-placeholder" data-consultation="schedule-tied-attendance">
             <strong>Schedule-tied attendance check</strong>
-            <p>Allowed shift: 7:00 AM - 3:00 PM. Location: Cebu City Medical Center, Ward B. CI session: Prof. Reyes. Bluetooth/proximity and location rules are prepared for mobile integration and CI verification.</p>
+            <p>Allowed shift: 7:00 AM - 3:00 PM. Location: CCMC, Emergency Room. CI session: Prof. Reyes. Bluetooth/proximity and location rules are prepared for mobile integration and CI verification.</p>
           </div>
         `));
       }
@@ -816,68 +763,17 @@
         return;
       }
 
-      if (page === "case-validation.html") {
-        setText("#selected-case-category", "DR - Newborn care");
+      if (page === "case-validation.html" && !new URLSearchParams(window.location.search).has("case")) {
+        setText("#selected-case-code", "J. A. K.");
+        setText("#selected-case-category", "Major Case - Assist");
+        setText("#selected-case-procedure", "Primary Lower Segment Transverse Cesarean Section");
+        setText("#selected-case-shift-time", "6:00 AM - 2:00 PM");
+        setText("#selected-case-supervising-ci", "Patricia Reyes, RN, MAN");
       }
-
-      insertAfterHero("ci-validation-flow", `
-        <section class="workspace-panel validation-flow-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Validation Status Flow</p>
-              <h2>Review assigned student records</h2>
-            </div>
-            <span class="status-badge status-pending">CI review</span>
-          </div>
-          <div class="validation-status-grid">
-            <div class="validation-status-item is-verified">
-              <span>VF</span>
-              <strong>Verified</strong>
-              <p>Counts after CI review.</p>
-            </div>
-            <div class="validation-status-item is-rejected">
-              <span>UV</span>
-              <strong>Unverified / Rejected</strong>
-              <p>Returned with remarks.</p>
-            </div>
-            <div class="validation-status-item is-pending">
-              <span>PN</span>
-              <strong>Pending</strong>
-              <p>Waiting for review.</p>
-            </div>
-            <div class="validation-status-item is-na">
-              <span>NA</span>
-              <strong>Not Applicable</strong>
-              <p>Kept for traceability.</p>
-            </div>
-          </div>
-          <p class="validation-scope-note">CI access is limited to verification, monitoring, and remarks for assigned students. Chair overrides and schedule reassignment stay outside CI control.</p>
-        </section>
-      `);
     };
 
     const enhanceAttendanceMonitoring = () => {
-      if (!isInstructor || !["live-attendance-tracker.html", "duty-validation.html"].includes(page)) {
-        return;
-      }
-
-      insertAfterHero("attendance-session", `
-        <section class="workspace-panel attendance-rules-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Attendance Verification</p>
-              <h2>Schedule, proximity, and location checks</h2>
-            </div>
-            <span class="status-badge status-verified">Session-ready</span>
-          </div>
-          <div class="attendance-rule-grid">
-            <div class="attendance-rule-card"><span>BT</span><strong>CI proximity session</strong><p>CI starts a mobile Bluetooth/proximity session for assigned students.</p></div>
-            <div class="attendance-rule-card"><span>PIN</span><strong>Location pinning</strong><p>Hospital coordinates, area, and allowed radius are stored for validation.</p></div>
-            <div class="attendance-rule-card"><span>TIME</span><strong>Shift window</strong><p>Late or incomplete status is detected from assigned schedule time.</p></div>
-            <div class="attendance-rule-card"><span>REM</span><strong>Remarks required</strong><p>Late, unverified, not applicable, and exception records require comments.</p></div>
-          </div>
-        </section>
-      `);
+      return;
     };
 
     const enhanceInstructorScheduling = () => {
@@ -956,40 +852,10 @@
       });
     };
 
-    const enhanceChairValidation = () => {
-      if (!isChair || page !== "admin-validation.html") {
-        return;
-      }
-
-      setText(".topbar-title h1", "Exceptions & Overrides");
-      setText(".workspace-hero .section-kicker", "Exceptions & Overrides");
-      setText(".workspace-hero h2", "Review exceptions, overrides, and special approvals.");
-      setText(
-        ".workspace-hero p:not(.section-kicker)",
-        "Monitor late attendance issues, not-applicable records, returned submissions, extension remarks, and Chair-approved exceptions."
-      );
-
-      insertAfterHero("chair-validation-monitoring", `
-        <section class="workspace-panel workflow-panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Chair Exceptions</p>
-              <h2>Records requiring override review</h2>
-            </div>
-            <span class="status-badge status-pending">Operational review</span>
-          </div>
-          <div class="workflow-grid">
-            <div class="workflow-card"><span>PN</span><strong>Pending</strong><p>Submitted records waiting for CI or Chair review.</p></div>
-            <div class="workflow-card"><span>VF</span><strong>Verified</strong><p>Approved attendance and clinical cases that count toward progress.</p></div>
-            <div class="workflow-card"><span>NA</span><strong>Not applicable</strong><p>Traceable records that do not count because they are not valid for requirement completion.</p></div>
-            <div class="workflow-card"><span>OV</span><strong>Overridden</strong><p>Chair-approved exceptions for late CI, hospital changes, or special cases.</p></div>
-          </div>
-        </section>
-      `);
-    };
+    const enhanceChairValidation = () => {};
 
     const enhanceReports = () => {
-      if (!page.includes("report") && !["generate-report.html", "compliance-summary.html"].includes(page)) {
+      if (!page.includes("report") && page !== "generate-report.html") {
         return;
       }
 
@@ -1026,6 +892,10 @@
     };
 
     const enhanceProgressReadiness = () => {
+      if (isInstructor) {
+        return;
+      }
+
       if (!["student-progress.html", "instructor-student-view.html", "student-progress-detail.html", "completion-status.html", "pending-requirements.html", "chair-student-progress.html"].includes(page)) {
         return;
       }
@@ -1171,6 +1041,7 @@
     simplifyNotificationCategories();
     simplifyAssignedSchedulePage();
     simplifyChairGuide4();
+    normalizeHospitalWardSelects();
 
     if (enforceRoleOwnership()) {
       return;

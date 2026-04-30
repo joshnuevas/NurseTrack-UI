@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Schedule Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+  </head>
+
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Chair</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="admin-schedules.html" aria-current="page"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
+          <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">CR</div>
+          <div>
+            <strong>Reyes</strong>
+            <span>Chair</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Chair Scheduling</p>
+              <h1>Schedule Maker</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
+            <a class="icon-button topbar-profile-button button-link" href="view-profile.html" aria-label="Profile" title="Profile">
+              <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </a>
+
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace schedule-management-workspace chair-schedule-maker-workspace">
+          <section class="workspace-panel chair-import-panel chair-schedule-import-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Upload Schedule Source File</h2>
+              </div>
+              <span class="status-badge status-pending" id="chair-import-status">Review required</span>
+            </div>
+
+            <div class="import-dropzone">
+              <strong>Drop Excel or CSV file here</strong>
+              <p>Accepted data: section/group, inclusive dates, RLE rotation, hospital or area, shift, case presentation date, student count, clinical instructor, and remarks. Student names are kept in the source file but hidden from this review to keep the page readable.</p>
+              <div class="button-row">
+                <input type="file" accept=".xlsx,.xls,.csv,.pdf" data-chair-file-input hidden>
+                <button class="ghost-button" type="button" data-chair-file-select>Choose schedule file</button>
+                <button class="ghost-button" type="button" data-create-manual-schedule>Create schedule manually</button>
+              </div>
+            </div>
+
+            <div id="chair-import-message" class="form-message" role="status" aria-live="polite">
+              Upload an imported file or create a schedule manually before publishing.
+            </div>
+          </section>
+
+          <section class="workspace-panel chair-schedule-maker-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Review Imported Schedule Before Publishing</h2>
+              </div>
+              <span class="status-badge status-pending" id="chair-schedule-status">Draft review</span>
+            </div>
+
+            <div class="schedule-maker-summary">
+              <div><span>Imported file</span><strong id="chair-imported-file">LEVEL-III-RLE-ROTATION-April-27-30.xlsx</strong></div>
+              <div><span>Review records</span><strong>6 groups / 58 students</strong></div>
+              <div><span>Publish scope</span><strong>Students and Clinical Instructors</strong></div>
+            </div>
+
+            <div class="schedule-draft-list" aria-label="Editable schedule draft">
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N1 G1</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N1 G1">10 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>VSMMC - SP St 201</option>
+                      <option>VSMMC - SP ST 301</option>
+                      <option>CCMC - Pedia Pulmo Ward</option>
+                      <option>LCH - 4th Floor</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="06:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" value="2026-05-02" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" value="08:00" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Louise Wong</option>
+                      <option>Rivelyn Altamira</option>
+                      <option>Rommel Andre Amit</option>
+                      <option>Arlene G. Vecino</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N1 G2</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N1 G2">10 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>VSMMC - SP St 201</option>
+                      <option>VSMMC - SP ST 301</option>
+                      <option>CCMC - Pedia Pulmo Ward</option>
+                      <option>LCH - 4th Floor</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="22:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" value="2026-05-02" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" value="08:00" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Louise Wong</option>
+                      <option>Rivelyn Altamira</option>
+                      <option>Rommel Andre Amit</option>
+                      <option>Arlene G. Vecino</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N1 G3</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N1 G3">10 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>VSMMC - SP ST 301</option>
+                      <option>VSMMC - SP St 201</option>
+                      <option>CCMC - Emergency Room</option>
+                      <option>PSH - 4th Floor</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="06:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" value="2026-05-02" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" value="08:00" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Rivelyn Altamira</option>
+                      <option>Louise Wong</option>
+                      <option>Rachel Ada</option>
+                      <option>Maria Carmina Villardar</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N1 G4</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N1 G4">9 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>VSMMC - SP ST 301</option>
+                      <option>VSMMC - SP St 201</option>
+                      <option>LCH - 3rd Floor</option>
+                      <option>PSH - 3B Station</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="22:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" value="2026-05-02" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" value="08:00" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Rivelyn Altamira</option>
+                      <option>Louise Wong</option>
+                      <option>Arlene G. Vecino</option>
+                      <option>Lucelle C. Valencia</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N2 G3</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N2 G3">10 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>CCMC - Pedia Pulmo Ward</option>
+                      <option>VSMMC - Main Station 205</option>
+                      <option>LCH - 4th Floor</option>
+                      <option>PSH - 4th Floor</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="22:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" value="2026-05-02" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" value="08:00" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Rommel Andre Amit</option>
+                      <option>Maria Carmina Villardar</option>
+                      <option>Rachel Ada</option>
+                      <option>Chato O. Chato</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+
+              <div class="schedule-draft-row" data-schedule-draft-row>
+                <div class="schedule-draft-main">
+                  <div><strong>N2 G4</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="N2 G4">9 students</button></div>
+                </div>
+                <div class="schedule-draft-actions">
+                  <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
+                  <button class="ghost-button danger-action" type="button" data-remove-draft-row>Remove</button>
+                </div>
+                <div class="schedule-draft-fields">
+                  <label class="form-label">Start date
+                    <input type="date" value="2026-04-27">
+                  </label>
+                  <label class="form-label">End date
+                    <input type="date" value="2026-04-30">
+                  </label>
+                  <label class="form-label">Hospital / Area
+                    <select>
+                      <option>CCMC - Emergency Room</option>
+                      <option>LCH - 3rd Floor</option>
+                      <option>VSMMC - Main Station 205</option>
+                    </select>
+                  </label>
+                  <label class="form-label">Shift start
+                    <input type="time" value="14:00">
+                  </label>
+                  <label class="form-label">Shift end
+                    <input type="time" value="22:00">
+                  </label>
+                  <label class="form-label">Case presentation date
+                    <input type="date" data-case-presentation-input>
+                  </label>
+                  <label class="form-label">Case presentation time
+                    <input type="time" data-case-presentation-input>
+                  </label>
+                  <label class="checkbox-line">
+                    <input type="checkbox" data-case-presentation-tba checked>
+                    TBA
+                  </label>
+                  <label class="form-label">Supervising CI
+                    <select>
+                      <option>Arlene G. Vecino</option>
+                      <option>Annalyn A. Hole</option>
+                      <option>Maria Carmina Villardar</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="schedule-maker-actions">
+              <button class="primary-button workspace-action" type="button" data-publish-schedule>Publish Schedule</button>
+            </div>
+
+            <div id="chair-schedule-message" class="form-message" role="status" aria-live="polite">
+              Schedule Maker is ready for review.
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="modal-backdrop roster-modal-backdrop" id="schedule-roster-modal" hidden>
+      <section class="modal-card schedule-roster-modal" role="dialog" aria-modal="true" aria-labelledby="schedule-roster-title">
+        <div class="modal-heading">
+          <div>
+            <p class="section-kicker">Assigned roster</p>
+            <h2 id="schedule-roster-title">Schedule students</h2>
+          </div>
+          <div class="schedule-roster-modal-actions">
+            <button class="ghost-button" type="button" data-undo-roster-remove disabled>Undo</button>
+            <button class="modal-close" type="button" data-close-roster-modal aria-label="Close roster modal">Close</button>
+          </div>
+        </div>
+
+        <div class="assigned-roster-table" id="schedule-roster-list"></div>
+      </section>
+    </div>
+
+    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/chair-schedule-maker.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

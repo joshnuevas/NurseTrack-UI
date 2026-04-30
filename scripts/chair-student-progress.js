@@ -1,51 +1,48 @@
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
-const searchInput = document.querySelector("#chair-student-search");
-const sectionFilter = document.querySelector("#chair-student-section");
-const readinessFilter = document.querySelector("#chair-student-readiness");
-const studentCards = Array.from(document.querySelectorAll("[data-chair-student-card]"));
-const studentCount = document.querySelector("#chair-student-count");
-const emptyState = document.querySelector("#chair-student-empty");
-const completeCount = document.querySelector("#chair-progress-complete");
-const incompleteCount = document.querySelector("#chair-progress-incomplete");
-const clearanceCount = document.querySelector("#chair-progress-clearance");
+const studentSearch = document.querySelector("#student-progress-search");
+const sectionFilter = document.querySelector("#student-progress-section");
+const standingFilter = document.querySelector("#student-progress-status");
+const studentListContainer = document.querySelector("#student-progress-pick-list");
+const studentEmpty = document.querySelector("#student-progress-empty");
+const studentCount = document.querySelector("#student-progress-count");
+let studentCards = Array.from(document.querySelectorAll("[data-student-progress-card]"));
 
-function filterChairStudents() {
-  const query = searchInput.value.trim().toLowerCase();
-  const section = sectionFilter.value;
-  const readiness = readinessFilter.value;
-  let shown = 0;
+function sortStudentsAlphabetically() {
+  studentCards.sort((a, b) => {
+    const lastNameA = (a.dataset.name || "").trim().split(" ").pop().toLowerCase();
+    const lastNameB = (b.dataset.name || "").trim().split(" ").pop().toLowerCase();
+    return lastNameA.localeCompare(lastNameB);
+  });
 
   studentCards.forEach((card) => {
-    const haystack = [
-      card.dataset.name,
-      card.dataset.id,
-      card.dataset.section,
-      card.dataset.ci,
-      card.dataset.area,
-      card.dataset.readiness,
-      card.textContent
-    ].join(" ").toLowerCase();
-    const matchesSearch = !query || haystack.includes(query);
-    const matchesSection = section === "all" || card.dataset.section === section;
-    const matchesReadiness = readiness === "all" || card.dataset.readiness === readiness;
-    const isVisible = matchesSearch && matchesSection && matchesReadiness;
+    studentListContainer.appendChild(card);
+  });
+}
+
+function filterStudentCards() {
+  const query = studentSearch.value.trim().toLowerCase();
+  const section = sectionFilter.value;
+  const standing = standingFilter.value;
+  let visibleCount = 0;
+
+  studentCards.forEach((card) => {
+    const textContent = card.textContent.toLowerCase();
+    const datasetContent = Object.values(card.dataset).join(" ").toLowerCase();
+    const matchesQuery = !query || textContent.includes(query) || datasetContent.includes(query);
+    const matchesSection = card.dataset.section === section;
+    const matchesStanding = standing === "all" || card.dataset.status === standing;
+    const isVisible = matchesQuery && matchesSection && matchesStanding;
 
     card.hidden = !isVisible;
+
     if (isVisible) {
-      shown += 1;
+      visibleCount += 1;
     }
   });
 
-  studentCount.textContent = `${shown} visible`;
-  emptyState.hidden = shown > 0;
-}
-
-function updateSummaryCounts() {
-  const readinessValues = studentCards.map((card) => card.dataset.readiness);
-  completeCount.textContent = readinessValues.filter((status) => status === "Complete" || status === "Ready for Enrollment").length;
-  incompleteCount.textContent = readinessValues.filter((status) => status === "Incomplete").length;
-  clearanceCount.textContent = readinessValues.filter((status) => status === "Ready for Clearance").length;
+  studentCount.textContent = `${visibleCount} visible`;
+  studentEmpty.hidden = visibleCount > 0;
 }
 
 menuButton.addEventListener("click", () => {
@@ -56,9 +53,9 @@ sidebarBackdrop.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[searchInput, sectionFilter, readinessFilter].forEach((control) => {
-  control.addEventListener("input", filterChairStudents);
+[studentSearch, sectionFilter, standingFilter].filter(Boolean).forEach((control) => {
+  control.addEventListener("input", filterStudentCards);
 });
 
-updateSummaryCounts();
-filterChairStudents();
+sortStudentsAlphabetically();
+filterStudentCards();

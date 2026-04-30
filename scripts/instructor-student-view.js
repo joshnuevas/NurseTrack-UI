@@ -3,10 +3,23 @@ const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const studentSearch = document.querySelector("#student-progress-search");
 const sectionFilter = document.querySelector("#student-progress-section");
 const standingFilter = document.querySelector("#student-progress-status");
-const studentCards = Array.from(document.querySelectorAll("[data-student-progress-card]"));
+const studentListContainer = document.querySelector("#student-progress-pick-list");
 const studentEmpty = document.querySelector("#student-progress-empty");
 const studentCount = document.querySelector("#student-progress-count");
+let studentCards = Array.from(document.querySelectorAll("[data-student-progress-card]"));
 const assignedInstructor = document.querySelector(".sidebar-account strong")?.textContent.trim() || "Prof. Reyes";
+
+function sortStudentsAlphabetically() {
+  studentCards.sort((a, b) => {
+    const lastNameA = (a.dataset.name || "").trim().split(" ").pop().toLowerCase();
+    const lastNameB = (b.dataset.name || "").trim().split(" ").pop().toLowerCase();
+    return lastNameA.localeCompare(lastNameB);
+  });
+
+  studentCards.forEach((card) => {
+    studentListContainer.appendChild(card);
+  });
+}
 
 function filterStudentCards() {
   const query = studentSearch.value.trim().toLowerCase();
@@ -15,9 +28,11 @@ function filterStudentCards() {
   let visibleCount = 0;
 
   studentCards.forEach((card) => {
+    const textContent = card.textContent.toLowerCase();
+    const datasetContent = Object.values(card.dataset).join(" ").toLowerCase();
     const matchesAssignedInstructor = card.dataset.assignedCi === assignedInstructor;
-    const matchesQuery = !query || card.textContent.toLowerCase().includes(query) || Object.values(card.dataset).join(" ").toLowerCase().includes(query);
-    const matchesSection = section === "all" || card.dataset.section === section;
+    const matchesQuery = !query || textContent.includes(query) || datasetContent.includes(query);
+    const matchesSection = card.dataset.section === section;
     const matchesStanding = standing === "all" || card.dataset.status === standing;
     const isVisible = matchesAssignedInstructor && matchesQuery && matchesSection && matchesStanding;
 
@@ -28,7 +43,7 @@ function filterStudentCards() {
     }
   });
 
-  studentCount.textContent = `${visibleCount} assigned visible`;
+  studentCount.textContent = `${visibleCount} visible`;
   studentEmpty.hidden = visibleCount > 0;
 }
 
@@ -40,8 +55,9 @@ sidebarBackdrop.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[studentSearch, sectionFilter, standingFilter].forEach((control) => {
+[studentSearch, sectionFilter, standingFilter].filter(Boolean).forEach((control) => {
   control.addEventListener("input", filterStudentCards);
 });
 
+sortStudentsAlphabetically();
 filterStudentCards();

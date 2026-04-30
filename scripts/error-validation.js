@@ -18,7 +18,7 @@ function setResolved() {
 
   document.querySelector("#student-id").value = "12-3456-789";
   document.querySelector("#duty-date").value = "2026-04-26";
-  document.querySelector("#clinical-site").value = "Cebu City Medical Center";
+  document.querySelector("#clinical-site").value = "CCMC";
   document.querySelector("#time-out").value = "15:00";
   issueList.innerHTML = '<div class="validation-issue-card is-resolved"><span class="alert-icon">OK</span><div><strong>No open issues</strong><p>The sample duty entry is ready to submit.</p></div></div>';
   errorCountBadge.textContent = "Resolved";

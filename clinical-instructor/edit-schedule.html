@@ -25,18 +25,17 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link is-active" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">PR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Prof. Reyes</strong>
+            <strong>Reyes</strong>
             <span>Clinical Instructor</span>
           </div>
         </div>
@@ -67,7 +66,7 @@
           <section class="workspace-hero dashboard-hero">
             <div>
               <p class="section-kicker">Schedule update</p>
-              <h2>Edit Ward B Rotation.</h2>
+              <h2>Edit Emergency Room Rotation.</h2>
               <p>Update duty details, review conflicts, and add a change note before saving.</p>
             </div>
             <span class="status-badge status-pending">Needs review</span>
@@ -85,7 +84,7 @@
 
               <label class="form-label" for="schedule-title">
                 Schedule title
-                <input id="schedule-title" name="scheduleTitle" type="text" value="Ward B Rotation" required>
+                <input id="schedule-title" name="scheduleTitle" type="text" value="Emergency Room Rotation" required>
               </label>
 
               <div class="form-grid">
@@ -121,18 +120,18 @@
                 <label class="form-label" for="clinical-site">
                   Clinical site
                   <select id="clinical-site" name="clinicalSite" required>
-                    <option>Cebu City Medical Center</option>
-                    <option>Vicente Sotto Memorial Medical Center</option>
-                    <option>CIT-U Nursing Skills Laboratory</option>
+                    <option>CCMC</option>
+                    <option>VSMMC</option>
+                    <option>CIT-U Nursing CSMC</option>
                   </select>
                 </label>
 
                 <label class="form-label" for="duty-area">
                   Duty area
                   <select id="duty-area" name="dutyArea" required>
-                    <option>Ward B</option>
+                    <option>Emergency Room</option>
                     <option>Delivery Room</option>
-                    <option>Pediatric Ward</option>
+                    <option>Pedia Pulmo Ward</option>
                     <option>Emergency Room</option>
                   </select>
                 </label>
@@ -181,9 +180,9 @@
                     <span id="preview-month">Apr</span>
                   </div>
                   <div>
-                    <h3 id="preview-title">Ward B Rotation</h3>
+                    <h3 id="preview-title">Emergency Room Rotation</h3>
                     <p id="preview-time">7:00 AM - 3:00 PM</p>
-                    <p id="preview-site">Cebu City Medical Center</p>
+                    <p id="preview-site">CCMC</p>
                   </div>
                 </div>
               </article>
@@ -201,7 +200,7 @@
                   <div class="warning-icon">!</div>
                   <div>
                     <strong>Potential conflict detected</strong>
-                    <p>BSN 3A - Group 2 already has a Ward B assignment on the selected rotation.</p>
+                    <p>BSN 3A - Group 2 already has a Emergency Room assignment on the selected rotation.</p>
                   </div>
                 </div>
               </article>

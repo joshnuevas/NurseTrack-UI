@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../styles/nursetrack.css">
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
   </head>
+
   <body class="app-body">
     <div class="app-shell">
       <aside class="app-sidebar" aria-label="Primary navigation">
@@ -26,16 +27,18 @@
         <nav class="sidebar-nav">
           <a class="nav-link is-active" href="admin-dashboard.html" aria-current="page"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
-          <a class="nav-link" href="compliance-summary.html"><span class="nav-dot"></span>Exceptions & Overrides</a>
+          <a class="nav-link" href="clinical-cases-view.html"><span class="nav-dot"></span>Clinical Cases View</a>
+          <a class="nav-link" href="student-appeals.html"><span class="nav-dot"></span>Appeal Recommendations</a>
+          <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
           <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="admin-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
           <div class="avatar">CR</div>
           <div>
-            <strong>Chair Reyes</strong>
+            <strong>Reyes</strong>
             <span>Chair</span>
           </div>
         </div>
@@ -57,7 +60,21 @@
 
           <div class="topbar-actions">
             <span class="sync-pill">Updated now</span>
-            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
+            <a class="icon-button topbar-profile-button button-link" href="view-profile.html" aria-label="Profile" title="Profile">
+              <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </a>
+
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
@@ -65,107 +82,54 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <p class="section-kicker">Chair Overview</p>
               <h2>Good evening, Chair Reyes.</h2>
-              <p>Manage schedules, student progress, exceptions, reports, and export activity from one workflow workspace.</p>
+              <p>Review clinical instructor appeal recommendations and monitor schedules assigned for today.</p>
             </div>
             <a class="primary-button workspace-action button-link" href="admin-schedules.html">Open schedules</a>
           </section>
 
-          <section class="dashboard-columns chair-dashboard-actions">
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Workflow</p>
-                  <h2>Chair controls</h2>
-                </div>
-                <span class="status-badge status-pending">3 pending</span>
+          <section class="dashboard-stats" aria-label="Chair dashboard summary" style="display: flex; gap: 1.5rem; justify-content: space-between;">
+            <article class="workspace-card stat-card" style="flex: 1;">
+              <div class="workspace-card-header">
+                <span class="card-icon icon-only" aria-label="Appeal recommendations">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 5h16v11H8l-4 4V5Z"></path>
+                    <path d="M8 9h8"></path>
+                    <path d="M8 13h5"></path>
+                    <path d="m15 17 2 2 4-5"></path>
+                  </svg>
+                </span>
+                <span class="status-badge status-pending">Pending</span>
               </div>
-
-              <div class="requirement-list">
-                <a class="requirement-item action-item" href="admin-schedules.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Schedules</strong>
-                    <p>Create schedules, upload groupings, and assign students to hospital, area, shift, and CI.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="chair-student-progress.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Student Progress</strong>
-                    <p>Search students and monitor completion, incompletion, and readiness status.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="compliance-summary.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Exceptions & Overrides</strong>
-                    <p>Review late attendance, special approvals, and override remarks.</p>
-                  </div>
-                </a>
-              </div>
+              <h3>Appeal Recommendations</h3>
+              <p>3 student appeals are waiting for Chair approval</p>
+              <div class="progress-track"><span style="width: 60%"></span></div>
+              <strong class="stat-value">3</strong>
             </article>
-          </section>
 
-          <section class="workspace-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Recent Activity</p>
-                <h2>Chair Queue</h2>
+            <article class="workspace-card stat-card" style="flex: 1;">
+              <div class="workspace-card-header">
+                <span class="card-icon icon-only" aria-label="Schedules today">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <path d="M3 10h18"></path>
+                    <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                  </svg>
+                </span>
+                <span class="status-badge status-verified">Today</span>
               </div>
-            </div>
-
-            <div class="activity-list">
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Schedule import reviewed</strong>
-                  <p>BSN 3A grouping is ready for hospital and CI assignment.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Override request received</strong>
-                  <p>One late attendance exception is waiting for Chair review.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Report export prepared</strong>
-                  <p>Compliance Summary PDF is ready for export.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Schedule conflict flagged</strong>
-                  <p>Delivery Room Rotation needs an assignment review before publishing.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Student readiness changed</strong>
-                  <p>Andrea Gomez moved to Ready for Enrollment in Student Progress.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Exceptions summary refreshed</strong>
-                  <p>Pending duty, case, and override totals are ready for Chair review.</p>
-                </div>
-              </div>
-            </div>
+              <h3>Schedules Today</h3>
+              <p>5 clinical duty schedules are active today</p>
+              <div class="progress-track"><span style="width: 72%"></span></div>
+              <strong class="stat-value">5</strong>
+            </article>
           </section>
         </main>
       </div>
     </div>
 
-    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/admin-dashboard.js"></script>
     <script src="../scripts/logout-confirm.js"></script>
     <script src="../scripts/sidebar-icons.js"></script>
     <script src="../scripts/consultation-update.js"></script>

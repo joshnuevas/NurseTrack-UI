@@ -53,14 +53,14 @@ function updatePreview() {
     previewMonth.textContent = monthNames[dateValue.getMonth()];
   }
 
-  const hasConflict = group === "BSN 3A - Group 2" && area === "Ward B";
+  const hasConflict = group === "BSN 3A - Group 2" && area === "Emergency Room";
   conflictBadge.textContent = hasConflict ? "Conflict" : "Clear";
   conflictBadge.classList.toggle("status-rejected", hasConflict);
   conflictBadge.classList.toggle("status-verified", !hasConflict);
   conflictBox.classList.toggle("clear-warning", !hasConflict);
   conflictBox.querySelector("strong").textContent = hasConflict ? "Potential conflict detected" : "No conflict detected";
   conflictBox.querySelector("p").textContent = hasConflict
-    ? "BSN 3A - Group 2 already has a Ward B assignment on the selected rotation."
+    ? "BSN 3A - Group 2 already has a Emergency Room assignment on the selected rotation."
     : "The updated schedule has no overlapping group assignment.";
 }
 

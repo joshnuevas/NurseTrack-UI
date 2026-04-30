@@ -25,18 +25,17 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link is-active" href="review-submissions.html"><span class="nav-dot"></span>Validation Review</a>
+          <a class="nav-link is-active" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
           <a class="nav-link" href="instructor-reports.html"><span class="nav-dot"></span>Reports</a>
-          <a class="nav-link" href="instructor-help.html"><span class="nav-dot"></span>Help</a>
         </nav>
 
         <div class="sidebar-account">
-          <div class="avatar">PR</div>
+          <div class="avatar">CR</div>
           <div>
-            <strong>Prof. Reyes</strong>
+            <strong>Reyes</strong>
             <span>Clinical Instructor</span>
           </div>
         </div>
@@ -76,7 +75,9 @@
           <section class="dashboard-stats" aria-label="Validation history summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Approved</span>
+                <span class="card-icon icon-only" aria-label="Approved records">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"></path></svg>
+                </span>
                 <span class="status-badge status-verified">Approved</span>
               </div>
               <h3>Approved</h3>
@@ -86,7 +87,9 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Returned</span>
+                <span class="card-icon icon-only" aria-label="Returned records">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h11a5 5 0 0 1 0 10h-1"></path></svg>
+                </span>
                 <span class="status-badge status-pending">Returned</span>
               </div>
               <h3>Returned</h3>
@@ -96,7 +99,9 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Rejected</span>
+                <span class="card-icon icon-only" aria-label="Rejected records">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                </span>
                 <span class="status-badge status-rejected">Rejected</span>
               </div>
               <h3>Rejected</h3>
@@ -106,7 +111,9 @@
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Reviewed today</span>
+                <span class="card-icon icon-only" aria-label="Reviewed today">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v6l4 2"></path><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"></path></svg>
+                </span>
                 <span class="status-badge status-verified">Today</span>
               </div>
               <h3>Reviewed today</h3>
@@ -115,7 +122,7 @@
             </article>
           </section>
 
-          <section class="validation-history-layout">
+          <section class="validation-history-layout validation-history-layout-single">
             <article class="workspace-panel history-panel">
               <div class="panel-heading">
                 <div>
@@ -169,7 +176,7 @@
                   <span>Duty hours</span>
                   <span>
                     <strong>DH-2026-0425-018</strong>
-                    <small>Ward B - 8.0 hrs</small>
+                    <small>Emergency Room - 8.0 hrs</small>
                   </span>
                   <span><span class="status-badge status-verified">Approved</span></span>
                   <span>
@@ -241,7 +248,7 @@
                   <span>Duty hours</span>
                   <span>
                     <strong>DH-2026-0423-015</strong>
-                    <small>Pediatric Ward - 8.0 hrs</small>
+                    <small>Pedia Pulmo Ward - 8.0 hrs</small>
                   </span>
                   <span><span class="status-badge status-verified">Approved</span></span>
                   <span>
@@ -279,76 +286,6 @@
               </div>
             </article>
 
-            <aside class="duty-side-panel">
-              <article class="workspace-panel">
-                <div class="panel-heading">
-                  <div>
-                    <p class="section-kicker">Activity</p>
-                    <h2>Recent decisions</h2>
-                  </div>
-                  <span class="status-badge status-pending">Live</span>
-                </div>
-
-                <div class="activity-feed">
-                  <div class="activity-item">
-                    <span class="activity-dot is-approved"></span>
-                    <div>
-                      <strong>Duty record approved</strong>
-                      <p>Maria Cruz - Ward B - 3:18 PM</p>
-                    </div>
-                  </div>
-
-                  <div class="activity-item">
-                    <span class="activity-dot is-approved"></span>
-                    <div>
-                      <strong>Case checklist approved</strong>
-                      <p>Treasure Abadinas - Maternal care - 2:42 PM</p>
-                    </div>
-                  </div>
-
-                  <div class="activity-item">
-                    <span class="activity-dot is-returned"></span>
-                    <div>
-                      <strong>Case returned</strong>
-                      <p>Zander Aligato - Missing checklist item</p>
-                    </div>
-                  </div>
-                </div>
-              </article>
-
-              <article class="workspace-panel">
-                <div class="panel-heading">
-                  <div>
-                    <p class="section-kicker">Quick actions</p>
-                    <h2>Validation tools</h2>
-                  </div>
-                </div>
-
-                <div class="requirement-list compact-list">
-                  <a class="requirement-item action-item" href="review-submissions.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Review queue</strong>
-                      <p>Open pending duty and case submissions.</p>
-                    </div>
-                  </a>
-                  <a class="requirement-item action-item" href="duty-validation.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Duty validation</strong>
-                      <p>Check submitted duty records and review decisions.</p>
-                    </div>
-                  </a>
-                  <a class="requirement-item action-item" href="case-validation.html">
-                    <span class="requirement-status"></span>
-                    <div>
-                      <strong>Case validation</strong>
-                      <p>Review case forms and checklist completion.</p>
-                    </div>
-                  </a>
-                </div>
-              </article>
-            </aside>
           </section>
         </main>
       </div>

@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Day Schedules</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
+    <style>
+      .selected-schedule-heading-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .selected-schedule-edit-button {
+        min-width: 126px;
+        white-space: nowrap;
+      }
+
+      .selected-schedule-form.is-readonly {
+        opacity: 0.82;
+      }
+
+      .selected-schedule-form.is-readonly input,
+      .selected-schedule-form.is-readonly select,
+      .selected-schedule-form.is-readonly textarea {
+        background-color: #f8fafc;
+        cursor: not-allowed;
+      }
+
+      .selected-schedule-button-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .selected-schedule-button-row .ghost-button,
+      .selected-schedule-button-row .primary-button {
+        width: auto;
+        min-width: 150px;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 720px) {
+        .selected-schedule-heading-actions {
+          justify-content: flex-start;
+          width: 100%;
+        }
+
+        .selected-schedule-button-row {
+          justify-content: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Chair</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="admin-schedules.html" aria-current="page"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="clinical-cases-view.html"><span class="nav-dot"></span>Clinical Cases View</a>
+          <a class="nav-link" href="student-appeals.html"><span class="nav-dot"></span>Appeal Recommendations</a>
+          <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
+          <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">CR</div>
+          <div>
+            <strong>Reyes</strong>
+            <span>Chair</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Chair Scheduling</p>
+              <h1>Day Schedules</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <a class="ghost-button button-link" href="admin-schedules.html">Back to calendar</a>
+
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
+            <a class="icon-button topbar-profile-button button-link" href="view-profile.html" aria-label="Profile" title="Profile">
+              <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </a>
+
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace selected-schedule-workspace">
+          <section class="selected-day-layout">
+            <article class="workspace-panel day-schedule-list-panel">
+              <div class="panel-heading">
+                <div>
+                  <h2 id="selected-day-heading">May 6, 2026</h2>
+                </div>
+                <span class="status-badge status-pending" id="selected-day-count">0 schedules</span>
+              </div>
+
+              <div class="day-schedule-list" id="day-schedule-list" aria-label="Schedules for selected day"></div>
+              <div class="empty-state" id="day-schedule-empty" hidden>No schedules are assigned for this day.</div>
+            </article>
+
+            <article class="workspace-panel selected-schedule-panel">
+              <div class="panel-heading">
+                <div>
+                  <h2 id="selected-schedule-heading">Select a Schedule</h2>
+                </div>
+
+                <div class="selected-schedule-heading-actions">
+                  <span class="status-badge status-verified" id="selected-schedule-status">Published</span>
+                  <button class="ghost-button selected-schedule-edit-button" id="edit-selected-schedule" type="button">Edit Schedule</button>
+                </div>
+              </div>
+
+              <div class="selected-schedule-summary">
+                <div>
+                  <span>Dates</span>
+                  <strong id="selected-schedule-date-summary">Not selected</strong>
+                </div>
+                <div>
+                  <span>Group</span>
+                  <strong id="selected-schedule-group-summary">No group</strong>
+                </div>
+                <div>
+                  <span>Students</span>
+                  <strong id="selected-schedule-students-summary">0 assigned</strong>
+                </div>
+                <div>
+                  <span>Shift</span>
+                  <strong id="selected-schedule-shift-summary">No shift</strong>
+                </div>
+              </div>
+
+              <form class="selected-schedule-form" id="selected-schedule-form">
+                <label class="form-label">Schedule title
+                  <input id="selected-schedule-title" type="text">
+                </label>
+
+                <label class="form-label">Assigned group
+                  <select id="selected-schedule-group">
+                    <option>BSN 3B - Group 1</option>
+                    <option>BSN 3A - Group 2</option>
+                    <option>BSN 4A - Group 1</option>
+                    <option>BSN 3A - Make-up Duty</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Start date
+                  <input id="selected-schedule-start-date" type="date">
+                </label>
+
+                <label class="form-label">End date
+                  <input id="selected-schedule-end-date" type="date">
+                </label>
+
+                <label class="form-label">Hospital
+                  <select id="selected-schedule-hospital">
+                    <option>VSMMC</option>
+                    <option>CCMC</option>
+                    <option>CHN Brgy. Dumlog</option>
+                    <option>CSMC</option>
+                    <option>SAMCH</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Duty area
+                  <select id="selected-schedule-area">
+                    <option>Pedia Pulmo Ward</option>
+                    <option>Emergency Room</option>
+                    <option>Delivery Room</option>
+                    <option>Operating Room</option>
+                    <option>OR Main</option>
+                    <option>Community Health Nursing Area</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Shift start
+                  <input id="selected-schedule-shift-start" type="time">
+                </label>
+
+                <label class="form-label">Shift end
+                  <input id="selected-schedule-shift-end" type="time">
+                </label>
+
+                <label class="form-label">Case presentation date
+                  <input id="selected-schedule-case-date" type="date" data-selected-case-input>
+                </label>
+
+                <label class="form-label">Case presentation time
+                  <input id="selected-schedule-case-time" type="time" data-selected-case-input>
+                </label>
+
+                <label class="checkbox-line selected-schedule-tba">
+                  <input id="selected-schedule-case-tba" type="checkbox">
+                  Case presentation TBA
+                </label>
+
+                <label class="form-label selected-schedule-ci-field">Supervising CI
+                  <select id="selected-schedule-ci">
+                    <option>Miguel Santos, RN, MAN</option>
+                    <option>Patricia Reyes, RN, MAN</option>
+                    <option>Elena Dela Cruz, RN, MN, DSCN</option>
+                    <option>Louise Wong</option>
+                    <option>Rivelyn Altamira</option>
+                  </select>
+                </label>
+
+                <label class="form-label selected-schedule-notes">Review notes
+                  <textarea id="selected-schedule-notes" rows="4" placeholder="Add correction notes before republishing"></textarea>
+                </label>
+
+                <div class="schedule-maker-actions selected-schedule-actions">
+                  <div class="selected-schedule-button-row">
+                    <button class="ghost-button" id="cancel-selected-schedule" type="button">Cancel</button>
+                    <button class="primary-button workspace-action" id="save-selected-schedule" type="submit">Save Selected Schedule</button>
+                  </div>
+                </div>
+              </form>
+            </article>
+
+            <article class="workspace-panel student-roster-panel" id="student-roster-panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Assigned Students</h3>
+                </div>
+                <span class="status-badge status-pending" id="selected-schedule-student-count">0 students</span>
+              </div>
+
+              <div id="selected-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Select a schedule from the day list to view details and students.</div>
+
+              <div class="form-label autocomplete-wrapper student-roster-add-search">
+                <label for="student-roster-add-search">Search student to add</label>
+                <input id="student-roster-add-search" type="search" placeholder="Search by name, ID, section, or site" autocomplete="off">
+                <div id="student-roster-add-options" class="custom-dropdown" hidden></div>
+              </div>
+
+              <div class="student-roster-table" id="selected-schedule-students-list"></div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/selected-schedule.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

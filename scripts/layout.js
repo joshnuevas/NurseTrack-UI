@@ -27,7 +27,7 @@ const roleContent = {
     items: [
       ["Duty hour entry verified", "Medical ward shift marked as verified."],
       ["Case checklist submitted", "Maternal care checklist sent for instructor review."],
-      ["Schedule updated", "Next duty area changed to Ward B."]
+      ["Schedule updated", "Next duty area changed to Emergency Room."]
     ]
   },
   instructor: {
@@ -35,15 +35,15 @@ const roleContent = {
     name: "Prof. Reyes",
     role: "Clinical Instructor",
     hero: "Good evening, Prof. Reyes.",
-    copy: "Pending submissions, schedule updates, and student progress are ready for review.",
-    action: "Review submissions",
+    copy: "Clinical case submissions, student appeals, schedule updates, and progress summaries are ready for review.",
+    action: "Review cases",
     notifications: "clinical-instructor/instructor-notifications.html",
     profile: "clinical-instructor/view-profile.html",
     activity: "Instructor queue",
     items: [
       ["5 duty entries need validation", "Review student time records before they appear in progress summaries."],
       ["3 case logs need comments", "Checklist submissions are waiting for approval or revision."],
-      ["Schedule conflict flagged", "Two students are assigned to the same limited duty slot."]
+      ["Student appeal received", "A late arrival appeal is ready for CI recommendation."]
     ]
   }
 };

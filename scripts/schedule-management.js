@@ -1,13 +1,13 @@
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const viewButtons = document.querySelectorAll("[data-management-view]");
+const calendarHeading = document.querySelector(".calendar-month-heading");
+const listFilters = document.querySelector("#list-filters");
 const calendarView = document.querySelector("#calendar-view");
 const listView = document.querySelector("#list-view");
-const statusFilter = document.querySelector("#status-filter");
-const areaFilter = document.querySelector("#area-filter");
 const scheduleSearch = document.querySelector("#schedule-search");
 const scheduleRows = Array.from(document.querySelectorAll(".management-row"));
-const calendarDays = Array.from(document.querySelectorAll(".management-day[data-status]"));
+const calendarDays = Array.from(document.querySelectorAll(".management-day[data-area]"));
 const emptyState = document.querySelector("#schedule-empty");
 
 function setView(view) {
@@ -16,21 +16,23 @@ function setView(view) {
   });
 
   calendarView.hidden = view !== "calendar";
+  if (calendarHeading) {
+    calendarHeading.hidden = view !== "calendar";
+  }
+  if (listFilters) {
+    listFilters.hidden = view !== "list";
+  }
   listView.hidden = view !== "list";
   filterSchedules();
 }
 
 function filterItems(items) {
-  const status = statusFilter?.value || "all";
-  const area = areaFilter?.value || "all";
   const query = scheduleSearch?.value.trim().toLowerCase() || "";
   let visibleCount = 0;
 
   items.forEach((item) => {
-    const matchesStatus = status === "all" || item.dataset.status === status;
-    const matchesArea = area === "all" || item.dataset.area === area;
     const matchesQuery = !query || item.textContent.toLowerCase().includes(query);
-    const isVisible = matchesStatus && matchesArea && matchesQuery;
+    const isVisible = matchesQuery;
 
     item.hidden = !isVisible;
 
@@ -43,7 +45,7 @@ function filterItems(items) {
 }
 
 function filterSchedules() {
-  const visibleCount = listView.hidden ? filterItems(calendarDays) : filterItems(scheduleRows);
+  const visibleCount = listView.hidden ? calendarDays.length : filterItems(scheduleRows);
   emptyState.hidden = visibleCount > 0;
 }
 
@@ -59,7 +61,7 @@ viewButtons.forEach((button) => {
   button.addEventListener("click", () => setView(button.dataset.managementView));
 });
 
-[statusFilter, areaFilter, scheduleSearch].filter(Boolean).forEach((control) => {
+[scheduleSearch].filter(Boolean).forEach((control) => {
   control.addEventListener("input", filterSchedules);
 });
 

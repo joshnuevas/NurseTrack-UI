@@ -8,6 +8,7 @@ const sectionFilter = document.querySelector("#section-filter");
 const siteFilter = document.querySelector("#site-filter");
 const formatFilter = document.querySelector("#format-filter");
 const studentSearch = document.querySelector("#student-search");
+const customDropdown = document.querySelector("#custom-student-dropdown");
 const message = document.querySelector("#report-message");
 const previewTitle = document.querySelector("#preview-title");
 const previewPeriod = document.querySelector("#preview-period");
@@ -26,7 +27,7 @@ const studentReportRecords = [
     name: "Maria Cruz",
     section: "BSN 3A",
     id: "12-3456-789",
-    site: "Cebu City Medical Center",
+    site: "CCMC",
     metrics: {
       "Compliance Summary": ["1 student record", "18", "3", "1"],
       "Duty Report": ["42 duty hours", "38", "3", "1"],
@@ -38,7 +39,7 @@ const studentReportRecords = [
     name: "Josh Anton Nuevas",
     section: "BSN 3A",
     id: "12-3456-812",
-    site: "Cebu City Medical Center",
+    site: "CCMC",
     metrics: {
       "Compliance Summary": ["1 student record", "16", "4", "2"],
       "Duty Report": ["39 duty hours", "34", "4", "1"],
@@ -50,7 +51,7 @@ const studentReportRecords = [
     name: "Treasure Abadinas",
     section: "BSN 3A",
     id: "12-3456-845",
-    site: "Vicente Sotto Medical Center",
+    site: "VSMMC",
     metrics: {
       "Compliance Summary": ["1 student record", "19", "2", "0"],
       "Duty Report": ["45 duty hours", "43", "2", "0"],
@@ -62,7 +63,7 @@ const studentReportRecords = [
     name: "Andrea Gomez",
     section: "BSN 3B",
     id: "12-3456-902",
-    site: "Community Health Center",
+    site: "CHN Brgy. Dumlog",
     metrics: {
       "Compliance Summary": ["1 student record", "17", "3", "1"],
       "Duty Report": ["40 duty hours", "36", "3", "1"],
@@ -74,7 +75,7 @@ const studentReportRecords = [
     name: "Lichael Ursulo",
     section: "BSN 3C",
     id: "12-3456-976",
-    site: "Skills Laboratory",
+    site: "CSMC",
     metrics: {
       "Compliance Summary": ["1 student record", "15", "4", "1"],
       "Duty Report": ["37 duty hours", "32", "4", "1"],
@@ -86,7 +87,7 @@ const studentReportRecords = [
     name: "Angela Neri",
     section: "BSN 3C",
     id: "12-3456-988",
-    site: "Skills Laboratory",
+    site: "CSMC",
     metrics: {
       "Compliance Summary": ["1 student record", "14", "5", "1"],
       "Duty Report": ["35 duty hours", "30", "5", "0"],
@@ -120,6 +121,62 @@ const reportMetrics = document.body.dataset.reportScope === "student" ? {
   "CI Assigned Student Status": ["6 instructors", "31", "9", "2"]
 };
 
+// Handle Custom Autocomplete Dropdown
+function renderDropdown(query = "") {
+  customDropdown.innerHTML = "";
+  const normalizedWords = query.toLowerCase().trim().split(/\s+/);
+
+  // Filter students based on query
+  const filteredStudents = studentReportRecords.filter((student) => {
+    if (!query) return true; // Show all if empty
+    const searchable = `${student.name} ${student.section} ${student.id} ${student.site}`.toLowerCase();
+    return normalizedWords.every(word => searchable.includes(word));
+  });
+
+  if (filteredStudents.length === 0) {
+    customDropdown.innerHTML = `<div class="custom-dropdown-empty">No students found matching "${query}"</div>`;
+    return;
+  }
+
+  // Build the list
+  filteredStudents.forEach(student => {
+    const item = document.createElement("div");
+    item.className = "custom-dropdown-item";
+    item.innerHTML = `
+      <strong>${student.name}</strong>
+      <small>${student.id} | ${student.section}</small>
+    `;
+    
+    // Select student on click
+    item.addEventListener("click", () => {
+      studentSearch.value = student.name;
+      customDropdown.hidden = true;
+      updatePreview();
+    });
+    
+    customDropdown.appendChild(item);
+  });
+}
+
+// Show dropdown on focus or typing
+studentSearch.addEventListener("focus", () => {
+  renderDropdown(studentSearch.value);
+  customDropdown.hidden = false;
+});
+
+studentSearch.addEventListener("input", (e) => {
+  renderDropdown(e.target.value);
+  customDropdown.hidden = false;
+  updatePreview();
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener("click", (e) => {
+  if (!studentSearch.contains(e.target) && !customDropdown.contains(e.target)) {
+    customDropdown.hidden = true;
+  }
+});
+
 function formatDate(value) {
   if (!value) {
     return "Not set";
@@ -139,6 +196,14 @@ function setMessage(text, state) {
   if (state) {
     message.classList.add(state);
   }
+}
+
+function findStudentRecord(query) {
+  const normalizedWords = query.toLowerCase().trim().split(/\s+/);
+  return studentReportRecords.find((student) => {
+    const searchable = `${student.name} ${student.section} ${student.id} ${student.site}`.toLowerCase();
+    return normalizedWords.every(word => searchable.includes(word));
+  });
 }
 
 function updatePreview() {
@@ -163,16 +228,13 @@ function updatePreview() {
   previewAction.textContent = metrics[3];
 }
 
-function findStudentRecord(query) {
-  const normalized = query.toLowerCase();
-
-  return studentReportRecords.find((student) => {
-    const searchable = `${student.name} ${student.section} ${student.id}`.toLowerCase();
-    return normalized.includes(student.name.toLowerCase()) || searchable.includes(normalized);
-  });
-}
-
 function generatePreview() {
+  if (studentSearch && !studentSearch.value.trim()) {
+    setMessage("Search an assigned student before generating the report.", "is-error");
+    studentSearch.focus();
+    return;
+  }
+
   if (startDate.value && endDate.value && startDate.value > endDate.value) {
     setMessage("End date must be later than the start date.", "is-error");
     endDate.focus();
@@ -184,7 +246,7 @@ function generatePreview() {
   const studentRecord = studentQuery ? findStudentRecord(studentQuery) : null;
   const target = studentQuery ? ` for ${studentRecord?.name || studentQuery}` : "";
 
-  setMessage(`${reportType.value} preview generated${target} successfully.`, "is-success");
+  setMessage(`${reportType.value} report generated${target} successfully.`, "is-success");
 }
 
 menuButton.addEventListener("click", () => {
@@ -195,7 +257,7 @@ sidebarBackdrop.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[reportType, startDate, endDate, sectionFilter, siteFilter, studentSearch].filter(Boolean).forEach((control) => {
+[reportType, startDate, endDate, sectionFilter, siteFilter].filter(Boolean).forEach((control) => {
   control.addEventListener("input", updatePreview);
 });
 
@@ -204,7 +266,7 @@ form.addEventListener("submit", (event) => {
   generatePreview();
 });
 
-quickGenerate.addEventListener("click", generatePreview);
+quickGenerate?.addEventListener("click", generatePreview);
 
 resetReport.addEventListener("click", () => {
   form.reset();

@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NurseTrack | Manual Schedule</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/nursetrack.css">
+    <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+  </head>
+
+  <body class="app-body">
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Primary navigation">
+        <div class="sidebar-brand">
+          <img class="sidebar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+          <div>
+            <strong>NurseTrack</strong>
+            <span>CIT-U Nursing</span>
+          </div>
+        </div>
+
+        <div class="role-chip">Chair</div>
+
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link is-active" href="admin-schedules.html" aria-current="page"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
+          <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
+          <a class="nav-link" href="generate-report.html"><span class="nav-dot"></span>Reports</a>
+        </nav>
+
+        <div class="sidebar-account">
+          <div class="avatar">CR</div>
+          <div>
+            <strong>Reyes</strong>
+            <span>Chair</span>
+          </div>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <div class="app-main">
+        <header class="topbar">
+          <button class="menu-button" type="button" data-menu-button>Menu</button>
+
+          <div class="topbar-title">
+            <img class="topbar-logo" src="../assets/cit-u-logo.png" alt="Cebu Institute of Technology - University logo">
+            <div>
+              <p>Chair Scheduling</p>
+              <h1>Manual Schedule</h1>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
+            <a class="icon-button topbar-profile-button button-link" href="view-profile.html" aria-label="Profile" title="Profile">
+              <svg class="profile-user-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M4 21a8 8 0 0 1 16 0"></path>
+              </svg>
+            </a>
+
+            <a class="logout-link" href="../index.html">Logout</a>
+          </div>
+        </header>
+
+        <main class="workspace selected-schedule-workspace manual-schedule-workspace">
+          <section class="selected-day-layout manual-schedule-layout">
+            <article class="workspace-panel selected-schedule-panel">
+              <div class="panel-heading">
+                <div>
+                  <h2>Create Schedule Manually</h2>
+                </div>
+                <span class="status-badge status-pending" id="manual-schedule-status">Draft</span>
+              </div>
+
+              <div class="selected-schedule-summary">
+                <div>
+                  <span>Dates</span>
+                  <strong id="manual-date-summary">Not set</strong>
+                </div>
+                <div>
+                  <span>Group</span>
+                  <strong id="manual-group-summary">No group</strong>
+                </div>
+                <div>
+                  <span>Students</span>
+                  <strong id="manual-students-summary">0 assigned</strong>
+                </div>
+                <div>
+                  <span>Shift</span>
+                  <strong id="manual-shift-summary">No shift</strong>
+                </div>
+              </div>
+
+              <form class="selected-schedule-form" id="manual-schedule-form">
+                <label class="form-label">Schedule title
+                  <input id="manual-title" type="text" value="Manual Clinical Duty">
+                </label>
+
+                <label class="form-label">Assigned group
+                  <select id="manual-group">
+                    <option>BSN 3A - Group 1</option>
+                    <option>BSN 3A - Group 2</option>
+                    <option>BSN 3B - Group 1</option>
+                    <option>BSN 4A - Group 1</option>
+                    <option>Make-up Duty</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Start date
+                  <input id="manual-start-date" type="date">
+                </label>
+
+                <label class="form-label">End date
+                  <input id="manual-end-date" type="date">
+                </label>
+
+                <label class="form-label">Hospital
+                  <select id="manual-hospital">
+                    <option>CCMC</option>
+                    <option>VSMMC</option>
+                    <option>CHN Brgy. Dumlog</option>
+                    <option>CSMC</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Duty area
+                  <select id="manual-area">
+                    <option>Emergency Room</option>
+                    <option>Pedia Pulmo Ward</option>
+                    <option>Delivery Room</option>
+                    <option>Operating Room</option>
+                    <option>Community Health Nursing Area</option>
+                  </select>
+                </label>
+
+                <label class="form-label">Shift start
+                  <input id="manual-shift-start" type="time">
+                </label>
+
+                <label class="form-label">Shift end
+                  <input id="manual-shift-end" type="time">
+                </label>
+
+                <label class="form-label">Case presentation date
+                  <input id="manual-case-date" type="date" data-manual-case-input>
+                </label>
+
+                <label class="form-label">Case presentation time
+                  <input id="manual-case-time" type="time" data-manual-case-input>
+                </label>
+
+                <label class="checkbox-line selected-schedule-tba">
+                  <input id="manual-case-tba" type="checkbox" checked>
+                  Case presentation TBA
+                </label>
+
+                <label class="form-label">Supervising CI
+                  <select id="manual-ci">
+                    <option>Patricia Reyes, RN, MAN</option>
+                    <option>Miguel Santos, RN, MAN</option>
+                    <option>Elena Dela Cruz, RN, MN, DSCN</option>
+                    <option>Louise Wong</option>
+                    <option>Rivelyn Altamira</option>
+                  </select>
+                </label>
+
+                <label class="form-label selected-schedule-notes">Chair notes
+                  <textarea id="manual-notes" rows="4" placeholder="Add instructions or rotation notes"></textarea>
+                </label>
+
+                <div class="schedule-maker-actions selected-schedule-actions">
+                  <div class="selected-schedule-button-row">
+                    <a class="ghost-button button-link" href="schedule-maker.html">Cancel</a>
+                    <button class="primary-button workspace-action" type="submit">Save Manual Schedule</button>
+                  </div>
+                </div>
+              </form>
+
+              <div id="manual-schedule-message" class="form-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the manual draft.</div>
+            </article>
+
+            <article class="workspace-panel manual-student-picker-panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Select Students to Add</h3>
+                </div>
+                <div class="manual-student-filters">
+                  <label class="form-label compact-search" for="manual-section-filter">
+                    Section
+                    <select id="manual-section-filter">
+                      <option value="BSN 3A">BSN 3A</option>
+                      <option value="BSN 3B">BSN 3B</option>
+                    </select>
+                  </label>
+
+                  <label class="form-label compact-search" for="manual-student-search">
+                    Search
+                    <input id="manual-student-search" type="search" placeholder="Search student">
+                  </label>
+                </div>
+              </div>
+
+              <div class="assign-list" id="manual-student-list">
+                <label class="assign-student" data-student="Maria Cruz BSN 3A" data-section="BSN 3A">
+                  <input type="checkbox" data-manual-student-check value="Maria Cruz">
+                  <div class="avatar small-avatar">MC</div>
+                  <div>
+                    <strong>Maria Cruz</strong>
+                    <p>BSN 3A - School ID 21-1845-103</p>
+                  </div>
+                </label>
+
+                <label class="assign-student" data-student="Treasure Abadinas BSN 3A" data-section="BSN 3A">
+                  <input type="checkbox" data-manual-student-check value="Treasure Abadinas">
+                  <div class="avatar small-avatar">TA</div>
+                  <div>
+                    <strong>Treasure Abadinas</strong>
+                    <p>BSN 3A - School ID 22-1845-103</p>
+                  </div>
+                </label>
+
+                <label class="assign-student" data-student="Josh Anton Nuevas BSN 3A" data-section="BSN 3A">
+                  <input type="checkbox" data-manual-student-check value="Josh Anton Nuevas">
+                  <div class="avatar small-avatar">JA</div>
+                  <div>
+                    <strong>Josh Anton Nuevas</strong>
+                    <p>BSN 3A - School ID 21-5589-201</p>
+                  </div>
+                </label>
+
+                <label class="assign-student" data-student="Zander Aligato BSN 3B" data-section="BSN 3B">
+                  <input type="checkbox" data-manual-student-check value="Zander Aligato">
+                  <div class="avatar small-avatar">ZA</div>
+                  <div>
+                    <strong>Zander Aligato</strong>
+                    <p>BSN 3B - School ID 21-7740-118</p>
+                  </div>
+                </label>
+
+                <label class="assign-student" data-student="Bianca Mariel Lumbre BSN 3B" data-section="BSN 3B">
+                  <input type="checkbox" data-manual-student-check value="Bianca Mariel Lumbre">
+                  <div class="avatar small-avatar">BL</div>
+                  <div>
+                    <strong>Bianca Mariel Lumbre</strong>
+                    <p>BSN 3B - School ID 23-1023-441</p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="button-row manual-student-actions">
+                <button class="ghost-button" type="button" id="manual-clear-selection">Clear selection</button>
+                <button class="primary-button workspace-action" type="button" id="manual-add-students">Add Selected Students</button>
+              </div>
+            </article>
+
+            <article class="workspace-panel student-roster-panel">
+              <div class="panel-heading">
+                <div>
+                  <h3>Assigned Students</h3>
+                </div>
+                <span class="status-badge status-pending" id="manual-student-count">0 students</span>
+              </div>
+
+              <div class="student-roster-table" id="manual-assigned-students"></div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../scripts/instructor-dashboard.js"></script>
+    <script src="../scripts/chair-manual-schedule.js"></script>
+    <script src="../scripts/logout-confirm.js"></script>
+    <script src="../scripts/sidebar-icons.js"></script>
+    <script src="../scripts/consultation-update.js"></script>
+  </body>
+</html>

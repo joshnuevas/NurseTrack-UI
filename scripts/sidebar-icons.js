@@ -10,6 +10,11 @@
       <path d="M14 3v5h5"></path>
       <path d="m9.5 14 1.6 1.6 3.4-4"></path>
     `,
+    "clinical cases review": `
+      <path d="M8 3h6l4 4v14H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path>
+      <path d="M14 3v5h5"></path>
+      <path d="m8.5 14 2 2 5-5"></path>
+    `,
     dashboard: `
       <rect x="3" y="3" width="7" height="8" rx="1.5"></rect>
       <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
@@ -78,6 +83,13 @@
       <path d="M4 10h16"></path>
       <path d="m8 15 2 2 4-5"></path>
     `,
+    "assigned schedules": `
+      <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+      <path d="M8 3v4"></path>
+      <path d="M16 3v4"></path>
+      <path d="M4 10h16"></path>
+      <path d="m8 15 2 2 4-5"></path>
+    `,
     scheduling: `
       <rect x="4" y="5" width="16" height="16" rx="2"></rect>
       <path d="M8 3v4"></path>
@@ -89,6 +101,12 @@
       <path d="M4 19V5"></path>
       <path d="M4 19h16"></path>
       <path d="m7 15 4-4 3 3 5-7"></path>
+    `,
+    "student appeals": `
+      <path d="M4 5h16v11H8l-4 4V5Z"></path>
+      <path d="M8 9h8"></path>
+      <path d="M8 13h5"></path>
+      <path d="m15 17 2 2 4-5"></path>
     `,
     "enrollment summary / archive": `
       <path d="M5 4h14v16H5z"></path>
