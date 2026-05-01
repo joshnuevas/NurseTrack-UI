@@ -10,6 +10,31 @@ const overtimeSheetTitle = document.querySelector("#overtime-sheet-title");
 const overtimeTable = document.querySelector("#overtime-table");
 const overtimeDetailMessage = document.querySelector("#overtime-detail-message");
 
+function setActiveSidebarLink() {
+  const currentPage = window.location.pathname.split("/").pop();
+  const navLinks = document.querySelectorAll(".sidebar-nav .nav-link");
+
+  navLinks.forEach((link) => {
+    const linkPage = link.getAttribute("href");
+
+    link.classList.remove("is-active");
+    link.removeAttribute("aria-current");
+
+    if (linkPage === currentPage) {
+      link.classList.add("is-active");
+      link.setAttribute("aria-current", "page");
+    }
+
+    if (
+      (currentPage === "overtime-rendered.html" || currentPage === "overtime-details.html") &&
+      linkPage === "overtime-details.html"
+    ) {
+      link.classList.add("is-active");
+      link.setAttribute("aria-current", "page");
+    }
+  });
+}
+
 function getCurrentMonthYear() {
   return new Date().toLocaleDateString("en-US", {
     month: "long",
@@ -221,4 +246,5 @@ sidebarBackdrop?.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
+setActiveSidebarLink();
 renderSelectedPerson();

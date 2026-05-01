@@ -66,10 +66,10 @@ document.querySelector("#admin-approval-list")?.addEventListener("click", (event
     return;
   }
 
-  approvalMessage.textContent = `${name} rejected and removed from the pending queue.`;
+  approvalMessage.textContent = `${name} denied. The request was archived for audit review.`;
   approvalMessage.classList.remove("is-success");
   approvalMessage.classList.add("is-error");
-  addAuditEntry("Account rejected", `${name} was rejected from pending account approval.`);
+  addAuditEntry("Account denied", `${name} was denied from pending account approval and retained in audit history.`);
 });
 
 updatePendingSummary();

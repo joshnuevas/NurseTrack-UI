@@ -26,8 +26,9 @@
         <nav class="sidebar-nav">
           <a class="nav-link" href="student-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link is-active" href="case-history.html"><span class="nav-dot"></span>Clinical Cases</a>
-          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Schedule</a>
+          <a class="nav-link" href="view-schedule.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="student-progress.html"><span class="nav-dot"></span>Progress</a>
+          <a class="nav-link" href="student-appeals.html"><span class="nav-dot"></span>Student Appeals</a>
           <a class="nav-link" href="student-reports.html"><span class="nav-dot"></span>Reports</a>
         </nav>
 
@@ -55,176 +56,106 @@
           </div>
 
           <div class="topbar-actions">
-            <span class="sync-pill">Updated now</span>
+            <span class="sync-pill">Read only</span>
             <a class="icon-button notification-button button-link" href="notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
 
-        <main class="workspace case-detail-workspace">
-          <section class="workspace-hero dashboard-hero">
-            <div>
-              <p class="section-kicker">Case record</p>
-              <h2>Newborn care assessment</h2>
-              <p>Maternal care &bull; CCMC &bull; Checklist completed</p>
-            </div>
-            <div class="quick-actions no-margin">
-              <a class="ghost-button" href="case-history.html">Back to history</a>
-              <span class="status-badge status-verified">Approved</span>
-            </div>
-          </section>
-
-          <section class="case-detail-layout">
+        <main class="workspace validation-workspace">
+          <section class="validation-layout">
             <article class="workspace-panel detail-main-card">
               <div class="panel-heading">
                 <div>
-                  <p class="section-kicker">Summary</p>
-                  <h2>Case information</h2>
+                  <h2>Case Information</h2>
                 </div>
-                <a class="ghost-button" href="edit-case.html">Edit case</a>
+                <a class="ghost-button" href="case-history.html">Back to cases</a>
+              </div>
+
+              <div class="student-validation-card">
+                <div class="avatar">MC</div>
+                <div>
+                  <strong>Maria Cruz</strong>
+                  <p>BSN 3A - Student ID 12-3456-789</p>
+                </div>
               </div>
 
               <div class="detail-summary-grid">
                 <div class="detail-summary-item">
                   <span>Case date</span>
-                  <strong>April 24, 2026</strong>
+                  <strong id="detail-case-date">April 24, 2026</strong>
                 </div>
                 <div class="detail-summary-item">
-                  <span>Case code</span>
-                  <strong>CASE-0424-002</strong>
+                  <span>Time of shift</span>
+                  <strong id="detail-case-shift-time">6:00 AM - 2:00 PM</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Patient name</span>
+                  <strong id="detail-case-patient">J. A. K.</strong>
                 </div>
                 <div class="detail-summary-item">
                   <span>Category</span>
-                  <strong>Maternal care</strong>
+                  <strong id="detail-case-category">Major Case - Assist</strong>
                 </div>
                 <div class="detail-summary-item">
-                  <span>Procedure title</span>
-                  <strong>Newborn care assessment</strong>
+                  <span>Procedure performed</span>
+                  <strong id="detail-case-procedure">Primary Lower Segment Transverse Cesarean Section</strong>
                 </div>
                 <div class="detail-summary-item">
-                  <span>Clinical site</span>
-                  <strong>CCMC</strong>
+                  <span>Name of hospital</span>
+                  <strong id="detail-case-site">CCMC</strong>
+                </div>
+                <div class="detail-summary-item">
+                  <span>Supervising clinical instructor</span>
+                  <strong id="detail-case-ci">Patricia Reyes, RN, MAN</strong>
                 </div>
                 <div class="detail-summary-item">
                   <span>Duty area</span>
-                  <strong>Delivery Room</strong>
+                  <strong id="detail-case-area">Delivery Room</strong>
                 </div>
                 <div class="detail-summary-item">
-                  <span>Clinical instructor</span>
-                  <strong>Prof. Reyes</strong>
+                  <span>Submitted date</span>
+                  <strong id="detail-case-submitted-date">April 24, 2026</strong>
                 </div>
                 <div class="detail-summary-item">
-                  <span>Checklist</span>
-                  <strong>9 / 9 completed</strong>
+                  <span>Submitted time</span>
+                  <strong id="detail-case-submitted-time">4:35 PM</strong>
                 </div>
               </div>
 
               <div class="notes-card">
-                <p class="section-kicker">Case notes</p>
-                <p>Assisted with newborn assessment and documented vital observations under instructor supervision.</p>
+                <p class="section-kicker">Student reflection</p>
+                <p id="detail-case-reflection">I learned how to assist properly during a DR major case, maintain sterile technique, and document accurately for clinical case documentation.</p>
               </div>
             </article>
 
             <aside class="duty-side-panel">
-              <article class="workspace-panel">
+              <article class="workspace-panel validation-comment-card">
                 <div class="panel-heading">
                   <div>
-                    <p class="section-kicker">Checklist</p>
-                    <h2>Completion result</h2>
+                    <h2>Clinical Case Status</h2>
                   </div>
-                  <span class="status-badge status-verified">Complete</span>
                 </div>
 
-                <div class="progress-track large-track"><span style="width: 100%"></span></div>
-                <p class="panel-note">All required checklist fields were completed before submission.</p>
-              </article>
-
-              <article class="workspace-panel">
-                <div class="panel-heading">
-                  <div>
-                    <p class="section-kicker">Validation</p>
-                    <h2>Instructor review</h2>
+                <div class="reviewed-case-panel chair-case-review-summary">
+                  <div class="reviewed-status-line">
+                    <span class="status-badge status-pending" id="detail-case-status-badge">Pending</span>
+                    <strong id="detail-case-status-title">Awaiting CI validation</strong>
                   </div>
-                  <span class="status-badge status-verified">Approved</span>
-                </div>
+                  <p id="detail-case-status-copy">This page is view-only. Updates and decisions are handled by the assigned Clinical Instructor and Chair workflows.</p>
 
-                <div class="review-comment no-margin">
-                  <div class="avatar small-avatar">PR</div>
-                  <div>
-                    <strong>Prof. Reyes</strong>
-                    <p>Checklist is complete and aligned with the submitted case record. Approved for progress tracking.</p>
+                  <div class="reviewed-comment-box">
+                    <p class="section-kicker">Recommended reviewer</p>
+                    <p id="detail-case-reviewer">Patricia Reyes, RN, MAN</p>
+                  </div>
+
+                  <div class="reviewed-comment-box">
+                    <p class="section-kicker">Student action</p>
+                    <p>No edits are available from this view.</p>
                   </div>
                 </div>
               </article>
             </aside>
-          </section>
-
-          <section class="dashboard-columns">
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Checklist details</p>
-                  <h2>Completed sections</h2>
-                </div>
-              </div>
-
-              <div class="requirement-list compact-list">
-                <div class="requirement-item">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Preparation</strong>
-                    <p>Patient identity, consent, and supplies confirmed</p>
-                  </div>
-                </div>
-                <div class="requirement-item">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Procedure Performance</strong>
-                    <p>Performed with supervision and safe technique</p>
-                  </div>
-                </div>
-                <div class="requirement-item">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Reflection</strong>
-                    <p>Learning summary and improvement plan submitted</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Timeline</p>
-                  <h2>Case activity</h2>
-                </div>
-              </div>
-
-              <div class="timeline-list">
-                <div class="timeline-item">
-                  <span class="timeline-dot"></span>
-                  <div>
-                    <strong>Case record created</strong>
-                    <p>April 24, 2026 &bull; 4:12 PM</p>
-                  </div>
-                </div>
-                <div class="timeline-item">
-                  <span class="timeline-dot"></span>
-                  <div>
-                    <strong>Checklist submitted</strong>
-                    <p>All required checklist fields were completed.</p>
-                  </div>
-                </div>
-                <div class="timeline-item">
-                  <span class="timeline-dot"></span>
-                  <div>
-                    <strong>Instructor approved</strong>
-                    <p>Case added to approved clinical requirements.</p>
-                  </div>
-                </div>
-              </div>
-            </article>
           </section>
         </main>
       </div>

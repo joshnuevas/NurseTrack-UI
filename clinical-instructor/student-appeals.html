@@ -80,24 +80,31 @@
         flex: 0 0 auto;
       }
 
+      .appeal-filters {
+        grid-template-columns: minmax(150px, 0.65fr) minmax(240px, 1fr) max-content !important;
+        align-items: end !important;
+        gap: 14px !important;
+      }
+
       .appeal-bulk-actions {
         display: flex !important;
         align-items: center !important;
         justify-content: flex-start !important;
-        flex-wrap: wrap !important;
+        align-self: end !important;
+        flex-wrap: nowrap !important;
         gap: 14px !important;
         width: auto !important;
         padding: 0 !important;
-        margin: 0 0 18px !important;
+        margin: 0 !important;
         border: 0 !important;
         background: transparent !important;
       }
 
       .appeal-bulk-actions .ghost-button,
       .appeal-accept-button {
-        width: 224px !important;
-        min-width: 224px !important;
-        max-width: 224px !important;
+        width: auto !important;
+        min-width: 156px !important;
+        max-width: max-content !important;
         height: 46px !important;
         min-height: 46px !important;
         padding: 10px 18px !important;
@@ -107,7 +114,63 @@
         justify-content: center !important;
         text-align: center !important;
         white-space: nowrap !important;
-        flex: 0 0 224px !important;
+        flex: 0 0 auto !important;
+      }
+
+      .appeal-accept-button {
+        min-width: 218px !important;
+        max-width: 218px !important;
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: #ffffff !important;
+        box-shadow: 0 12px 24px rgba(138, 37, 44, 0.24) !important;
+      }
+
+      .appeal-accept-button:hover:not(:disabled) {
+        background: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+        color: #ffffff !important;
+      }
+
+      .appeal-accept-button:focus-visible {
+        outline: 3px solid rgba(138, 37, 44, 0.35) !important;
+        outline-offset: 3px !important;
+      }
+
+      .appeal-accept-button:disabled {
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: #ffffff !important;
+        opacity: 0.55 !important;
+        cursor: not-allowed !important;
+        box-shadow: none !important;
+      }
+
+      .appeal-card .primary-button,
+      .appeal-card .appeal-accept-button,
+      .appeal-card button[data-action="accept"],
+      .appeal-card button[data-action="approve"],
+      .appeal-card button[data-decision="accept"],
+      .appeal-card button[data-decision="approve"],
+      .appeal-card button[data-appeal-action="accept"],
+      .appeal-card button[data-appeal-action="approve"] {
+        background: var(--primary) !important;
+        border-color: var(--primary) !important;
+        color: #ffffff !important;
+        box-shadow: 0 12px 24px rgba(138, 37, 44, 0.24) !important;
+      }
+
+      .appeal-card .primary-button:hover,
+      .appeal-card .appeal-accept-button:hover,
+      .appeal-card button[data-action="accept"]:hover,
+      .appeal-card button[data-action="approve"]:hover,
+      .appeal-card button[data-decision="accept"]:hover,
+      .appeal-card button[data-decision="approve"]:hover,
+      .appeal-card button[data-appeal-action="accept"]:hover,
+      .appeal-card button[data-appeal-action="approve"]:hover {
+        background: var(--primary-dark) !important;
+        border-color: var(--primary-dark) !important;
+        color: #ffffff !important;
       }
 
       #appeal-selected-count {
@@ -118,6 +181,10 @@
       }
 
       @media (max-width: 768px) {
+        .appeal-filters {
+          grid-template-columns: 1fr !important;
+        }
+
         .appeal-card-head {
           align-items: flex-start;
           flex-direction: column;
@@ -129,14 +196,20 @@
 
         .appeal-bulk-actions {
           align-items: stretch !important;
+          flex-direction: column !important;
+          flex-wrap: nowrap !important;
         }
 
         .appeal-bulk-actions .ghost-button,
         .appeal-accept-button {
-          width: 224px !important;
-          min-width: 224px !important;
-          max-width: 224px !important;
-          flex: 0 0 224px !important;
+          width: 100% !important;
+          min-width: 0 !important;
+          max-width: 100% !important;
+          flex: 0 0 auto !important;
+        }
+
+        #appeal-selected-count {
+          text-align: left;
         }
       }
     </style>
@@ -249,18 +322,18 @@
                   Search
                   <input id="appeal-search" type="search" placeholder="Search student, reason, site, or section">
                 </label>
-              </div>
 
-              <div class="appeal-bulk-actions" aria-label="Appeal batch actions">
-                <button class="ghost-button" id="appeal-select-all" type="button">
-                  Select all appeals
-                </button>
+                <div class="appeal-bulk-actions" aria-label="Appeal batch actions">
+                  <button class="ghost-button" id="appeal-select-all" type="button">
+                    Select all appeals
+                  </button>
 
-                <button class="primary-button appeal-accept-button" id="appeal-bulk-recommend" type="button" disabled>
-                  Accept selected appeals
-                </button>
+                  <button class="primary-button appeal-accept-button" id="appeal-bulk-recommend" type="button" disabled>
+                    Accept selected appeals
+                  </button>
 
-                <span id="appeal-selected-count">0 selected</span>
+                  <span id="appeal-selected-count">0 selected</span>
+                </div>
               </div>
 
               <div class="appeal-card-list" id="appeal-card-list"></div>

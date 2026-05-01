@@ -5,6 +5,7 @@ const manualStudentSearch = document.querySelector("#manual-student-search");
 const manualSectionFilter = document.querySelector("#manual-section-filter");
 const manualStudentItems = Array.from(document.querySelectorAll("#manual-student-list .assign-student"));
 const manualStudentChecks = Array.from(document.querySelectorAll("[data-manual-student-check]"));
+const manualNoStudentsMessage = document.querySelector("#manual-no-students-message");
 const manualAddStudentsButton = document.querySelector("#manual-add-students");
 const manualClearSelectionButton = document.querySelector("#manual-clear-selection");
 const manualAssignedStudents = document.querySelector("#manual-assigned-students");
@@ -14,7 +15,9 @@ const manualCaseInputs = Array.from(document.querySelectorAll("[data-manual-case
 
 const manualFields = {
   title: document.querySelector("#manual-title"),
+  section: document.querySelector("#manual-section"),
   group: document.querySelector("#manual-group"),
+  dutyType: document.querySelector("#manual-duty-type"),
   startDate: document.querySelector("#manual-start-date"),
   endDate: document.querySelector("#manual-end-date"),
   shiftStart: document.querySelector("#manual-shift-start"),
@@ -72,9 +75,36 @@ function formatManualDateRange() {
   return `${startDate} to ${endDate}`;
 }
 
+function getManualAssignedGroup() {
+  const section = manualFields.section?.value || "";
+  const group = manualFields.group?.value || "";
+
+  if (!section && !group) {
+    return "No group";
+  }
+
+  if (group === "Make-up Duty") {
+    return section ? `${section} - Make-up Duty` : group;
+  }
+
+  return [section, group].filter(Boolean).join(" - ");
+}
+
+function syncManualPickerSection() {
+  if (!manualFields.section || !manualSectionFilter) {
+    return;
+  }
+
+  const hasMatchingFilter = Array.from(manualSectionFilter.options).some((option) => option.value === manualFields.section.value);
+
+  if (hasMatchingFilter) {
+    manualSectionFilter.value = manualFields.section.value;
+  }
+}
+
 function syncManualSummary() {
   if (manualSummary.date) manualSummary.date.textContent = formatManualDateRange();
-  if (manualSummary.group) manualSummary.group.textContent = manualFields.group?.value || "No group";
+  if (manualSummary.group) manualSummary.group.textContent = getManualAssignedGroup();
   if (manualSummary.students) manualSummary.students.textContent = `${manualSelectedStudents.length} assigned`;
   if (manualSummary.shift) {
     const shiftStart = manualFields.shiftStart?.value || "";
@@ -107,8 +137,9 @@ function renderManualAssignedStudents() {
 
   if (manualSelectedStudents.length === 0) {
     manualAssignedStudents.innerHTML = `
-      <div class="manual-empty-roster-line" aria-hidden="true"></div>
+      <div class="manual-empty-roster-line">No assigned students yet.</div>
     `;
+    filterManualStudents();
     syncManualSummary();
     return;
   }
@@ -127,7 +158,7 @@ function renderManualAssignedStudents() {
           <span class="avatar mini-avatar">${manualInitials(student)}</span>
           <strong>${student}</strong>
         </div>
-        <span>${manualFields.group?.value || "No group"}</span>
+        <span>${getManualAssignedGroup()}</span>
         <div class="roster-action-buttons">
           <button class="ghost-button danger-action" type="button" data-remove-manual-student="${student}">Remove</button>
         </div>
@@ -141,23 +172,44 @@ function renderManualAssignedStudents() {
       manualSelectedStudents = manualSelectedStudents.filter((name) => name !== student);
       renderManualAssignedStudents();
       setManualStatus("Draft edited", "status-pending");
-      setManualMessage(`${student} removed from the manual schedule.`);
+      setManualMessage(`${student} removed from the manual schedule.`, false);
     });
   });
 
+  filterManualStudents();
   syncManualSummary();
 }
 
 function filterManualStudents() {
   const query = manualStudentSearch?.value.trim().toLowerCase() || "";
   const section = manualSectionFilter?.value || "BSN 3A";
+  let visibleCount = 0;
 
   manualStudentItems.forEach((item) => {
+    const student = item.querySelector("[data-manual-student-check]")?.value || "";
+    const isAssigned = manualSelectedStudents.includes(student);
     const matchesSearch = !query || item.dataset.student.toLowerCase().includes(query);
     const matchesSection = item.dataset.section === section;
+    const shouldHide = isAssigned || !matchesSearch || !matchesSection;
 
-    item.hidden = !matchesSearch || !matchesSection;
+    item.hidden = shouldHide;
+
+    if (!shouldHide) {
+      visibleCount += 1;
+    }
+
+    if (shouldHide) {
+      const check = item.querySelector("[data-manual-student-check]");
+
+      if (check) {
+        check.checked = false;
+      }
+    }
   });
+
+  if (manualNoStudentsMessage) {
+    manualNoStudentsMessage.hidden = visibleCount > 0;
+  }
 }
 
 function clearManualStudentSelection() {
@@ -171,7 +223,7 @@ manualSectionFilter?.addEventListener("change", filterManualStudents);
 manualClearSelectionButton?.addEventListener("click", clearManualStudentSelection);
 
 manualAddStudentsButton?.addEventListener("click", () => {
-  const selectedChecks = manualStudentChecks.filter((check) => check.checked);
+  const selectedChecks = manualStudentChecks.filter((check) => check.checked && !check.closest(".assign-student")?.hidden);
   const newStudents = selectedChecks.map((check) => check.value).filter((student) => !manualSelectedStudents.includes(student));
 
   if (newStudents.length === 0) {
@@ -188,10 +240,12 @@ manualAddStudentsButton?.addEventListener("click", () => {
 
 Object.values(manualFields).forEach((field) => {
   field?.addEventListener("input", () => {
+    syncManualPickerSection();
     syncManualSummary();
     renderManualAssignedStudents();
   });
   field?.addEventListener("change", () => {
+    syncManualPickerSection();
     syncManualSummary();
     renderManualAssignedStudents();
   });
@@ -212,5 +266,6 @@ manualScheduleForm?.addEventListener("submit", (event) => {
 });
 
 syncManualCasePresentation();
+syncManualPickerSection();
 renderManualAssignedStudents();
 syncManualSummary();

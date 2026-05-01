@@ -27,6 +27,19 @@
         gap: 1.25rem;
       }
 
+      .report-scope-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .report-date-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
       .autocomplete-wrapper {
         position: relative;
       }
@@ -106,6 +119,12 @@
       input[type="search"]::-webkit-search-cancel-button:hover {
         opacity: 1;
       }
+
+      @media (max-width: 760px) {
+        .report-date-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
 
@@ -127,6 +146,7 @@
           <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="chair-student-progress.html"><span class="nav-dot"></span>Student Progress</a>
+          <a class="nav-link" href="clinical-cases-view.html"><span class="nav-dot"></span>Clinical Cases View</a>
           <a class="nav-link" href="overtime-details.html"><span class="nav-dot"></span>Overtime Details</a>
           <a class="nav-link is-active" href="generate-report.html" aria-current="page"><span class="nav-dot"></span>Reports</a>
         </nav>
@@ -180,16 +200,75 @@
             <form class="workspace-panel report-form instructor-report-form" id="report-form" novalidate>
               <div class="panel-heading">
                 <div>
-                  <h2>Person Report Details</h2>
+                  <h2>General Report Details</h2>
                 </div>
                 <span class="status-badge status-pending">Required</span>
               </div>
 
+              <div class="report-scope-grid">
+                <label class="form-label" for="report-scope">
+                  Report about
+                  <select id="report-scope" name="reportScope" required>
+                    <option value="person">One student or clinical instructor</option>
+                    <option value="section">Section</option>
+                    <option value="site">Clinical site</option>
+                    <option value="group">Group</option>
+                  </select>
+                </label>
+              </div>
+
               <div class="student-only-report-grid">
-                <div class="form-label autocomplete-wrapper">
+                <div class="form-label autocomplete-wrapper" id="person-field">
                   <label for="person-search">Search student or clinical instructor</label>
-                  <input id="person-search" name="personSearch" type="search" placeholder="Search by name, ID, role, section, or clinical site" autocomplete="off" required>
+                  <input id="person-search" name="personSearch" type="search" placeholder="Search by name, ID, role, section, or clinical site" autocomplete="off">
                   <div id="custom-person-dropdown" class="custom-dropdown" hidden></div>
+                </div>
+
+                <label class="form-label" for="section-target" id="section-field" hidden>
+                  Select section
+                  <select id="section-target" name="sectionTarget">
+                    <option value="">Choose section</option>
+                    <option value="BSN 3A">BSN 3A</option>
+                    <option value="BSN 3B">BSN 3B</option>
+                    <option value="BSN 3C">BSN 3C</option>
+                    <option value="BSN 4A">BSN 4A</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="site-target" id="site-field" hidden>
+                  Select clinical site
+                  <select id="site-target" name="siteTarget">
+                    <option value="">Choose clinical site</option>
+                    <option value="CCMC">CCMC</option>
+                    <option value="VSMMC">VSMMC</option>
+                    <option value="SAMCH">SAMCH</option>
+                    <option value="CSMC">CSMC</option>
+                    <option value="CHN Brgy. Dumlog">CHN Brgy. Dumlog</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="group-target" id="group-field" hidden>
+                  Select group
+                  <select id="group-target" name="groupTarget">
+                    <option value="">Choose group</option>
+                    <option value="BSN 3A - Group 1">BSN 3A - Group 1</option>
+                    <option value="BSN 3A - Group 2">BSN 3A - Group 2</option>
+                    <option value="BSN 3B - Group 1">BSN 3B - Group 1</option>
+                    <option value="BSN 3C - Group 1">BSN 3C - Group 1</option>
+                    <option value="BSN 4A - Group 1">BSN 4A - Group 1</option>
+                  </select>
+                </label>
+
+                <div class="report-date-grid">
+                  <label class="form-label" for="start-date">
+                    Start date
+                    <input id="start-date" name="startDate" type="date" value="2026-04-01" required>
+                  </label>
+
+                  <label class="form-label" for="end-date">
+                    End date
+                    <input id="end-date" name="endDate" type="date" value="2026-05-01" required>
+                  </label>
                 </div>
               </div>
 
@@ -198,7 +277,7 @@
 
                 <label class="check-row">
                   <input type="checkbox" checked>
-                  Person details
+                  Person, section, site, or group details
                 </label>
 
                 <label class="check-row">
@@ -208,12 +287,22 @@
 
                 <label class="check-row">
                   <input type="checkbox" checked>
-                  Progress summary
+                  Duty hours and attendance records
+                </label>
+
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  Clinical case progress
+                </label>
+
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  Completion and lacking requirements
                 </label>
               </fieldset>
 
               <div id="report-message" class="form-message" role="status" aria-live="polite">
-                Select one student or one clinical instructor, then generate a report.
+                Select a person, section, clinical site, or group, then generate a general report.
               </div>
 
               <div class="button-row report-actions">
@@ -225,143 +314,6 @@
         </main>
       </div>
     </div>
-
-    <script>
-      const chairReportPeople = [
-        {
-          name: "Maria Cruz",
-          meta: "Student | 12-3456-789 | BSN 3A | CCMC"
-        },
-        {
-          name: "Josh Anton Nuevas",
-          meta: "Student | 12-3456-812 | BSN 3A | CCMC"
-        },
-        {
-          name: "Treasure Abadinas",
-          meta: "Student | 12-3456-845 | BSN 3A | VSMMC"
-        },
-        {
-          name: "Andrea Gomez",
-          meta: "Student | 12-3456-902 | BSN 3B | CHN Brgy. Dumlog"
-        },
-        {
-          name: "Lichael Ursulo",
-          meta: "Student | 12-3456-976 | BSN 3C | CSMC"
-        },
-        {
-          name: "Angela Neri",
-          meta: "Student | 12-3456-988 | BSN 3C | CSMC"
-        },
-        {
-          name: "Patricia Reyes, RN, MAN",
-          meta: "Clinical Instructor | CI-1002 | BSN 3A | CCMC"
-        },
-        {
-          name: "Miguel Santos, RN, MAN",
-          meta: "Clinical Instructor | CI-1003 | BSN 3B | CCMC"
-        },
-        {
-          name: "Elena Dela Cruz, RN, MN, DSCN",
-          meta: "Clinical Instructor | CI-1004 | BSN 4A | VSMMC"
-        },
-        {
-          name: "Louise Wong",
-          meta: "Clinical Instructor | CI-1005 | BSN 3A | VSMMC"
-        },
-        {
-          name: "Rivelyn Altamira",
-          meta: "Clinical Instructor | CI-1006 | BSN 3A | SAMCH"
-        }
-      ];
-
-      const personSearchInput = document.querySelector("#person-search");
-      const personDropdown = document.querySelector("#custom-person-dropdown");
-      const resetReportButton = document.querySelector("#reset-report");
-      const reportForm = document.querySelector("#report-form");
-      const reportMessage = document.querySelector("#report-message");
-
-      function renderPersonDropdown() {
-        if (!personSearchInput || !personDropdown) {
-          return;
-        }
-
-        const query = personSearchInput.value.trim().toLowerCase();
-
-        const filteredPeople = chairReportPeople.filter((person) => {
-          return `${person.name} ${person.meta}`.toLowerCase().includes(query);
-        });
-
-        if (!filteredPeople.length) {
-          personDropdown.innerHTML = `<div class="custom-dropdown-empty">No results found</div>`;
-          personDropdown.hidden = false;
-          return;
-        }
-
-        personDropdown.innerHTML = filteredPeople.map((person) => `
-          <button class="custom-dropdown-item" type="button" data-value="${person.name} - ${person.meta}">
-            <strong>${person.name}</strong>
-            <small>${person.meta}</small>
-          </button>
-        `).join("");
-
-        personDropdown.querySelectorAll("[data-value]").forEach((button) => {
-          button.addEventListener("click", () => {
-            personSearchInput.value = button.dataset.value;
-            personDropdown.hidden = true;
-          });
-        });
-
-        personDropdown.hidden = false;
-      }
-
-      personSearchInput?.addEventListener("focus", renderPersonDropdown);
-      personSearchInput?.addEventListener("input", renderPersonDropdown);
-
-      personSearchInput?.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && personDropdown) {
-          personDropdown.hidden = true;
-        }
-      });
-
-      document.addEventListener("click", (event) => {
-        if (!personSearchInput || !personDropdown) {
-          return;
-        }
-
-        if (!personSearchInput.contains(event.target) && !personDropdown.contains(event.target)) {
-          personDropdown.hidden = true;
-        }
-      });
-
-      resetReportButton?.addEventListener("click", () => {
-        if (personSearchInput) {
-          personSearchInput.value = "";
-        }
-
-        if (personDropdown) {
-          personDropdown.hidden = true;
-        }
-
-        if (reportMessage) {
-          reportMessage.textContent = "Select one student or one clinical instructor, then generate a report.";
-          reportMessage.classList.remove("is-error", "is-success");
-        }
-      });
-
-      reportForm?.addEventListener("submit", (event) => {
-        if (!personSearchInput?.value.trim()) {
-          event.preventDefault();
-
-          if (reportMessage) {
-            reportMessage.textContent = "Select one student or one clinical instructor before generating a report.";
-            reportMessage.classList.add("is-error");
-            reportMessage.classList.remove("is-success");
-          }
-
-          personSearchInput?.focus();
-        }
-      });
-    </script>
 
     <script src="../scripts/generate-report.js"></script>
     <script src="../scripts/logout-confirm.js"></script>

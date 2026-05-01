@@ -1,287 +1,384 @@
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
-const form = document.querySelector("#report-form");
-const reportType = document.querySelector("#report-type");
-const startDate = document.querySelector("#start-date");
-const endDate = document.querySelector("#end-date");
-const sectionFilter = document.querySelector("#section-filter");
-const siteFilter = document.querySelector("#site-filter");
-const formatFilter = document.querySelector("#format-filter");
-const studentSearch = document.querySelector("#student-search");
-const customDropdown = document.querySelector("#custom-student-dropdown");
-const message = document.querySelector("#report-message");
-const previewTitle = document.querySelector("#preview-title");
-const previewPeriod = document.querySelector("#preview-period");
-const previewScope = document.querySelector("#preview-scope");
-const previewCount = document.querySelector("#preview-count");
-const previewCompleted = document.querySelector("#preview-completed");
-const previewPending = document.querySelector("#preview-pending");
-const previewAction = document.querySelector("#preview-action");
-const quickGenerate = document.querySelector("#quick-generate");
-const resetReport = document.querySelector("#reset-report");
-const exportCsv = document.querySelector("#export-csv");
-const exportPdf = document.querySelector("#export-pdf");
+const reportForm = document.querySelector("#report-form");
+const reportScope = document.querySelector("#report-scope");
+const personField = document.querySelector("#person-field");
+const sectionField = document.querySelector("#section-field");
+const siteField = document.querySelector("#site-field");
+const groupField = document.querySelector("#group-field");
+const personSearchInput = document.querySelector("#person-search");
+const personDropdown = document.querySelector("#custom-person-dropdown");
+const sectionTarget = document.querySelector("#section-target");
+const siteTarget = document.querySelector("#site-target");
+const groupTarget = document.querySelector("#group-target");
+const resetReportButton = document.querySelector("#reset-report");
+const reportMessage = document.querySelector("#report-message");
 
-const studentReportRecords = [
+const chairReportPeople = [
   {
     name: "Maria Cruz",
-    section: "BSN 3A",
+    role: "Student",
     id: "12-3456-789",
+    section: "BSN 3A",
     site: "CCMC",
-    metrics: {
-      "Compliance Summary": ["1 student record", "18", "3", "1"],
-      "Duty Report": ["42 duty hours", "38", "3", "1"],
-      "Case Report": ["18 case logs", "14", "3", "1"],
-      "Schedule Report": ["5 assigned schedules", "5", "0", "0"]
-    }
+    group: "BSN 3A - Group 2"
   },
   {
     name: "Josh Anton Nuevas",
-    section: "BSN 3A",
+    role: "Student",
     id: "12-3456-812",
+    section: "BSN 3A",
     site: "CCMC",
-    metrics: {
-      "Compliance Summary": ["1 student record", "16", "4", "2"],
-      "Duty Report": ["39 duty hours", "34", "4", "1"],
-      "Case Report": ["16 case logs", "12", "3", "1"],
-      "Schedule Report": ["5 assigned schedules", "4", "1", "0"]
-    }
+    group: "BSN 3A - Group 2"
   },
   {
     name: "Treasure Abadinas",
-    section: "BSN 3A",
+    role: "Student",
     id: "12-3456-845",
+    section: "BSN 3A",
     site: "VSMMC",
-    metrics: {
-      "Compliance Summary": ["1 student record", "19", "2", "0"],
-      "Duty Report": ["45 duty hours", "43", "2", "0"],
-      "Case Report": ["19 case logs", "17", "2", "0"],
-      "Schedule Report": ["5 assigned schedules", "5", "0", "0"]
-    }
+    group: "BSN 3A - Group 1"
   },
   {
     name: "Andrea Gomez",
-    section: "BSN 3B",
+    role: "Student",
     id: "12-3456-902",
+    section: "BSN 3B",
     site: "CHN Brgy. Dumlog",
-    metrics: {
-      "Compliance Summary": ["1 student record", "17", "3", "1"],
-      "Duty Report": ["40 duty hours", "36", "3", "1"],
-      "Case Report": ["17 case logs", "13", "3", "1"],
-      "Schedule Report": ["4 assigned schedules", "4", "0", "0"]
-    }
+    group: "BSN 3B - Group 1"
   },
   {
     name: "Lichael Ursulo",
-    section: "BSN 3C",
+    role: "Student",
     id: "12-3456-976",
+    section: "BSN 3C",
     site: "CSMC",
-    metrics: {
-      "Compliance Summary": ["1 student record", "15", "4", "1"],
-      "Duty Report": ["37 duty hours", "32", "4", "1"],
-      "Case Report": ["15 case logs", "11", "3", "1"],
-      "Schedule Report": ["4 assigned schedules", "4", "0", "0"]
-    }
+    group: "BSN 3C - Group 1"
   },
   {
     name: "Angela Neri",
-    section: "BSN 3C",
+    role: "Student",
     id: "12-3456-988",
+    section: "BSN 3C",
     site: "CSMC",
-    metrics: {
-      "Compliance Summary": ["1 student record", "14", "5", "1"],
-      "Duty Report": ["35 duty hours", "30", "5", "0"],
-      "Case Report": ["14 case logs", "10", "3", "1"],
-      "Schedule Report": ["4 assigned schedules", "3", "1", "0"]
-    }
+    group: "BSN 3C - Group 1"
+  },
+  {
+    name: "Patricia Reyes, RN, MAN",
+    role: "Clinical Instructor",
+    id: "CI-1002",
+    section: "BSN 3A",
+    site: "CCMC",
+    group: "BSN 3A - Group 2"
+  },
+  {
+    name: "Miguel Santos, RN, MAN",
+    role: "Clinical Instructor",
+    id: "CI-1003",
+    section: "BSN 3B",
+    site: "CCMC",
+    group: "BSN 3B - Group 1"
+  },
+  {
+    name: "Elena Dela Cruz, RN, MN, DSCN",
+    role: "Clinical Instructor",
+    id: "CI-1004",
+    section: "BSN 4A",
+    site: "VSMMC",
+    group: "BSN 4A - Group 1"
+  },
+  {
+    name: "Louise Wong",
+    role: "Clinical Instructor",
+    id: "CI-1005",
+    section: "BSN 3A",
+    site: "VSMMC",
+    group: "BSN 3A - Group 1"
+  },
+  {
+    name: "Rivelyn Altamira",
+    role: "Clinical Instructor",
+    id: "CI-1006",
+    section: "BSN 3A",
+    site: "SAMCH",
+    group: "BSN 3A - Group 1"
   }
 ];
 
-const reportMetrics = document.body.dataset.reportScope === "student" ? {
-  "Compliance Summary": ["42 records", "31", "9", "2"],
-  "Duty Report": ["128 duty hours", "96", "24", "8"],
-  "Case Report": ["34 case logs", "27", "5", "2"],
-  "Schedule Report": ["5 schedules", "4", "1", "0"],
-  "Lacking Duty Hours": ["24 hours lacking", "96", "24", "8"],
-  "Lacking Clinical Cases": ["10 case items lacking", "14", "6", "4"],
-  "Late Attendance Records": ["3 late entries", "2", "1", "0"],
-  "Not Applicable Records": ["2 case records", "0", "0", "2"],
-  "Group Progress": ["1 active group", "3", "1", "0"],
-  "CI Assigned Student Status": ["1 assigned CI", "4", "1", "0"]
-} : {
-  "Compliance Summary": ["42 students", "31", "9", "2"],
-  "Duty Report": ["318 duty records", "246", "58", "14"],
-  "Case Report": ["186 case logs", "142", "36", "8"],
-  "Schedule Report": ["28 schedules", "22", "4", "2"],
-  "Lacking Duty Hours": ["58 duty gaps", "246", "58", "14"],
-  "Lacking Clinical Cases": ["36 case gaps", "142", "36", "8"],
-  "Late Attendance Records": ["14 late entries", "9", "3", "2"],
-  "Not Applicable Records": ["8 records", "0", "0", "8"],
-  "Group Progress": ["12 active groups", "9", "2", "1"],
-  "CI Assigned Student Status": ["6 instructors", "31", "9", "2"]
-};
-
-// Handle Custom Autocomplete Dropdown
-function renderDropdown(query = "") {
-  customDropdown.innerHTML = "";
-  const normalizedWords = query.toLowerCase().trim().split(/\s+/);
-
-  // Filter students based on query
-  const filteredStudents = studentReportRecords.filter((student) => {
-    if (!query) return true; // Show all if empty
-    const searchable = `${student.name} ${student.section} ${student.id} ${student.site}`.toLowerCase();
-    return normalizedWords.every(word => searchable.includes(word));
-  });
-
-  if (filteredStudents.length === 0) {
-    customDropdown.innerHTML = `<div class="custom-dropdown-empty">No students found matching "${query}"</div>`;
+function setMessage(text, state) {
+  if (!reportMessage) {
     return;
   }
 
-  // Build the list
-  filteredStudents.forEach(student => {
-    const item = document.createElement("div");
-    item.className = "custom-dropdown-item";
-    item.innerHTML = `
-      <strong>${student.name}</strong>
-      <small>${student.id} | ${student.section}</small>
-    `;
-    
-    // Select student on click
-    item.addEventListener("click", () => {
-      studentSearch.value = student.name;
-      customDropdown.hidden = true;
-      updatePreview();
-    });
-    
-    customDropdown.appendChild(item);
-  });
-}
-
-// Show dropdown on focus or typing
-studentSearch.addEventListener("focus", () => {
-  renderDropdown(studentSearch.value);
-  customDropdown.hidden = false;
-});
-
-studentSearch.addEventListener("input", (e) => {
-  renderDropdown(e.target.value);
-  customDropdown.hidden = false;
-  updatePreview();
-});
-
-// Hide dropdown when clicking outside
-document.addEventListener("click", (e) => {
-  if (!studentSearch.contains(e.target) && !customDropdown.contains(e.target)) {
-    customDropdown.hidden = true;
-  }
-});
-
-function formatDate(value) {
-  if (!value) {
-    return "Not set";
-  }
-
-  return new Date(`${value}T00:00:00`).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric"
-  });
-}
-
-function setMessage(text, state) {
-  message.textContent = text;
-  message.classList.remove("is-error", "is-success");
+  reportMessage.textContent = text;
+  reportMessage.classList.remove("is-error", "is-success");
 
   if (state) {
-    message.classList.add(state);
+    reportMessage.classList.add(state);
   }
 }
 
-function findStudentRecord(query) {
-  const normalizedWords = query.toLowerCase().trim().split(/\s+/);
-  return studentReportRecords.find((student) => {
-    const searchable = `${student.name} ${student.section} ${student.id} ${student.site}`.toLowerCase();
-    return normalizedWords.every(word => searchable.includes(word));
+function getPersonMeta(person) {
+  return `${person.role} | ${person.id} | ${person.section}`;
+}
+
+function getSelectedPerson() {
+  const value = personSearchInput?.value.trim() || "";
+
+  if (!value) {
+    return null;
+  }
+
+  return chairReportPeople.find((person) => person.name === value) || null;
+}
+
+function getTargetCount(scope, value) {
+  if (!value) {
+    return 0;
+  }
+
+  if (scope === "person") {
+    return getSelectedPerson() ? 1 : 0;
+  }
+
+  if (scope === "section") {
+    return chairReportPeople.filter((person) => person.section === value).length;
+  }
+
+  if (scope === "site") {
+    return chairReportPeople.filter((person) => person.site === value).length;
+  }
+
+  if (scope === "group") {
+    return chairReportPeople.filter((person) => person.group === value).length;
+  }
+
+  return 0;
+}
+
+function getCurrentScopeValue() {
+  const scope = reportScope?.value || "person";
+
+  if (scope === "person") {
+    return personSearchInput?.value.trim() || "";
+  }
+
+  if (scope === "section") {
+    return sectionTarget?.value || "";
+  }
+
+  if (scope === "site") {
+    return siteTarget?.value || "";
+  }
+
+  if (scope === "group") {
+    return groupTarget?.value || "";
+  }
+
+  return "";
+}
+
+function getScopeLabel(scope) {
+  if (scope === "person") {
+    return "Person";
+  }
+
+  if (scope === "section") {
+    return "Section";
+  }
+
+  if (scope === "site") {
+    return "Clinical Site";
+  }
+
+  if (scope === "group") {
+    return "Group";
+  }
+
+  return "Report Target";
+}
+
+function updateTargetPreview() {
+  return;
+}
+
+function showScopeField() {
+  const scope = reportScope?.value || "person";
+
+  if (personField) {
+    personField.hidden = scope !== "person";
+  }
+
+  if (sectionField) {
+    sectionField.hidden = scope !== "section";
+  }
+
+  if (siteField) {
+    siteField.hidden = scope !== "site";
+  }
+
+  if (groupField) {
+    groupField.hidden = scope !== "group";
+  }
+
+  if (personDropdown) {
+    personDropdown.hidden = true;
+  }
+
+  updateTargetPreview();
+}
+
+function renderPersonDropdown() {
+  if (!personSearchInput || !personDropdown) {
+    return;
+  }
+
+  const query = personSearchInput.value.trim().toLowerCase();
+
+  const filteredPeople = chairReportPeople.filter((person) => {
+    const searchable = `${person.name} ${person.role} ${person.id} ${person.section} ${person.site} ${person.group}`.toLowerCase();
+    return searchable.includes(query);
   });
-}
 
-function updatePreview() {
-  const studentQuery = studentSearch?.value.trim() || "";
-  const studentRecord = studentQuery ? findStudentRecord(studentQuery) : null;
-  const defaultMetrics = reportMetrics[reportType.value] || reportMetrics["Compliance Summary"];
-  const metrics = studentQuery
-    ? studentRecord?.metrics[reportType.value] || ["1 student record", "1", "0", "0"]
-    : defaultMetrics;
-  const studentScope = studentRecord
-    ? `${studentRecord.name} (${studentRecord.section})`
-    : studentQuery;
-
-  previewTitle.textContent = reportType.value;
-  previewPeriod.textContent = `${formatDate(startDate.value)} - ${formatDate(endDate.value)}`;
-  previewScope.textContent = studentQuery
-    ? `${studentScope} - ${studentRecord?.site || siteFilter.value}`
-    : `${sectionFilter.value} - ${siteFilter.value}`;
-  previewCount.textContent = metrics[0];
-  previewCompleted.textContent = metrics[1];
-  previewPending.textContent = metrics[2];
-  previewAction.textContent = metrics[3];
-}
-
-function generatePreview() {
-  if (studentSearch && !studentSearch.value.trim()) {
-    setMessage("Search an assigned student before generating the report.", "is-error");
-    studentSearch.focus();
+  if (!filteredPeople.length) {
+    personDropdown.innerHTML = `<div class="custom-dropdown-empty">No results found</div>`;
+    personDropdown.hidden = false;
     return;
   }
 
-  if (startDate.value && endDate.value && startDate.value > endDate.value) {
-    setMessage("End date must be later than the start date.", "is-error");
-    endDate.focus();
+  personDropdown.innerHTML = filteredPeople.map((person) => {
+    const value = person.name;
+
+    return `
+      <button class="custom-dropdown-item" type="button" data-value="${value}">
+        <strong>${person.name}</strong>
+        <small>${getPersonMeta(person)}</small>
+      </button>
+    `;
+  }).join("");
+
+  personDropdown.querySelectorAll("[data-value]").forEach((button) => {
+    button.addEventListener("click", () => {
+      personSearchInput.value = button.dataset.value;
+      personDropdown.hidden = true;
+      updateTargetPreview();
+    });
+  });
+
+  personDropdown.hidden = false;
+}
+
+function resetReportForm() {
+  reportForm?.reset();
+
+  if (personDropdown) {
+    personDropdown.hidden = true;
+  }
+
+  showScopeField();
+  setMessage("Select a person, section, clinical site, or group, then generate a general report.");
+}
+
+function validateReportTarget() {
+  const scope = reportScope?.value || "person";
+  const value = getCurrentScopeValue();
+
+  if (!value) {
+    if (scope === "person") {
+      setMessage("Select one student or one clinical instructor before generating a report.", "is-error");
+      personSearchInput?.focus();
+      return false;
+    }
+
+    if (scope === "section") {
+      setMessage("Select a section before generating a report.", "is-error");
+      sectionTarget?.focus();
+      return false;
+    }
+
+    if (scope === "site") {
+      setMessage("Select a clinical site before generating a report.", "is-error");
+      siteTarget?.focus();
+      return false;
+    }
+
+    if (scope === "group") {
+      setMessage("Select a group before generating a report.", "is-error");
+      groupTarget?.focus();
+      return false;
+    }
+  }
+
+  if (scope === "person" && !getSelectedPerson()) {
+    setMessage("Please choose a valid person from the dropdown list.", "is-error");
+    personSearchInput?.focus();
+    return false;
+  }
+
+  return true;
+}
+
+function generateReport() {
+  if (!validateReportTarget()) {
     return;
   }
 
-  updatePreview();
-  const studentQuery = studentSearch?.value.trim();
-  const studentRecord = studentQuery ? findStudentRecord(studentQuery) : null;
-  const target = studentQuery ? ` for ${studentRecord?.name || studentQuery}` : "";
+  const scope = reportScope?.value || "person";
+  const value = getCurrentScopeValue();
+  const count = getTargetCount(scope, value);
 
-  setMessage(`${reportType.value} report generated${target} successfully.`, "is-success");
+  if (scope === "person") {
+    const person = getSelectedPerson();
+    setMessage(`General report generated for ${person.name}.`, "is-success");
+    return;
+  }
+
+  setMessage(`General report generated for ${value} with ${count} matching records.`, "is-success");
 }
 
-menuButton.addEventListener("click", () => {
+menuButton?.addEventListener("click", () => {
   document.body.classList.add("sidebar-open");
 });
 
-sidebarBackdrop.addEventListener("click", () => {
+sidebarBackdrop?.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[reportType, startDate, endDate, sectionFilter, siteFilter].filter(Boolean).forEach((control) => {
-  control.addEventListener("input", updatePreview);
+reportScope?.addEventListener("change", showScopeField);
+
+personSearchInput?.addEventListener("focus", renderPersonDropdown);
+
+personSearchInput?.addEventListener("input", () => {
+  renderPersonDropdown();
+  updateTargetPreview();
 });
 
-form.addEventListener("submit", (event) => {
+personSearchInput?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && personDropdown) {
+    personDropdown.hidden = true;
+  }
+});
+
+sectionTarget?.addEventListener("change", updateTargetPreview);
+siteTarget?.addEventListener("change", updateTargetPreview);
+groupTarget?.addEventListener("change", updateTargetPreview);
+
+document.addEventListener("click", (event) => {
+  if (!personSearchInput || !personDropdown) {
+    return;
+  }
+
+  if (!personSearchInput.contains(event.target) && !personDropdown.contains(event.target)) {
+    personDropdown.hidden = true;
+  }
+});
+
+resetReportButton?.addEventListener("click", resetReportForm);
+
+reportForm?.addEventListener("submit", (event) => {
   event.preventDefault();
-  generatePreview();
+  generateReport();
 });
 
-quickGenerate?.addEventListener("click", generatePreview);
-
-resetReport.addEventListener("click", () => {
-  form.reset();
-  updatePreview();
-  setMessage("Report filters reset.", "is-success");
-});
-
-exportCsv.addEventListener("click", () => {
-  setMessage(`${reportType.value} CSV export is ready.`, "is-success");
-  formatFilter.value = "CSV";
-});
-
-exportPdf.addEventListener("click", () => {
-  setMessage(`${reportType.value} PDF export is ready.`, "is-success");
-  formatFilter.value = "PDF";
-});
-
-updatePreview();
+showScopeField();
+updateTargetPreview();

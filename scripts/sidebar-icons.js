@@ -15,6 +15,11 @@
       <path d="M14 3v5h5"></path>
       <path d="m8.5 14 2 2 5-5"></path>
     `,
+    clearance: `
+      <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"></path>
+      <path d="m8 12 2.5 2.5L16 9"></path>
+      <path d="M8 18h8"></path>
+    `,
     dashboard: `
       <rect x="3" y="3" width="7" height="8" rx="1.5"></rect>
       <rect x="14" y="3" width="7" height="5" rx="1.5"></rect>
@@ -66,6 +71,29 @@
       <path d="M17 22v-2"></path>
       <path d="M20 17h2"></path>
       <path d="M12 17h2"></path>
+    `,
+    "section import": `
+      <path d="M5 4h10l4 4v12H5z"></path>
+      <path d="M15 4v5h5"></path>
+      <path d="M8 14h8"></path>
+      <path d="M8 17h5"></path>
+      <path d="M10 11h4"></path>
+      <path d="M12 9v4"></path>
+    `,
+    "hospitals / duty areas": `
+      <path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"></path>
+      <path d="M16 8h2a2 2 0 0 1 2 2v11"></path>
+      <path d="M8 7h4"></path>
+      <path d="M8 11h4"></path>
+      <path d="M8 15h4"></path>
+      <path d="M3 21h18"></path>
+    `,
+    "audit logs": `
+      <path d="M6 3h10l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"></path>
+      <path d="M16 3v5h5"></path>
+      <path d="M8 12h8"></path>
+      <path d="M8 16h6"></path>
+      <path d="m8 8 1 1 2-2"></path>
     `,
     schedule: `
       <rect x="4" y="5" width="16" height="16" rx="2"></rect>

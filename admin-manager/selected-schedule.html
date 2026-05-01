@@ -11,6 +11,127 @@
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
 
     <style>
+      .selected-schedule-workspace {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .selected-day-layout {
+        gap: 1.5rem;
+      }
+
+      .selected-day-layout .workspace-panel {
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+      }
+
+      .day-schedule-list-panel {
+        padding: 1.65rem 1.75rem 1.9rem;
+        background:
+          linear-gradient(180deg, rgba(255, 247, 214, 0.55), rgba(255, 255, 255, 0) 170px),
+          #ffffff;
+      }
+
+      .day-schedule-list-panel .panel-heading {
+        margin-bottom: 1.35rem;
+        padding-bottom: 0.75rem;
+      }
+
+      .day-schedule-list-panel .panel-heading h2,
+      .selected-schedule-panel .panel-heading h2,
+      .student-roster-panel .panel-heading h3 {
+        letter-spacing: -0.03em;
+      }
+
+      .day-schedule-list {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .day-schedule-list .day-schedule-card,
+      .day-schedule-card {
+        position: relative;
+        display: grid;
+        gap: 0.65rem;
+        overflow: hidden;
+        width: 100%;
+        min-height: 126px;
+        padding: 1.35rem 1.45rem 1.35rem 1.65rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        background: #ffffff;
+        text-align: left;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      }
+
+      .day-schedule-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 5px;
+        background: linear-gradient(180deg, #8a252c, #ffcf01);
+      }
+
+      .day-schedule-card strong {
+        display: block;
+        color: #111827;
+        font-size: 1.08rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+      }
+
+      .day-schedule-card span {
+        display: block;
+        color: #4c5d7d;
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      .day-schedule-card small {
+        display: block;
+        color: #4c5d7d;
+        font-size: 0.92rem;
+        font-weight: 750;
+        line-height: 1.35;
+      }
+
+      .day-schedule-card:hover,
+      .day-schedule-card.is-active,
+      .day-schedule-card.is-selected {
+        border-color: rgba(138, 37, 44, 0.32);
+        box-shadow: 0 14px 28px rgba(138, 37, 44, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .empty-state {
+        padding: 1.25rem;
+        border: 1px dashed rgba(138, 37, 44, 0.22);
+        border-radius: 1rem;
+        background: #fffaf0;
+        color: #8a252c;
+        font-weight: 800;
+      }
+
+      .selected-schedule-panel {
+        padding: 1.05rem 1.35rem 1.45rem;
+        background:
+          radial-gradient(circle at top right, rgba(255, 207, 1, 0.14), transparent 22%),
+          #ffffff;
+      }
+
+      .selected-schedule-panel .panel-heading {
+        align-items: center;
+        margin-bottom: 0.65rem;
+        padding-bottom: 0.35rem;
+      }
+
+      .selected-schedule-panel .panel-heading h2 {
+        margin: 0;
+        line-height: 1.15;
+      }
+
       .selected-schedule-heading-actions {
         display: flex;
         align-items: center;
@@ -24,8 +145,48 @@
         white-space: nowrap;
       }
 
+      .selected-details-message {
+        margin: 0 0 0.75rem;
+        padding: 0.75rem 1rem;
+        min-height: 0;
+        line-height: 1.3;
+        border-radius: 0.85rem;
+        border: 1px solid rgba(138, 37, 44, 0.12);
+        background: #fffaf0;
+      }
+
+      .selected-details-message:empty {
+        display: none;
+      }
+
+      .selected-schedule-form {
+        gap: 0.9rem;
+      }
+
+      .selected-schedule-form .form-label {
+        padding: 0.1rem;
+      }
+
+      .selected-schedule-form input,
+      .selected-schedule-form select,
+      .selected-schedule-form textarea,
+      .student-roster-add-search input {
+        border-color: #dbe3ee;
+        background: #ffffff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      }
+
+      .selected-schedule-form input:focus,
+      .selected-schedule-form select:focus,
+      .selected-schedule-form textarea:focus,
+      .student-roster-add-search input:focus {
+        border-color: rgba(138, 37, 44, 0.45);
+        box-shadow: 0 0 0 4px rgba(255, 207, 1, 0.18);
+        background: #fffef8;
+      }
+
       .selected-schedule-form.is-readonly {
-        opacity: 0.82;
+        opacity: 0.88;
       }
 
       .selected-schedule-form.is-readonly input,
@@ -35,11 +196,12 @@
         cursor: not-allowed;
       }
 
-      .selected-schedule-button-row {
+      .selected-schedule-button-row,
+      .student-roster-button-row {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 10px;
+        gap: 12px;
         flex-wrap: wrap;
       }
 
@@ -47,17 +209,134 @@
       .selected-schedule-button-row .primary-button {
         width: auto;
         min-width: 150px;
+        min-height: 48px;
         white-space: nowrap;
       }
 
+      .student-roster-panel {
+        padding: 1.6rem 1.75rem 1.75rem;
+        background:
+          linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(255, 255, 255, 1)),
+          #ffffff;
+      }
+
+      .student-roster-panel .panel-heading {
+        align-items: center;
+        margin-bottom: 1.1rem;
+        padding-bottom: 0;
+      }
+
+      .student-roster-panel .panel-heading h3 {
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      .student-roster-panel .selected-roster-message {
+        margin: 0 0 0.9rem;
+        padding: 0.9rem 1.15rem;
+        min-height: 0;
+        line-height: 1.35;
+        border-radius: 0.85rem;
+        border: 1px solid rgba(138, 37, 44, 0.12);
+        background: #fffaf0;
+      }
+
+      .student-roster-panel .selected-roster-message:empty {
+        display: none;
+      }
+
+      .student-roster-add-search {
+        display: block;
+        margin: 0 0 1rem;
+        padding: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        background: #ffffff;
+      }
+
+      .student-roster-add-search label {
+        display: block;
+        margin-bottom: 0.45rem;
+        line-height: 1.2;
+      }
+
+      .student-roster-add-search input {
+        min-height: 52px;
+      }
+
+      .student-roster-table {
+        margin-top: 0.35rem;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      .student-roster-actions {
+        margin-top: 1.15rem;
+        padding-top: 1.15rem;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .student-roster-button-row .ghost-button,
+      .student-roster-button-row .primary-button {
+        width: auto;
+        min-height: 48px;
+        padding: 0 24px;
+        border-radius: 10px;
+        white-space: nowrap;
+      }
+
+      .student-roster-button-row .ghost-button {
+        min-width: 140px;
+      }
+
+      .student-roster-button-row .primary-button {
+        min-width: 230px;
+        font-size: 0.92rem;
+        letter-spacing: -0.01em;
+      }
+
+      .student-roster-button-row .ghost-button:disabled,
+      .student-roster-button-row .primary-button:disabled {
+        opacity: 0.48;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .student-roster-button-row .primary-button:not(:disabled) {
+        box-shadow: 0 12px 24px rgba(138, 37, 44, 0.16);
+      }
+
+      .selected-schedule-actions,
+      .student-roster-actions {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(248, 250, 252, 0.85));
+      }
+
       @media (max-width: 720px) {
+        .selected-schedule-panel {
+          padding: 1rem 1.15rem 1.3rem;
+        }
+
+        .selected-schedule-panel .panel-heading {
+          align-items: flex-start;
+          gap: 0.65rem;
+          margin-bottom: 0.55rem;
+          padding-bottom: 0.25rem;
+        }
+
         .selected-schedule-heading-actions {
           justify-content: flex-start;
           width: 100%;
         }
 
-        .selected-schedule-button-row {
+        .selected-schedule-button-row,
+        .student-roster-button-row {
           justify-content: flex-start;
+        }
+
+        .student-roster-button-row .ghost-button,
+        .student-roster-button-row .primary-button {
+          width: 100%;
+          min-width: 0;
         }
       }
     </style>
@@ -111,8 +390,6 @@
           </div>
 
           <div class="topbar-actions">
-            <a class="ghost-button button-link" href="admin-schedules.html">Back to calendar</a>
-
             <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
               <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
@@ -157,31 +434,14 @@
                 </div>
               </div>
 
-              <div class="selected-schedule-summary">
-                <div>
-                  <span>Dates</span>
-                  <strong id="selected-schedule-date-summary">Not selected</strong>
-                </div>
-                <div>
-                  <span>Group</span>
-                  <strong id="selected-schedule-group-summary">No group</strong>
-                </div>
-                <div>
-                  <span>Students</span>
-                  <strong id="selected-schedule-students-summary">0 assigned</strong>
-                </div>
-                <div>
-                  <span>Shift</span>
-                  <strong id="selected-schedule-shift-summary">No shift</strong>
-                </div>
-              </div>
+              <div id="selected-schedule-details-message" class="form-message selected-details-message" role="status" aria-live="polite"></div>
 
               <form class="selected-schedule-form" id="selected-schedule-form">
-                <label class="form-label">Schedule title
+                <label class="form-label">Schedule Title
                   <input id="selected-schedule-title" type="text">
                 </label>
 
-                <label class="form-label">Assigned group
+                <label class="form-label">Assigned Group
                   <select id="selected-schedule-group">
                     <option>BSN 3B - Group 1</option>
                     <option>BSN 3A - Group 2</option>
@@ -190,15 +450,15 @@
                   </select>
                 </label>
 
-                <label class="form-label">Start date
+                <label class="form-label">Start Date
                   <input id="selected-schedule-start-date" type="date">
                 </label>
 
-                <label class="form-label">End date
+                <label class="form-label">End Date
                   <input id="selected-schedule-end-date" type="date">
                 </label>
 
-                <label class="form-label">Hospital
+                <label class="form-label selected-schedule-hospital">Hospital
                   <select id="selected-schedule-hospital">
                     <option>VSMMC</option>
                     <option>CCMC</option>
@@ -208,7 +468,7 @@
                   </select>
                 </label>
 
-                <label class="form-label">Duty area
+                <label class="form-label">Duty Area
                   <select id="selected-schedule-area">
                     <option>Pedia Pulmo Ward</option>
                     <option>Emergency Room</option>
@@ -219,25 +479,33 @@
                   </select>
                 </label>
 
-                <label class="form-label">Shift start
+                <label class="form-label selected-schedule-duty-type">Duty Type
+                  <select id="selected-schedule-duty-type">
+                    <option>Regular</option>
+                    <option>Extension</option>
+                    <option>Completion</option>
+                  </select>
+                </label>
+
+                <label class="form-label selected-schedule-shift-start">Shift Start
                   <input id="selected-schedule-shift-start" type="time">
                 </label>
 
-                <label class="form-label">Shift end
+                <label class="form-label selected-schedule-shift-end">Shift End
                   <input id="selected-schedule-shift-end" type="time">
                 </label>
 
-                <label class="form-label">Case presentation date
+                <label class="form-label selected-schedule-case-date">Case Presentation Date
                   <input id="selected-schedule-case-date" type="date" data-selected-case-input>
                 </label>
 
-                <label class="form-label">Case presentation time
+                <label class="form-label selected-schedule-case-time">Case Presentation Time
                   <input id="selected-schedule-case-time" type="time" data-selected-case-input>
                 </label>
 
                 <label class="checkbox-line selected-schedule-tba">
                   <input id="selected-schedule-case-tba" type="checkbox">
-                  Case presentation TBA
+                  Case Presentation TBA
                 </label>
 
                 <label class="form-label selected-schedule-ci-field">Supervising CI
@@ -250,7 +518,7 @@
                   </select>
                 </label>
 
-                <label class="form-label selected-schedule-notes">Review notes
+                <label class="form-label selected-schedule-notes">Review Notes
                   <textarea id="selected-schedule-notes" rows="4" placeholder="Add correction notes before republishing"></textarea>
                 </label>
 
@@ -271,15 +539,22 @@
                 <span class="status-badge status-pending" id="selected-schedule-student-count">0 students</span>
               </div>
 
-              <div id="selected-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Select a schedule from the day list to view details and students.</div>
+              <div id="selected-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite"></div>
 
               <div class="form-label autocomplete-wrapper student-roster-add-search">
-                <label for="student-roster-add-search">Search student to add</label>
+                <label for="student-roster-add-search">Search Student To Add</label>
                 <input id="student-roster-add-search" type="search" placeholder="Search by name, ID, section, or site" autocomplete="off">
                 <div id="student-roster-add-options" class="custom-dropdown" hidden></div>
               </div>
 
               <div class="student-roster-table" id="selected-schedule-students-list"></div>
+
+              <div class="student-roster-actions">
+                <div class="student-roster-button-row">
+                  <button class="ghost-button" id="cancel-assigned-students" type="button" disabled>Cancel</button>
+                  <button class="primary-button workspace-action" id="save-assigned-students" type="button" disabled>Save Assigned Students</button>
+                </div>
+              </div>
             </article>
           </section>
         </main>

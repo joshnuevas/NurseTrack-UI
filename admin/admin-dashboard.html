@@ -9,7 +9,137 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/nursetrack.css">
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
+    <style>
+      .admin-dashboard-stats {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: space-between;
+      }
+
+      .admin-dashboard-stats .stat-card {
+        flex: 1;
+      }
+
+      .audit-summary-panel {
+        margin-top: 1.5rem;
+      }
+
+      .audit-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .audit-summary-card {
+        padding: 1.15rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        background:
+          radial-gradient(circle at top right, rgba(255, 207, 1, 0.16), transparent 32%),
+          #ffffff;
+      }
+
+      .audit-summary-card span {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: #8a252c;
+        font-size: 0.76rem;
+        font-weight: 900;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+      }
+
+      .audit-summary-card strong {
+        display: block;
+        color: #111827;
+        font-size: 1.45rem;
+        font-weight: 900;
+        line-height: 1.1;
+      }
+
+      .audit-summary-card small {
+        display: block;
+        margin-top: 0.4rem;
+        color: #4c5d7d;
+        font-size: 0.86rem;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .audit-log-preview {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .audit-log-item {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.9fr) minmax(220px, 1.1fr) minmax(190px, 0.8fr) auto;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.15rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.9rem;
+        background: #ffffff;
+      }
+
+      .audit-log-item strong {
+        display: block;
+        color: #111827;
+        font-size: 0.95rem;
+        font-weight: 850;
+        line-height: 1.25;
+      }
+
+      .audit-log-item span {
+        color: #4c5d7d;
+        font-size: 0.88rem;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
+      .audit-log-item small {
+        color: #64748b;
+        font-size: 0.8rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .audit-summary-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+      }
+
+      .audit-summary-footer .ghost-button {
+        min-height: 44px;
+        padding: 0 1.25rem;
+      }
+
+      @media (max-width: 1000px) {
+        .audit-summary-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .audit-log-item {
+          grid-template-columns: 1fr;
+          gap: 0.45rem;
+        }
+
+        .audit-log-item small {
+          white-space: normal;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .admin-dashboard-stats {
+          flex-direction: column;
+        }
+      }
+    </style>
   </head>
+
   <body class="app-body">
     <div class="app-shell">
       <aside class="app-sidebar" aria-label="Primary navigation">
@@ -24,10 +154,10 @@
         <div class="role-chip">Admin</div>
 
         <nav class="sidebar-nav">
-          <a class="nav-link is-active" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link" href="manage-users.html"><span class="nav-dot"></span>Manage Users</a>
-          <a class="nav-link" href="role-assignment.html"><span class="nav-dot"></span>Role Assignment</a>
-          <a class="nav-link" href="enrollment-archive.html"><span class="nav-dot"></span>Enrollment Summary / Archive</a>
+          <a class="nav-link is-active" href="admin-dashboard.html" aria-current="page"><span class="nav-dot"></span>Dashboard</a>
+          <a class="nav-link" href="section-import.html"><span class="nav-dot"></span>Section Import</a>
+          <a class="nav-link" href="hospital-duty-area.html"><span class="nav-dot"></span>Hospitals / Duty Areas</a>
+          <a class="nav-link" href="audit-logs.html"><span class="nav-dot"></span>Audit Logs</a>
         </nav>
 
         <div class="sidebar-account">
@@ -55,7 +185,14 @@
 
           <div class="topbar-actions">
             <span class="sync-pill">Updated now</span>
-            <a class="icon-button notification-button button-link" href="admin-dashboard.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+
+            <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
@@ -63,219 +200,60 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <p class="section-kicker">Admin Overview</p>
-              <h2>Manage system accounts and access control.</h2>
-              <p>Admin handles user accounts, role assignment, Chair assignment, and enrollment/archive visibility.</p>
+              <h2>Good Evening, Admin Santos.</h2>
+              <p>Welcome back! Here is an overview of system setup, and recent audit activity.</p>
             </div>
-            <a class="primary-button workspace-action button-link" href="manage-users.html">Manage Users</a>
+            <a class="primary-button workspace-action button-link" href="section-import.html">Upload Section File</a>
           </section>
 
-          <section class="dashboard-stats" aria-label="Admin dashboard summary">
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Users</span>
-                <span class="status-badge status-verified">Active</span>
-              </div>
-              <h3>Active accounts</h3>
-              <p>Students, CIs, Chairs, and Admins enabled</p>
-              <strong class="stat-value">32</strong>
-            </article>
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Pending</span>
-                <span class="status-badge status-pending">Review</span>
-              </div>
-              <h3>Pending accounts</h3>
-              <p>Accounts waiting for approval or rejection</p>
-              <strong class="stat-value" id="admin-pending-count">3</strong>
-            </article>
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">Students</span>
-                <span class="status-badge status-verified">Current</span>
-              </div>
-              <h3>Students</h3>
-              <p>Current student accounts in the system</p>
-              <strong class="stat-value">18</strong>
-            </article>
-            <article class="workspace-card stat-card">
-              <div class="workspace-card-header">
-                <span class="card-icon">CI</span>
-                <span class="status-badge status-verified">Active</span>
-              </div>
-              <h3>Instructors</h3>
-              <p>Clinical Instructor accounts enabled</p>
-              <strong class="stat-value">6</strong>
-            </article>
-          </section>
-
-          <section class="workspace-panel admin-approval-panel" id="pending-approvals">
+          <section class="workspace-panel audit-summary-panel">
             <div class="panel-heading">
               <div>
-                <p class="section-kicker">Pending Account Approval</p>
-                <h2>Review account requests before access is granted</h2>
+                <h2>Recent System Activity</h2>
               </div>
-              <span class="status-badge status-pending" id="admin-pending-badge">3 pending</span>
+              <span class="status-badge status-verified">Live logs</span>
             </div>
 
-            <div class="admin-approval-list" id="admin-approval-list">
-              <article class="admin-approval-card" data-pending-account data-name="Juan Dela Cruz" data-role="student">
+            <div class="audit-log-preview" aria-label="Recent audit log preview">
+              <div class="audit-log-item">
                 <div>
-                  <strong>Juan Dela Cruz</strong>
-                  <small>24-0001-001 - BSN 2B - juan.delacruz@cit.edu</small>
+                  <strong>Chair Reyes</strong>
+                  <span>Chair</span>
                 </div>
-                <label class="form-label compact-label">
-                  Assign role
-                  <select>
-                    <option value="student">Student</option>
-                    <option value="instructor">Clinical Instructor</option>
-                    <option value="chair">Chair</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </label>
-                <div class="button-row compact-actions">
-                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
-                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
-                </div>
-              </article>
+                <span>Published schedule</span>
+                <span>Pedia Pulmo Ward Rotation</span>
+                <small>May 1, 2026 - 09:20 AM</small>
+              </div>
 
-              <article class="admin-approval-card" data-pending-account data-name="Prof. Dela Cruz" data-role="instructor">
+              <div class="audit-log-item">
                 <div>
-                  <strong>Prof. Dela Cruz</strong>
-                  <small>CI-1007 - Community Health - dela.cruz@cit.edu</small>
+                  <strong>Patricia Reyes, RN, MAN</strong>
+                  <span>Clinical Instructor</span>
                 </div>
-                <label class="form-label compact-label">
-                  Assign role
-                  <select>
-                    <option value="instructor">Clinical Instructor</option>
-                    <option value="student">Student</option>
-                    <option value="chair">Chair</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </label>
-                <div class="button-row compact-actions">
-                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
-                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
-                </div>
-              </article>
+                <span>Approved clinical case</span>
+                <span>Maria Cruz</span>
+                <small>Apr 30, 2026 - 04:35 PM</small>
+              </div>
 
-              <article class="admin-approval-card" data-pending-account data-name="Rhea Navarro" data-role="student">
+              <div class="audit-log-item">
                 <div>
-                  <strong>Rhea Navarro</strong>
-                  <small>24-0001-018 - BSN 1A - rhea.navarro@cit.edu</small>
+                  <strong>Chair Reyes</strong>
+                  <span>Chair</span>
                 </div>
-                <label class="form-label compact-label">
-                  Assign role
-                  <select>
-                    <option value="student">Student</option>
-                    <option value="instructor">Clinical Instructor</option>
-                    <option value="chair">Chair</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </label>
-                <div class="button-row compact-actions">
-                  <button class="ghost-button" type="button" data-approval-action="reject">Reject</button>
-                  <button class="primary-button" type="button" data-approval-action="approve">Approve</button>
-                </div>
-              </article>
+                <span>Approved appeal</span>
+                <span>Treasure Abadinas</span>
+                <small>Apr 30, 2026 - 03:22 PM</small>
+              </div>
             </div>
 
-            <div id="admin-approval-message" class="form-message" role="status" aria-live="polite">
-              Select approve or reject after confirming the account role.
-            </div>
-          </section>
-
-          <section class="dashboard-columns">
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Account Control</p>
-                  <h2>Admin responsibilities</h2>
-                </div>
-                <span class="status-badge status-verified">Admin only</span>
-              </div>
-              <div class="requirement-list">
-                <a class="requirement-item action-item" href="manage-users.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Manage Users</strong>
-                    <p>Add, edit, deactivate, approve, or restore user accounts.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="role-assignment.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Role Assignment</strong>
-                    <p>Assign Student, Clinical Instructor, Chair, and Admin access.</p>
-                  </div>
-                </a>
-              </div>
-            </article>
-
-            <article class="workspace-panel">
-              <div class="panel-heading">
-                <div>
-                  <p class="section-kicker">Enrollment</p>
-                  <h2>Summary and archive</h2>
-                </div>
-                <span class="status-badge status-pending">Read-only summary</span>
-              </div>
-              <div class="requirement-list">
-                <a class="requirement-item action-item" href="enrollment-archive.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Enrollment Summary / Archive</strong>
-                    <p>View enrollment-related totals and archived student summaries.</p>
-                  </div>
-                </a>
-                <a class="requirement-item action-item" href="role-assignment.html">
-                  <span class="requirement-status"></span>
-                  <div>
-                    <strong>Chair assignment</strong>
-                    <p>Assign or review who owns the Chair workflow role.</p>
-                  </div>
-                </a>
-              </div>
-            </article>
-          </section>
-
-          <section class="workspace-panel admin-audit-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Activity Log</p>
-                <h2>Recent account audit trail</h2>
-              </div>
-              <span class="status-badge status-verified">Tracked</span>
-            </div>
-            <div class="activity-list" id="admin-audit-list">
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>User created</strong>
-                  <p>Admin Santos added Rhea Navarro as a pending student account.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Chair assigned</strong>
-                  <p>Chair Reyes is currently assigned as Chair for the Nursing workflow.</p>
-                </div>
-              </div>
-              <div class="activity-item">
-                <span class="activity-marker"></span>
-                <div>
-                  <strong>Role changed</strong>
-                  <p>Prof. Dela Cruz was reviewed for Clinical Instructor access.</p>
-                </div>
-              </div>
+            <div class="audit-summary-footer">
+              <a class="ghost-button button-link" href="audit-logs.html">Open Audit Logs</a>
             </div>
           </section>
         </main>
       </div>
     </div>
 
-    <script src="../scripts/admin-dashboard.js"></script>
     <script src="../scripts/instructor-dashboard.js"></script>
     <script src="../scripts/logout-confirm.js"></script>
     <script src="../scripts/sidebar-icons.js"></script>

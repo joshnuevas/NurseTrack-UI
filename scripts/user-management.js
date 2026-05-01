@@ -209,7 +209,7 @@ function closeModal(modal) {
 
 function setActionButtons(row) {
   const isPending = row.dataset.status === "pending";
-  const isSuspended = row.dataset.status === "suspended";
+  const isInactive = row.dataset.status === "suspended" || row.dataset.status === "denied";
 
   actionButtons.forEach((button) => {
     const action = button.dataset.accountAction;
@@ -219,14 +219,14 @@ function setActionButtons(row) {
       (action === "reject" && !isPending);
 
     if (action === "toggle") {
-      button.textContent = isSuspended ? "Reactivate User" : "Deactivate User";
+      button.textContent = isInactive ? "Reactivate User" : "Deactivate User";
     }
   });
 }
 
 function openActionMenu(button) {
   selectedRow = button.closest(".user-row");
-  selectedAccountAction = button.dataset.action === "approve" ? "approve" : "edit";
+  selectedAccountAction = button.dataset.action === "approve" ? "approve" : button.dataset.action === "restore" ? "toggle" : "edit";
 
   if (actionSummary) {
     actionSummary.innerHTML = `
@@ -240,7 +240,7 @@ function openActionMenu(button) {
   }
 
   if (actionCopy) {
-    actionCopy.textContent = "Choose whether to edit details, change role/status, reset password, or approve/reject this account.";
+    actionCopy.textContent = "Choose whether to edit details, change role/status, reset password, or approve/deny this pending account. Records stay in the directory for audit.";
   }
 
   setActionButtons(selectedRow);
@@ -281,12 +281,10 @@ function applySelectedAction() {
     setRowStatus(selectedRow, "active");
     setMessage(userMessage, `${name} approved and activated.`, "is-success");
   } else if (selectedAccountAction === "reject") {
-    selectedRow.remove();
-    updateCounts();
-    filterUsers();
-    setMessage(userMessage, `${name} rejected and removed from pending accounts.`, "is-success");
+    setRowStatus(selectedRow, "denied");
+    setMessage(userMessage, `${name} denied. The account record was kept for audit review.`, "is-success");
   } else if (selectedAccountAction === "toggle") {
-    const nextStatus = selectedRow.dataset.status === "suspended" ? "active" : "suspended";
+    const nextStatus = selectedRow.dataset.status === "suspended" || selectedRow.dataset.status === "denied" ? "active" : "suspended";
     setRowStatus(selectedRow, nextStatus);
     setMessage(userMessage, `${name} is now ${statusText(nextStatus)}.`, "is-success");
   }

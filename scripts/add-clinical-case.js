@@ -16,20 +16,19 @@ function setMessage(text, state) {
 function hasRequiredFields(formData) {
   const fields = [
     "caseDate",
+    "shiftTime",
+    "patientName",
     "caseCategory",
-    "caseSubcategory",
-    "clinicalSite",
+    "procedurePerformed",
+    "hospitalName",
+    "supervisingClinicalInstructor",
     "dutyArea",
-    "caseCode",
-    "clinicalInstructor",
-    "procedureTitle"
+    "submittedDate",
+    "submittedTime",
+    "studentReflection"
   ];
 
-  const hasBaseFields = fields.every((field) => String(formData.get(field) || "").trim());
-  const isMajorCase = formData.get("caseSubcategory") === "Major cases";
-  const hasMajorRole = !isMajorCase || String(formData.get("caseMajorRole") || "").trim();
-
-  return hasBaseFields && hasMajorRole;
+  return fields.every((field) => String(formData.get(field) || "").trim());
 }
 
 menuButton.addEventListener("click", () => {
@@ -41,7 +40,7 @@ sidebarBackdrop.addEventListener("click", () => {
 });
 
 saveDraft.addEventListener("click", () => {
-  setMessage("Case draft saved.", "is-success");
+  setMessage("Clinical case draft saved.", "is-success");
 });
 
 form.addEventListener("submit", (event) => {
@@ -50,12 +49,12 @@ form.addEventListener("submit", (event) => {
   const formData = new FormData(form);
 
   if (!hasRequiredFields(formData)) {
-    setMessage("Please complete the DR/OR category, subcategory, and required case details.", "is-error");
+    setMessage("Please complete every required case information field before submitting.", "is-error");
     return;
   }
 
-  setMessage("Case details saved. Opening checklist form.", "is-success");
+  setMessage("Clinical case submitted for CI validation.", "is-success");
   window.setTimeout(() => {
-    window.location.href = "checklist-form.html";
+    window.location.href = "case-history.html";
   }, 650);
 });

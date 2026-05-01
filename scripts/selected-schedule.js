@@ -6,6 +6,7 @@ const selectedDayEmpty = document.querySelector("#day-schedule-empty");
 const selectedScheduleHeading = document.querySelector("#selected-schedule-heading");
 const selectedScheduleStatus = document.querySelector("#selected-schedule-status");
 const selectedScheduleMessage = document.querySelector("#selected-schedule-message");
+const selectedScheduleDetailsMessage = document.querySelector("#selected-schedule-details-message");
 const selectedScheduleForm = document.querySelector("#selected-schedule-form");
 const selectedScheduleEditButton = document.querySelector("#edit-selected-schedule");
 const selectedScheduleCancelButton = document.querySelector("#cancel-selected-schedule");
@@ -17,6 +18,8 @@ const selectedScheduleCaseInputs = Array.from(document.querySelectorAll("[data-s
 const studentRosterAddSearch = document.querySelector("#student-roster-add-search");
 const studentRosterAddOptions = document.querySelector("#student-roster-add-options");
 const selectedScheduleNotes = document.querySelector("#selected-schedule-notes");
+const cancelAssignedStudentsButton = document.querySelector("#cancel-assigned-students");
+const saveAssignedStudentsButton = document.querySelector("#save-assigned-students");
 
 const selectedScheduleFields = {
   title: document.querySelector("#selected-schedule-title"),
@@ -25,6 +28,7 @@ const selectedScheduleFields = {
   endDate: document.querySelector("#selected-schedule-end-date"),
   hospital: document.querySelector("#selected-schedule-hospital"),
   area: document.querySelector("#selected-schedule-area"),
+  dutyType: document.querySelector("#selected-schedule-duty-type"),
   shiftStart: document.querySelector("#selected-schedule-shift-start"),
   shiftEnd: document.querySelector("#selected-schedule-shift-end"),
   caseDate: document.querySelector("#selected-schedule-case-date"),
@@ -50,6 +54,7 @@ const chairDayScheduleData = {
       endDate: "2026-05-06",
       hospital: "CCMC",
       area: "Pedia Pulmo Ward",
+      dutyType: "Regular",
       shiftStart: "08:00",
       shiftEnd: "16:00",
       caseDate: "2026-05-02",
@@ -67,6 +72,7 @@ const chairDayScheduleData = {
       endDate: "2026-05-06",
       hospital: "CCMC",
       area: "Pedia Pulmo Ward",
+      dutyType: "Completion",
       shiftStart: "07:00",
       shiftEnd: "15:00",
       caseDate: "",
@@ -86,6 +92,7 @@ const chairDayScheduleData = {
       endDate: "2026-05-08",
       hospital: "CCMC",
       area: "Emergency Room",
+      dutyType: "Regular",
       shiftStart: "07:00",
       shiftEnd: "15:00",
       caseDate: "2026-05-02",
@@ -103,6 +110,7 @@ const chairDayScheduleData = {
       endDate: "2026-05-08",
       hospital: "SAMCH",
       area: "Delivery Room",
+      dutyType: "Regular",
       shiftStart: "14:00",
       shiftEnd: "22:00",
       caseDate: "",
@@ -122,6 +130,7 @@ const chairDayScheduleData = {
       endDate: "2026-05-09",
       hospital: "VSMMC",
       area: "OR Main",
+      dutyType: "Regular",
       shiftStart: "08:00",
       shiftEnd: "17:00",
       caseDate: "2026-05-02",
@@ -164,6 +173,7 @@ Object.values(chairDayScheduleData).forEach((schedules) => {
 
       if (!exists) {
         const section = schedule.group.split(" - ")[0] || "BSN";
+
         chairStudentRosterOptions.push({
           name,
           id: `22-${String(1800 + index).padStart(4, "0")}-${String(100 + index).padStart(3, "0")}`,
@@ -180,11 +190,90 @@ chairStudentRosterOptions.sort((first, second) => first.name.localeCompare(secon
 let selectedScheduleActive = selectedDaySchedules[0] || null;
 let selectedScheduleEditMode = false;
 let selectedScheduleSnapshot = null;
+let selectedRosterSnapshot = [];
+let assignedStudentsDirty = false;
 let pendingStudentMove = null;
 let pendingStudentRemove = null;
 
 function cloneSelectedSchedule(schedule) {
   return schedule ? JSON.parse(JSON.stringify(schedule)) : null;
+}
+
+function cloneStudentList(schedule) {
+  return Array.isArray(schedule?.students) ? [...schedule.students] : [];
+}
+
+function setMessageBox(element, message, isSuccess = true) {
+  if (!element) {
+    return;
+  }
+
+  element.textContent = message || "";
+  element.classList.toggle("is-success", Boolean(message) && isSuccess);
+  element.classList.toggle("is-error", Boolean(message) && !isSuccess);
+}
+
+function setSelectedScheduleMessage(message, isSuccess = true, target = "roster") {
+  const messageBox = target === "details" ? selectedScheduleDetailsMessage : selectedScheduleMessage;
+  setMessageBox(messageBox, message, isSuccess);
+}
+
+function clearScheduleDetailsMessage() {
+  setMessageBox(selectedScheduleDetailsMessage, "");
+}
+
+function clearRosterMessage() {
+  setMessageBox(selectedScheduleMessage, "");
+}
+
+function setAssignedStudentsDirty(isDirty) {
+  assignedStudentsDirty = isDirty;
+
+  if (saveAssignedStudentsButton) {
+    saveAssignedStudentsButton.disabled = !assignedStudentsDirty;
+  }
+
+  if (cancelAssignedStudentsButton) {
+    cancelAssignedStudentsButton.disabled = !assignedStudentsDirty;
+  }
+}
+
+function markAssignedStudentsDirty(message = "You have unsaved assigned student changes.", isSuccess = true) {
+  setAssignedStudentsDirty(true);
+  setSelectedScheduleMessage(message, isSuccess, "roster");
+}
+
+function restoreSelectedRosterFromSnapshot() {
+  if (!selectedScheduleActive) {
+    return;
+  }
+
+  selectedScheduleActive.students = [...selectedRosterSnapshot];
+  updateSelectedStudentCount();
+  syncSelectedScheduleSummary();
+  renderSelectedStudents(selectedScheduleActive);
+  renderSelectedDayList();
+  renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
+}
+
+function saveAssignedStudents() {
+  if (!assignedStudentsDirty) {
+    return;
+  }
+
+  selectedRosterSnapshot = cloneStudentList(selectedScheduleActive);
+  setAssignedStudentsDirty(false);
+  setSelectedScheduleMessage("Assigned students saved successfully.", true, "roster");
+}
+
+function cancelAssignedStudentsChanges() {
+  if (!assignedStudentsDirty) {
+    return;
+  }
+
+  restoreSelectedRosterFromSnapshot();
+  setAssignedStudentsDirty(false);
+  setSelectedScheduleMessage("Assigned student changes were cancelled.", true, "roster");
 }
 
 function restoreSelectedScheduleFromSnapshot() {
@@ -214,7 +303,6 @@ function createSelectedStudentMoveDialog() {
     <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="student-move-confirm-title" aria-describedby="student-move-confirm-copy">
       <div class="modal-heading">
         <div>
-          <p class="section-kicker">Confirm Move</p>
           <h2 id="student-move-confirm-title">Move this student?</h2>
         </div>
       </div>
@@ -245,7 +333,6 @@ function createSelectedStudentRemoveDialog() {
     <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="student-remove-confirm-title" aria-describedby="student-remove-confirm-copy">
       <div class="modal-heading">
         <div>
-          <p class="section-kicker">Confirm Remove</p>
           <h2 id="student-remove-confirm-title">Remove this student?</h2>
         </div>
       </div>
@@ -313,14 +400,15 @@ function updateScheduleDetailsEditState() {
 
 function enableSelectedScheduleEditMode() {
   if (!selectedScheduleActive) {
-    setSelectedScheduleMessage("Select a schedule before editing.", false);
+    setSelectedScheduleMessage("Select a schedule before editing.", false, "details");
     return;
   }
 
+  clearRosterMessage();
   selectedScheduleSnapshot = cloneSelectedSchedule(selectedScheduleActive);
   selectedScheduleEditMode = true;
   updateScheduleDetailsEditState();
-  setSelectedScheduleMessage("Edit mode enabled for schedule details. Student roster remains editable below.");
+  setSelectedScheduleMessage("Edit mode enabled for schedule details.", true, "details");
 }
 
 function cancelSelectedScheduleEditMode() {
@@ -328,7 +416,7 @@ function cancelSelectedScheduleEditMode() {
   selectedScheduleEditMode = false;
   selectedScheduleSnapshot = null;
   populateSelectedSchedule(selectedScheduleActive, false);
-  setSelectedScheduleMessage("Editing cancelled. Schedule details were restored.");
+  setSelectedScheduleMessage("Editing cancelled. Schedule details were restored.", true, "details");
 }
 
 function disableSelectedScheduleEditMode() {
@@ -391,7 +479,9 @@ function applySelectedStudentMove() {
   syncSelectedScheduleSummary();
   renderSelectedStudents(selectedScheduleActive);
   renderSelectedDayList();
-  setSelectedScheduleMessage(`${student} moved to ${target}.`);
+  renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
+  clearScheduleDetailsMessage();
+  markAssignedStudentsDirty(`${student} moved to ${target}. Save assigned students to keep this change.`);
 
   pendingStudentMove = null;
   selectedStudentMoveDialog.hidden = true;
@@ -413,7 +503,10 @@ function applySelectedStudentRemove() {
   syncSelectedScheduleSummary();
   renderSelectedStudents(selectedScheduleActive);
   renderSelectedDayList();
-  setSelectedScheduleMessage(`${student} removed from this schedule.`);
+  renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
+  clearScheduleDetailsMessage();
+  markAssignedStudentsDirty(`${student} removed from this schedule. Save assigned students to keep this change.`, false);
+
   pendingStudentRemove = null;
   selectedStudentRemoveDialog.hidden = true;
   document.body.classList.remove("modal-open");
@@ -460,16 +553,6 @@ function syncSelectedCasePresentationInputs() {
   });
 }
 
-function setSelectedScheduleMessage(message, isSuccess = true) {
-  if (!selectedScheduleMessage) {
-    return;
-  }
-
-  selectedScheduleMessage.textContent = message;
-  selectedScheduleMessage.classList.toggle("is-success", isSuccess);
-  selectedScheduleMessage.classList.toggle("is-error", !isSuccess);
-}
-
 function renderStudentRosterAddOptions(query = "") {
   if (!studentRosterAddOptions) {
     return;
@@ -511,21 +594,21 @@ function renderStudentRosterAddOptions(query = "") {
 
 function addStudentToSelectedRoster(student) {
   if (!selectedScheduleActive) {
-    setSelectedScheduleMessage("Select a schedule before adding a student.", false);
+    setSelectedScheduleMessage("Select a schedule before adding a student.", false, "roster");
     return;
   }
 
   const normalizedStudent = student.trim().replace(/\s+/g, " ");
 
   if (!normalizedStudent) {
-    setSelectedScheduleMessage("Search or type a student name before adding.", false);
+    setSelectedScheduleMessage("Search or type a student name before adding.", false, "roster");
     return;
   }
 
   const alreadyAssigned = selectedScheduleActive.students.some((name) => name.toLowerCase() === normalizedStudent.toLowerCase());
 
   if (alreadyAssigned) {
-    setSelectedScheduleMessage(`${normalizedStudent} is already assigned to this schedule.`, false);
+    setSelectedScheduleMessage(`${normalizedStudent} is already assigned to this schedule.`, false, "roster");
     return;
   }
 
@@ -552,14 +635,26 @@ function addStudentToSelectedRoster(student) {
   renderSelectedStudents(selectedScheduleActive);
   renderStudentRosterAddOptions();
   renderSelectedDayList();
-  setSelectedScheduleMessage(`${normalizedStudent} added to this schedule.`);
+  clearScheduleDetailsMessage();
+  markAssignedStudentsDirty(`${normalizedStudent} added to this schedule. Save assigned students to keep this change.`);
 }
 
 function renderSelectedDayList() {
-  if (selectedDayHeading) selectedDayHeading.textContent = selectedDate;
-  if (selectedDayCount) selectedDayCount.textContent = `${selectedDaySchedules.length} schedule${selectedDaySchedules.length === 1 ? "" : "s"}`;
-  if (selectedDayEmpty) selectedDayEmpty.hidden = selectedDaySchedules.length > 0;
-  if (!selectedDayList) return;
+  if (selectedDayHeading) {
+    selectedDayHeading.textContent = selectedDate;
+  }
+
+  if (selectedDayCount) {
+    selectedDayCount.textContent = `${selectedDaySchedules.length} schedule${selectedDaySchedules.length === 1 ? "" : "s"}`;
+  }
+
+  if (selectedDayEmpty) {
+    selectedDayEmpty.hidden = selectedDaySchedules.length > 0;
+  }
+
+  if (!selectedDayList) {
+    return;
+  }
 
   selectedDayList.innerHTML = selectedDaySchedules.map((schedule) => `
     <button class="day-schedule-card ${schedule.id === selectedScheduleActive?.id ? "is-selected" : ""}" type="button" data-day-schedule-id="${schedule.id}">
@@ -571,6 +666,10 @@ function renderSelectedDayList() {
 
   selectedDayList.querySelectorAll("[data-day-schedule-id]").forEach((button) => {
     button.addEventListener("click", () => {
+      if (assignedStudentsDirty) {
+        cancelAssignedStudentsChanges();
+      }
+
       const schedule = selectedDaySchedules.find((item) => item.id === button.dataset.dayScheduleId);
       populateSelectedSchedule(schedule);
     });
@@ -578,15 +677,15 @@ function renderSelectedDayList() {
 }
 
 function renderSelectedStudents(schedule) {
-  if (!selectedScheduleStudentsList) return;
+  if (!selectedScheduleStudentsList) {
+    return;
+  }
 
   const students = schedule?.students || [];
   const moveTargetOptions = ["BSN 3A - Group 1", "BSN 3A - Group 2", "BSN 3A - Make-up Duty", "BSN 3B - Group 1", "BSN 4A - Group 1"]
     .filter((group) => group !== schedule?.group);
 
-  if (selectedScheduleStudentCount) {
-    updateSelectedStudentCount();
-  }
+  updateSelectedStudentCount();
 
   selectedScheduleStudentsList.innerHTML = `
     <div class="student-roster-table-row student-roster-table-head">
@@ -654,6 +753,7 @@ function syncSelectedScheduleSummary() {
     selectedScheduleActive.endDate = selectedScheduleFields.endDate?.value || selectedScheduleActive.endDate;
     selectedScheduleActive.hospital = selectedScheduleFields.hospital?.value || selectedScheduleActive.hospital;
     selectedScheduleActive.area = selectedScheduleFields.area?.value || selectedScheduleActive.area;
+    selectedScheduleActive.dutyType = selectedScheduleFields.dutyType?.value || selectedScheduleActive.dutyType || "Regular";
     selectedScheduleActive.shiftStart = selectedScheduleFields.shiftStart?.value || selectedScheduleActive.shiftStart;
     selectedScheduleActive.shiftEnd = selectedScheduleFields.shiftEnd?.value || selectedScheduleActive.shiftEnd;
     selectedScheduleActive.caseTba = Boolean(selectedScheduleCaseTba?.checked);
@@ -662,20 +762,36 @@ function syncSelectedScheduleSummary() {
     selectedScheduleActive.ci = selectedScheduleFields.ci?.value || selectedScheduleActive.ci;
   }
 
-  if (selectedScheduleHeading) selectedScheduleHeading.textContent = selectedScheduleActive.title;
+  if (selectedScheduleHeading) {
+    selectedScheduleHeading.textContent = selectedScheduleActive.title;
+  }
+
   if (selectedScheduleStatus) {
     selectedScheduleStatus.textContent = selectedScheduleActive.status || "Draft";
     selectedScheduleStatus.className = `status-badge ${selectedScheduleActive.status === "Published" ? "status-verified" : "status-pending"}`;
   }
 
-  if (selectedScheduleSummary.date) selectedScheduleSummary.date.textContent = formatSelectedScheduleDateRange(selectedScheduleActive);
-  if (selectedScheduleSummary.group) selectedScheduleSummary.group.textContent = selectedScheduleActive.group;
-  if (selectedScheduleSummary.students) selectedScheduleSummary.students.textContent = `${selectedScheduleActive.students.length} assigned`;
-  if (selectedScheduleSummary.shift) selectedScheduleSummary.shift.textContent = `${selectedScheduleActive.shiftStart} to ${selectedScheduleActive.shiftEnd}`;
+  if (selectedScheduleSummary.date) {
+    selectedScheduleSummary.date.textContent = formatSelectedScheduleDateRange(selectedScheduleActive);
+  }
+
+  if (selectedScheduleSummary.group) {
+    selectedScheduleSummary.group.textContent = selectedScheduleActive.group;
+  }
+
+  if (selectedScheduleSummary.students) {
+    selectedScheduleSummary.students.textContent = `${selectedScheduleActive.students.length} assigned`;
+  }
+
+  if (selectedScheduleSummary.shift) {
+    selectedScheduleSummary.shift.textContent = `${selectedScheduleActive.shiftStart} to ${selectedScheduleActive.shiftEnd}`;
+  }
 }
 
 function populateSelectedSchedule(schedule, resetEditMode = true) {
   selectedScheduleActive = schedule;
+  selectedRosterSnapshot = cloneStudentList(schedule);
+  setAssignedStudentsDirty(false);
 
   if (resetEditMode) {
     selectedScheduleEditMode = false;
@@ -695,6 +811,8 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
     if (selectedScheduleSummary.shift) selectedScheduleSummary.shift.textContent = "No shift";
     if (studentRosterAddOptions) studentRosterAddOptions.hidden = true;
     updateScheduleDetailsEditState();
+    clearScheduleDetailsMessage();
+    clearRosterMessage();
     return;
   }
 
@@ -704,6 +822,7 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
   setSelectedScheduleValue(selectedScheduleFields.endDate, schedule.endDate);
   setSelectedScheduleValue(selectedScheduleFields.hospital, schedule.hospital);
   setSelectedScheduleValue(selectedScheduleFields.area, schedule.area);
+  setSelectedScheduleValue(selectedScheduleFields.dutyType, schedule.dutyType || "Regular");
   setSelectedScheduleValue(selectedScheduleFields.shiftStart, schedule.shiftStart);
   setSelectedScheduleValue(selectedScheduleFields.shiftEnd, schedule.shiftEnd);
   setSelectedScheduleValue(selectedScheduleFields.caseDate, schedule.caseDate);
@@ -722,12 +841,12 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
   syncSelectedScheduleSummary();
   renderSelectedStudents(schedule);
   renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
+  updateScheduleDetailsEditState();
 
   if (resetEditMode) {
-    setSelectedScheduleMessage("Schedule selected. Press Edit Schedule to update schedule details. Student roster can be edited below.");
+    clearScheduleDetailsMessage();
+    clearRosterMessage();
   }
-
-  updateScheduleDetailsEditState();
 }
 
 Object.values(selectedScheduleFields).forEach((field) => {
@@ -765,14 +884,14 @@ selectedScheduleForm?.addEventListener("submit", (event) => {
   event.preventDefault();
 
   if (!selectedScheduleEditMode) {
-    setSelectedScheduleMessage("Press Edit Schedule before saving schedule details.", false);
+    setSelectedScheduleMessage("Press Edit Schedule before saving schedule details.", false, "details");
     return;
   }
 
   syncSelectedScheduleSummary();
   renderSelectedDayList();
   disableSelectedScheduleEditMode();
-  setSelectedScheduleMessage("Schedule details saved. Student roster remains editable below.");
+  setSelectedScheduleMessage("Schedule details saved.", true, "details");
 });
 
 studentRosterAddSearch?.addEventListener("focus", () => {
@@ -799,6 +918,9 @@ studentRosterAddSearch?.addEventListener("keydown", (event) => {
   event.preventDefault();
   addStudentToSelectedRoster(studentRosterAddSearch?.value || "");
 });
+
+cancelAssignedStudentsButton?.addEventListener("click", cancelAssignedStudentsChanges);
+saveAssignedStudentsButton?.addEventListener("click", saveAssignedStudents);
 
 selectedStudentMoveDialog.querySelectorAll("[data-close-student-move-dialog]").forEach((button) => {
   button.addEventListener("click", closeSelectedStudentMoveDialog);

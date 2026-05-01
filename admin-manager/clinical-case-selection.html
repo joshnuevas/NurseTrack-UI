@@ -32,6 +32,33 @@
         width: 100%;
       }
 
+      .case-selection-section {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .case-selection-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+      }
+
+      .case-selection-title h3 {
+        margin: 0;
+        color: #8A252C;
+        font-size: 1.05rem;
+        font-weight: 800;
+      }
+
+      .case-selection-title span {
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 800;
+      }
+
       .history-row.case-row,
       .history-row-head.case-row {
         display: grid;
@@ -49,9 +76,15 @@
       }
 
       @media (max-width: 680px) {
+        .detail-main-card .student-validation-card,
         .history-row.case-row,
         .history-row-head.case-row {
           grid-template-columns: 1fr;
+        }
+
+        .case-selection-title {
+          align-items: flex-start;
+          flex-direction: column;
         }
       }
     </style>
@@ -131,7 +164,7 @@
                 <div>
                   <h2 id="case-selection-student-heading">Maria Cruz</h2>
                 </div>
-                <span class="status-badge status-pending" id="case-selection-count">1 pending case</span>
+                <span class="status-badge status-pending" id="case-selection-count">4 pending cases</span>
               </div>
 
               <div class="student-validation-card">
@@ -143,52 +176,75 @@
                 <span class="status-badge status-pending" id="case-selection-student-status">Pending</span>
               </div>
 
-              <div class="history-table" id="case-selection-table">
-                <div class="history-row history-row-head case-row">
-                  <span>Category</span>
-                  <span>Procedure performed</span>
-                  <span>Status</span>
-                  <span>Date</span>
-                  <span>Time</span>
-                  <span>Action</span>
+              <section class="case-selection-section" aria-label="Delivery Room clinical case records">
+                <div class="case-selection-title">
+                  <h3>Delivery Room Cases</h3>
                 </div>
 
-                <div class="history-row case-row">
-                  <span>Major Case - Assist</span>
-                  <span><strong>Primary Lower Segment Transverse Cesarean Section</strong></span>
-                  <span><span class="status-badge status-pending">Pending</span></span>
-                  <span><strong>Apr 24, 2026</strong></span>
-                  <span><strong>4:35 PM</strong></span>
-                  <span><a class="text-link" href="case-validation.html?case=treasure-dr-newborn-0424&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
+                <div class="history-table">
+                  <div class="history-row history-row-head case-row">
+                    <span>Category</span>
+                    <span>Procedure Performed</span>
+                    <span>Status</span>
+                    <span>Date</span>
+                    <span>Time</span>
+                    <span>Action</span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Major Case - Assist</span>
+                    <span><strong>Primary Lower Segment Transverse Cesarean Section</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 24, 2026</strong></span>
+                    <span><strong>4:35 PM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=treasure-dr-newborn-0424&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Handled Case</span>
+                    <span><strong>Operative Hysteroscopy, Transcervical Resection of Polyp</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 22, 2026</strong></span>
+                    <span><strong>11:45 AM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=maria-dr-handled-0425&amp;mode=review&amp;from=selection&amp;student=maria-cruz">Open</a></span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="case-selection-section" aria-label="Operating Room clinical case records">
+                <div class="case-selection-title">
+                  <h3>Operating Room Cases</h3>
                 </div>
 
-                <div class="history-row case-row">
-                  <span>Major Case - Circulate</span>
-                  <span><strong>Laparoscopic Cholecystectomy</strong></span>
-                  <span><span class="status-badge status-pending">Pending</span></span>
-                  <span><strong>Apr 23, 2026</strong></span>
-                  <span><strong>2:10 PM</strong></span>
-                  <span><a class="text-link" href="case-validation.html?case=treasure-or-circulate-0423&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
-                </div>
+                <div class="history-table">
+                  <div class="history-row history-row-head case-row">
+                    <span>Category</span>
+                    <span>Procedure Performed</span>
+                    <span>Status</span>
+                    <span>Date</span>
+                    <span>Time</span>
+                    <span>Action</span>
+                  </div>
 
-                <div class="history-row case-row">
-                  <span>Handled Case</span>
-                  <span><strong>Operative Hysteroscopy, Transcervical Resection of Polyp</strong></span>
-                  <span><span class="status-badge status-pending">Pending</span></span>
-                  <span><strong>Apr 22, 2026</strong></span>
-                  <span><strong>11:45 AM</strong></span>
-                  <span><a class="text-link" href="case-validation.html?case=maria-dr-handled-0425&amp;mode=review&amp;from=selection&amp;student=maria-cruz">Open</a></span>
-                </div>
+                  <div class="history-row case-row">
+                    <span>Major Case - Circulate</span>
+                    <span><strong>Laparoscopic Cholecystectomy</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 23, 2026</strong></span>
+                    <span><strong>2:10 PM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=treasure-or-circulate-0423&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
+                  </div>
 
-                <div class="history-row case-row">
-                  <span>Minor Case</span>
-                  <span><strong>Suturing of Lacerated Left Side Lip Wound</strong></span>
-                  <span><span class="status-badge status-pending">Pending</span></span>
-                  <span><strong>Apr 21, 2026</strong></span>
-                  <span><strong>9:30 AM</strong></span>
-                  <span><a class="text-link" href="case-validation.html?case=nicole-medication-0424&amp;mode=review&amp;from=selection&amp;student=nicole-dela-pena">Open</a></span>
+                  <div class="history-row case-row">
+                    <span>Minor Case</span>
+                    <span><strong>Suturing of Lacerated Left Side Lip Wound</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 21, 2026</strong></span>
+                    <span><strong>9:30 AM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=nicole-medication-0424&amp;mode=review&amp;from=selection&amp;student=nicole-dela-pena">Open</a></span>
+                  </div>
                 </div>
-              </div>
+              </section>
 
               <div id="case-selection-message" class="form-message" role="status" aria-live="polite">
                 Select a clinical case to continue validation.

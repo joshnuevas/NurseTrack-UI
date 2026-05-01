@@ -887,7 +887,9 @@ h2 {
   padding: 22px 22px 28px;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: none;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(255, 207, 1, 0.72) rgba(255, 255, 255, 0.12);
+  scrollbar-width: thin;
   z-index: 20;
   animation: none;
 }
@@ -943,7 +945,7 @@ h2 {
 }
 
 .app-sidebar::-webkit-scrollbar {
-  width: 0;
+  width: 8px;
 }
 
 .app-sidebar::-webkit-scrollbar-track {
@@ -1048,6 +1050,26 @@ h2 {
   display: grid;
   align-content: start;
   gap: 8px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  scrollbar-color: rgba(255, 207, 1, 0.72) rgba(255, 255, 255, 0.08);
+  scrollbar-width: thin;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 207, 1, 0.72);
+  border-radius: 999px;
 }
 
 .nav-link {
@@ -3088,6 +3110,13 @@ h2 {
   align-items: start;
 }
 
+.student-appeal-entry-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.42fr);
+  gap: 18px;
+  align-items: start;
+}
+
 .student-progress-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
@@ -3874,8 +3903,16 @@ h2 {
 
 .schedule-view-tabs {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(112px, auto));
+  justify-content: end;
+  gap: 10px;
+}
+
+.schedule-view-tabs .state-tab {
+  min-width: 112px;
+  min-height: 52px;
+  padding: 0 24px;
+  font-size: 0.95rem;
 }
 
 .calendar-grid {
@@ -5958,6 +5995,18 @@ h2 {
   margin-bottom: 16px;
 }
 
+.audit-log-controls {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.55fr) minmax(320px, 1fr);
+  gap: 14px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.audit-range-control {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .admin-import-panel,
 .admin-approval-panel,
 .admin-audit-panel,
@@ -6587,20 +6636,30 @@ h2 {
 
 .chair-schedule-maker-panel {
   display: grid;
+  gap: 26px;
+  padding: 30px;
+}
+
+.chair-schedule-import-panel {
+  padding: 30px;
+}
+
+.chair-schedule-import-panel .import-dropzone {
   gap: 18px;
+  padding: 28px;
 }
 
 .schedule-maker-summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
 .schedule-maker-summary div {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface-muted);
-  padding: 14px;
+  padding: 18px;
 }
 
 .schedule-maker-summary span {
@@ -6620,18 +6679,18 @@ h2 {
 
 .schedule-draft-list {
   display: grid;
-  gap: 12px;
+  gap: 22px;
 }
 
 .schedule-draft-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(132px, auto);
-  gap: 14px;
+  gap: 22px 26px;
   align-items: start;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--surface);
-  padding: 16px;
+  padding: 24px;
 }
 
 .schedule-draft-row:first-child {
@@ -6653,12 +6712,15 @@ h2 {
 
 .schedule-draft-main {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   min-width: 0;
 }
 
 .schedule-draft-main div {
+  display: grid;
+  gap: 12px;
+  align-content: start;
   min-width: 0;
 }
 
@@ -6672,21 +6734,45 @@ h2 {
 .schedule-draft-fields {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 18px 22px;
+  padding-top: 4px;
 }
 
 .schedule-draft-fields .form-label {
+  gap: 8px;
   min-width: 0;
 }
 
 .schedule-draft-fields input,
 .schedule-draft-fields select {
   min-width: 0;
+  min-height: 56px;
 }
 
-.schedule-draft-fields .form-label:last-child {
-  grid-column: span 2;
+.schedule-draft-fields .schedule-draft-case-date {
+  grid-column: 1;
+}
+
+.schedule-draft-fields .schedule-draft-hospital-area {
+  grid-column: 1;
+}
+
+.schedule-draft-fields .schedule-draft-duty-type {
+  grid-column: 2;
+}
+
+.schedule-draft-fields .schedule-draft-case-time {
+  grid-column: 2;
+}
+
+.schedule-draft-fields .schedule-draft-tba {
+  align-self: center;
+  grid-column: 1;
+}
+
+.schedule-draft-fields .form-label.schedule-draft-ci-field {
+  grid-column: 2;
 }
 
 .schedule-draft-main strong,
@@ -6835,7 +6921,7 @@ h2 {
 
 .chair-schedule-maker-workspace {
   display: grid;
-  gap: 18px;
+  gap: 24px;
 }
 
 .chair-calendar-layout {
@@ -6847,7 +6933,7 @@ h2 {
 }
 
 .chair-schedules-workspace .ci-month-calendar .management-day {
-  min-height: 108px;
+  min-height: 132px;
 }
 
 .schedule-draft-main .status-badge {
@@ -6966,6 +7052,71 @@ h2 {
   gap: 14px;
 }
 
+#manual-schedule-form .manual-title-field {
+  grid-column: span 2;
+}
+
+#manual-schedule-form .manual-section-field,
+#manual-schedule-form .manual-group-field {
+  grid-column: span 1;
+}
+
+#manual-schedule-form .manual-hospital {
+  grid-column: span 2;
+}
+
+#manual-schedule-form .manual-shift-start {
+  grid-column: 1 / span 2;
+}
+
+#manual-schedule-form .manual-shift-end {
+  grid-column: 3 / span 2;
+}
+
+#manual-schedule-form .manual-case-date {
+  grid-column: 1;
+}
+
+#manual-schedule-form .manual-case-time {
+  grid-column: 2;
+}
+
+#manual-schedule-form .selected-schedule-tba {
+  grid-column: 3;
+}
+
+#manual-schedule-form .manual-ci-field {
+  grid-column: 4;
+}
+
+#selected-schedule-form .selected-schedule-hospital {
+  grid-column: span 2;
+}
+
+#selected-schedule-form .selected-schedule-shift-start {
+  grid-column: 1 / span 2;
+}
+
+#selected-schedule-form .selected-schedule-shift-end {
+  grid-column: 3 / span 2;
+}
+
+#selected-schedule-form .selected-schedule-case-date {
+  grid-column: 1;
+}
+
+#selected-schedule-form .selected-schedule-case-time {
+  grid-column: 2;
+}
+
+#selected-schedule-form .selected-schedule-tba {
+  grid-column: 3;
+}
+
+#selected-schedule-form .selected-schedule-ci-field {
+  grid-column: 4;
+}
+
 .selected-schedule-notes,
 .selected-schedule-actions {
   grid-column: 1 / -1;
@@ -7012,8 +7163,22 @@ h2 {
   margin-top: 0;
 }
 
+.manual-schedule-workspace .student-roster-panel .panel-heading {
+  margin-bottom: 8px;
+}
+
 .selected-roster-message {
   margin-bottom: 16px;
+}
+
+.manual-schedule-workspace .student-roster-panel .selected-roster-message {
+  margin-bottom: 12px;
+}
+
+.student-roster-actions {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 .student-roster-add-search {
@@ -7049,9 +7214,28 @@ h2 {
 }
 
 .manual-empty-roster-line {
-  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 68px;
   border-top: 1px solid var(--line);
+  color: var(--muted);
   background: var(--surface);
+  font-weight: 800;
+}
+
+.manual-empty-picker {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  background: var(--surface-muted);
+  color: var(--muted);
+  padding: 18px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.validation-empty-message {
+  margin-top: 14px;
 }
 
 .student-roster-table.is-empty {
@@ -9184,7 +9368,14 @@ h2 {
 .management-calendar {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
+  border: 1px solid rgba(228, 231, 236, 0.92);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(249, 250, 251, 0.9)),
+    var(--surface-muted);
+  padding: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .calendar-month-heading {
@@ -9192,12 +9383,17 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 2px 0 14px;
+  margin: 4px 0 14px;
+  border: 1px solid rgba(228, 231, 236, 0.9);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255, 207, 1, 0.18), rgba(138, 37, 44, 0.05)), var(--surface);
   color: var(--text);
+  padding: 14px 16px;
 }
 
 .calendar-month-heading strong {
-  font-size: 1.02rem;
+  font-size: 1.08rem;
+  line-height: 1.2;
 }
 
 .calendar-month-heading span {
@@ -9207,7 +9403,13 @@ h2 {
 }
 
 .calendar-weekday {
-  color: var(--muted);
+  min-height: 34px;
+  border-radius: 8px;
+  background: rgba(138, 37, 44, 0.06);
+  color: #4b5565;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.72rem;
   font-weight: 900;
   text-align: center;
@@ -9215,15 +9417,20 @@ h2 {
 }
 
 .management-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 150px;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  border: 1px solid rgba(228, 231, 236, 0.95);
   border-radius: 8px;
-  background: var(--surface-muted);
+  background: #fcfcfd;
   padding: 12px;
+  box-shadow: 0 1px 2px rgba(32, 33, 36, 0.03);
 }
 
 .ci-month-calendar .management-day {
-  min-height: 118px;
+  min-height: 132px;
 }
 
 a.management-day {
@@ -9248,9 +9455,9 @@ a.management-day:hover,
 button.management-day:hover,
 a.management-day:focus-visible,
 button.management-day:focus-visible {
-  transform: translateY(-1px);
-  border-color: rgba(138, 37, 44, 0.36);
-  box-shadow: 0 14px 28px rgba(32, 33, 36, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(138, 37, 44, 0.34);
+  box-shadow: 0 16px 34px rgba(32, 33, 36, 0.11);
 }
 
 button.management-day:not(.has-duty):hover,
@@ -9261,18 +9468,19 @@ button.management-day:not(.has-duty):focus-visible {
 }
 
 .management-day.is-selected {
-  border-color: rgba(138, 37, 44, 0.48);
-  box-shadow: inset 0 0 0 2px rgba(138, 37, 44, 0.12), 0 14px 28px rgba(32, 33, 36, 0.08);
+  border-color: rgba(138, 37, 44, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(138, 37, 44, 0.13), 0 16px 34px rgba(32, 33, 36, 0.1);
 }
 
 .management-day.is-muted {
-  opacity: 0.52;
+  background: #f8fafc;
+  opacity: 0.58;
 }
 
 .management-day.is-today {
   border-color: rgba(138, 37, 44, 0.46);
-  background: linear-gradient(135deg, rgba(255, 207, 1, 0.24), rgba(138, 37, 44, 0.08)), var(--surface);
-  box-shadow: inset 0 0 0 2px rgba(138, 37, 44, 0.08);
+  background: linear-gradient(135deg, rgba(255, 207, 1, 0.22), rgba(138, 37, 44, 0.07)), var(--surface);
+  box-shadow: inset 0 0 0 2px rgba(138, 37, 44, 0.08), 0 12px 26px rgba(138, 37, 44, 0.08);
 }
 
 .management-day.is-muted.is-today {
@@ -9280,16 +9488,28 @@ button.management-day:not(.has-duty):focus-visible {
 }
 
 .management-day span {
-  display: block;
-  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 8px;
+  color: #475467;
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
+}
+
+.management-day.is-today span {
+  background: var(--primary);
+  color: var(--surface);
 }
 
 .management-day strong {
   display: block;
-  margin-top: 16px;
+  margin-top: 14px;
+  color: var(--text);
   font-size: 0.95rem;
   line-height: 1.25;
 }
@@ -9297,27 +9517,57 @@ button.management-day:not(.has-duty):focus-visible {
 .management-day p {
   margin: 8px 0 0;
   color: var(--muted);
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 800;
   line-height: 1.4;
 }
 
 .management-day small {
-  display: inline-block;
-  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  margin-top: auto;
+  border: 1px solid rgba(138, 37, 44, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
   color: var(--primary);
   font-size: 0.76rem;
   font-weight: 900;
+  padding: 7px 10px;
 }
 
 .management-day.has-duty {
-  border-color: rgba(255, 207, 1, 0.58);
-  background: var(--accent-soft);
+  border-color: rgba(255, 207, 1, 0.82);
+  background: linear-gradient(145deg, #fff8d9 0%, #fff3bc 58%, #fffdf4 100%);
+  box-shadow: 0 12px 30px rgba(161, 92, 7, 0.1);
+}
+
+.management-day.has-duty::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--accent);
+}
+
+.management-day.has-duty span {
+  background: rgba(138, 37, 44, 0.08);
+  color: var(--primary);
+}
+
+.management-day.has-duty p {
+  color: #344054;
+  font-weight: 800;
 }
 
 .management-day.has-conflict {
   border-color: rgba(180, 35, 24, 0.28);
-  background: #fff1f0;
+  background: linear-gradient(145deg, #fff1f0, #fff7f5);
+}
+
+.management-day:not(.has-duty):not(.is-today) p {
+  color: #667085;
 }
 
 .management-list {
@@ -9525,6 +9775,7 @@ button.management-row:focus-visible {
   .decision-layout,
   .validation-history-layout,
   .appeals-layout,
+  .student-appeal-entry-layout,
   .overtime-details-layout,
   .student-progress-layout,
   .student-progress-pick-list,
@@ -9576,6 +9827,11 @@ button.management-row:focus-visible {
 
   .management-calendar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 12px;
+  }
+
+  .calendar-weekday {
+    display: none;
   }
 
   .validation-pick-list {
@@ -9683,6 +9939,7 @@ button.management-row:focus-visible {
   .help-topic-grid,
   .help-topic-card,
   .user-filters,
+  .audit-log-controls,
   .user-row,
   .profile-info-grid,
   .profile-activity-item,
@@ -9766,10 +10023,34 @@ button.management-row:focus-visible {
     width: 100%;
   }
 
-  .schedule-draft-fields .form-label:last-child {
+  .schedule-draft-fields .schedule-draft-shift-start,
+  .schedule-draft-fields .schedule-draft-shift-end,
+  .schedule-draft-fields .schedule-draft-hospital-area,
+  .schedule-draft-fields .schedule-draft-duty-type,
+  .schedule-draft-fields .schedule-draft-case-date,
+  .schedule-draft-fields .schedule-draft-case-time,
+  .schedule-draft-fields .schedule-draft-tba,
+  .schedule-draft-fields .form-label.schedule-draft-ci-field {
     grid-column: auto;
   }
 
+  #manual-schedule-form .manual-hospital,
+  #manual-schedule-form .manual-title-field,
+  #manual-schedule-form .manual-section-field,
+  #manual-schedule-form .manual-group-field,
+  #manual-schedule-form .manual-shift-start,
+  #manual-schedule-form .manual-shift-end,
+  #manual-schedule-form .manual-case-date,
+  #manual-schedule-form .manual-case-time,
+  #manual-schedule-form .selected-schedule-tba,
+  #manual-schedule-form .manual-ci-field,
+  #selected-schedule-form .selected-schedule-hospital,
+  #selected-schedule-form .selected-schedule-shift-start,
+  #selected-schedule-form .selected-schedule-shift-end,
+  #selected-schedule-form .selected-schedule-case-date,
+  #selected-schedule-form .selected-schedule-case-time,
+  #selected-schedule-form .selected-schedule-tba,
+  #selected-schedule-form .selected-schedule-ci-field,
   .selected-schedule-ci-field {
     grid-column: auto;
   }
@@ -9986,5 +10267,10 @@ button.management-row:focus-visible {
 
   .management-calendar {
     grid-template-columns: 1fr;
+  }
+
+  .calendar-month-heading {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

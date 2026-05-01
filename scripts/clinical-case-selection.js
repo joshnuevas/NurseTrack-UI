@@ -35,7 +35,7 @@ function renderCaseRows(studentKey) {
 
   caseSelectionTable.innerHTML = header;
 
-  records.forEach((record, index) => {
+  records.forEach((record) => {
     const meta = statusMeta(record.status);
     const row = document.createElement("div");
     const href = instructorData.buildCaseUrl(record.id, {
@@ -44,7 +44,6 @@ function renderCaseRows(studentKey) {
     });
 
     row.className = "history-row case-row";
-    // Render strictly 6 columns (Patient name removed)
     row.innerHTML = `
       <span>${record.category}</span>
       <span><strong>${record.procedurePerformed || record.procedure}</strong></span>
@@ -86,25 +85,22 @@ function applySelectedStudent() {
     params.get("student") ||
     instructorData.studentKeyFromName(params.get("name")) ||
     "treasure-abadinas";
+
   const student = instructorData.students[studentKey] || instructorData.students["treasure-abadinas"];
 
-  setText("#case-selection-student-heading", student.name);
+  setText("#case-selection-student-heading", "Student Information");
   setText("#case-selection-avatar", student.initials);
   setText("#case-selection-name", student.name);
   setText("#case-selection-meta", `${student.section} - Student ID ${student.id}`);
   renderCaseRows(studentKey);
 }
 
-if (menuButton) {
-  menuButton.addEventListener("click", () => {
-    document.body.classList.add("sidebar-open");
-  });
-}
+menuButton?.addEventListener("click", () => {
+  document.body.classList.add("sidebar-open");
+});
 
-if (sidebarBackdrop) {
-  sidebarBackdrop.addEventListener("click", () => {
-    document.body.classList.remove("sidebar-open");
-  });
-}
+sidebarBackdrop?.addEventListener("click", () => {
+  document.body.classList.remove("sidebar-open");
+});
 
 applySelectedStudent();

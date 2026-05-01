@@ -9,51 +9,84 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/nursetrack.css">
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
     <style>
-        .validation-layout-single {
-            grid-template-columns: minmax(0, 1fr);
-        }
+      .validation-layout-single {
+        grid-template-columns: minmax(0, 1fr);
+      }
 
-        .detail-main-card .student-validation-card {
-            width: 100%;
-            max-width: none;
-            display: grid;
-            grid-template-columns: auto minmax(0, 1fr) auto;
-            align-items: center;
-            gap: 16px;
-        }
+      .detail-main-card .student-validation-card {
+        width: 100%;
+        max-width: none;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+      }
 
-        .detail-main-card .student-validation-card > div:nth-child(2) {
-            width: 100%;
-        }
+      .detail-main-card .student-validation-card > div:nth-child(2) {
+        width: 100%;
+      }
 
-        .detail-main-card {
-            width: 100%;
-        }
-        
+      .detail-main-card {
+        width: 100%;
+      }
+
+      .case-selection-section {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .case-selection-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 4px;
+      }
+
+      .case-selection-title h3 {
+        margin: 0;
+        color: #8A252C;
+        font-size: 1.05rem;
+        font-weight: 800;
+      }
+
+      .case-selection-title span {
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 800;
+      }
+
+      .history-row.case-row,
+      .history-row-head.case-row {
+        display: grid;
+        grid-template-columns: minmax(180px, 1.2fr) minmax(300px, 2.2fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) minmax(96px, 0.6fr) minmax(88px, 0.5fr);
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .history-row.case-row span,
+      .history-row-head.case-row span {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      @media (max-width: 680px) {
+        .detail-main-card .student-validation-card,
         .history-row.case-row,
         .history-row-head.case-row {
-            display: grid;
-            /* Updated to 6 Columns: Re-proportioned to justify and fill the extra space */
-            grid-template-columns: minmax(180px, 1.2fr) minmax(300px, 2.2fr) minmax(120px, 0.9fr) minmax(120px, 0.9fr) minmax(96px, 0.6fr) minmax(88px, 0.5fr);
-            align-items: center;
-            gap: 1.5rem; /* Increased gap slightly for better spacing */
+          grid-template-columns: 1fr;
         }
 
-        .history-row.case-row span,
-        .history-row-head.case-row span {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start; 
-            text-align: left;
+        .case-selection-title {
+          align-items: flex-start;
+          flex-direction: column;
         }
-
-        @media (max-width: 680px) {
-            .history-row.case-row,
-            .history-row-head.case-row {
-                grid-template-columns: 1fr;
-            }
-        }
+      }
     </style>
   </head>
 
@@ -72,7 +105,7 @@
 
         <nav class="sidebar-nav">
           <a class="nav-link" href="instructor-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
-          <a class="nav-link is-active" href="select-validation-user.html"><span class="nav-dot"></span>Clinical Cases Review</a>
+          <a class="nav-link is-active" href="select-validation-user.html" aria-current="page"><span class="nav-dot"></span>Clinical Cases Review</a>
           <a class="nav-link" href="live-attendance-tracker.html"><span class="nav-dot"></span>Live Attendance</a>
           <a class="nav-link" href="schedule-management.html"><span class="nav-dot"></span>Assigned Schedules</a>
           <a class="nav-link" href="instructor-student-view.html"><span class="nav-dot"></span>Student Progress</a>
@@ -104,7 +137,14 @@
 
           <div class="topbar-actions">
             <span class="sync-pill">Updated now</span>
-            <a class="icon-button notification-button button-link" href="instructor-notifications.html" aria-label="Notifications" title="Notifications"><svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+
+            <a class="icon-button notification-button button-link" href="instructor-notifications.html" aria-label="Notifications" title="Notifications">
+              <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </a>
+
             <a class="logout-link" href="../index.html">Logout</a>
           </div>
         </header>
@@ -114,9 +154,9 @@
             <article class="workspace-panel detail-main-card">
               <div class="panel-heading">
                 <div>
-                  <h2 id="case-selection-student-heading">Maria Cruz</h2>
+                  <h2 id="case-selection-student-heading">Student Information</h2>
                 </div>
-                <span class="status-badge status-pending" id="case-selection-count">1 pending case</span>
+                <span class="status-badge status-pending" id="case-selection-count">4 pending cases</span>
               </div>
 
               <div class="student-validation-card">
@@ -128,52 +168,75 @@
                 <span class="status-badge status-pending" id="case-selection-student-status">Pending</span>
               </div>
 
-              <div class="history-table" id="case-selection-table">
-                    <div class="history-row history-row-head case-row">
-                        <span>Category</span>
-                        <span>Procedure performed</span>
-                        <span>Status</span>
-                        <span>Date</span>
-                        <span>Time</span>
-                        <span>Action</span>
-                    </div>
-
-                    <div class="history-row case-row">
-                        <span>Major Case - Assist</span>
-                        <span><strong>Primary Lower Segment Transverse Cesarean Section</strong></span>
-                        <span><span class="status-badge status-pending">Pending</span></span>
-                        <span><strong>Apr 24, 2026</strong></span>
-                        <span><strong>4:35 PM</strong></span>
-                        <span><a class="text-link" href="case-validation.html?case=treasure-dr-newborn-0424&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
-                    </div>
-
-                    <div class="history-row case-row">
-                        <span>Major Case - Circulate</span>
-                        <span><strong>Laparoscopic Cholecystectomy</strong></span>
-                        <span><span class="status-badge status-pending">Pending</span></span>
-                        <span><strong>Apr 23, 2026</strong></span>
-                        <span><strong>2:10 PM</strong></span>
-                        <span><a class="text-link" href="case-validation.html?case=treasure-or-circulate-0423&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
-                    </div>
-
-                    <div class="history-row case-row">
-                        <span>Handled Case</span>
-                        <span><strong>Operative Hysteroscopy, Transcervical Resection of Polyp</strong></span>
-                        <span><span class="status-badge status-pending">Pending</span></span>
-                        <span><strong>Apr 22, 2026</strong></span>
-                        <span><strong>11:45 AM</strong></span>
-                        <span><a class="text-link" href="case-validation.html?case=maria-dr-handled-0425&amp;mode=review&amp;from=selection&amp;student=maria-cruz">Open</a></span>
-                    </div>
-
-                    <div class="history-row case-row">
-                        <span>Minor Case</span>
-                        <span><strong>Suturing of Lacerated Left Side Lip Wound</strong></span>
-                        <span><span class="status-badge status-pending">Pending</span></span>
-                        <span><strong>Apr 21, 2026</strong></span>
-                        <span><strong>9:30 AM</strong></span>
-                        <span><a class="text-link" href="case-validation.html?case=nicole-medication-0424&amp;mode=review&amp;from=selection&amp;student=nicole-dela-pena">Open</a></span>
-                    </div>
+              <section class="case-selection-section" aria-label="Delivery Room clinical case records">
+                <div class="case-selection-title">
+                  <h3>Delivery Room Cases</h3>
                 </div>
+
+                <div class="history-table">
+                  <div class="history-row history-row-head case-row">
+                    <span>Category</span>
+                    <span>Procedure Performed</span>
+                    <span>Status</span>
+                    <span>Date</span>
+                    <span>Time</span>
+                    <span>Action</span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Major Case - Assist</span>
+                    <span><strong>Primary Lower Segment Transverse Cesarean Section</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 24, 2026</strong></span>
+                    <span><strong>4:35 PM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=treasure-dr-newborn-0424&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Handled Case</span>
+                    <span><strong>Operative Hysteroscopy, Transcervical Resection of Polyp</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 22, 2026</strong></span>
+                    <span><strong>11:45 AM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=maria-dr-handled-0425&amp;mode=review&amp;from=selection&amp;student=maria-cruz">Open</a></span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="case-selection-section" aria-label="Operating Room clinical case records">
+                <div class="case-selection-title">
+                  <h3>Operating Room Cases</h3>
+                </div>
+
+                <div class="history-table">
+                  <div class="history-row history-row-head case-row">
+                    <span>Category</span>
+                    <span>Procedure Performed</span>
+                    <span>Status</span>
+                    <span>Date</span>
+                    <span>Time</span>
+                    <span>Action</span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Major Case - Circulate</span>
+                    <span><strong>Laparoscopic Cholecystectomy</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 23, 2026</strong></span>
+                    <span><strong>2:10 PM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=treasure-or-circulate-0423&amp;mode=review&amp;from=selection&amp;student=treasure-abadinas">Open</a></span>
+                  </div>
+
+                  <div class="history-row case-row">
+                    <span>Minor Case</span>
+                    <span><strong>Suturing of Lacerated Left Side Lip Wound</strong></span>
+                    <span><span class="status-badge status-pending">Pending</span></span>
+                    <span><strong>Apr 21, 2026</strong></span>
+                    <span><strong>9:30 AM</strong></span>
+                    <span><a class="text-link" href="case-validation.html?case=nicole-medication-0424&amp;mode=review&amp;from=selection&amp;student=nicole-dela-pena">Open</a></span>
+                  </div>
+                </div>
+              </section>
 
               <div id="case-selection-message" class="form-message" role="status" aria-live="polite">
                 Select a clinical case to continue validation.

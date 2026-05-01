@@ -86,49 +86,39 @@
                 <span class="status-badge status-pending" id="manual-schedule-status">Draft</span>
               </div>
 
-              <div class="selected-schedule-summary">
-                <div>
-                  <span>Dates</span>
-                  <strong id="manual-date-summary">Not set</strong>
-                </div>
-                <div>
-                  <span>Group</span>
-                  <strong id="manual-group-summary">No group</strong>
-                </div>
-                <div>
-                  <span>Students</span>
-                  <strong id="manual-students-summary">0 assigned</strong>
-                </div>
-                <div>
-                  <span>Shift</span>
-                  <strong id="manual-shift-summary">No shift</strong>
-                </div>
-              </div>
-
               <form class="selected-schedule-form" id="manual-schedule-form">
-                <label class="form-label">Schedule title
+                <label class="form-label manual-title-field">Schedule Title
                   <input id="manual-title" type="text" value="Manual Clinical Duty">
                 </label>
 
-                <label class="form-label">Assigned group
+                <label class="form-label manual-section-field">Section
+                  <select id="manual-section">
+                    <option>BSN 3A</option>
+                    <option>BSN 3B</option>
+                    <option>BSN 3C</option>
+                    <option>BSN 4A</option>
+                  </select>
+                </label>
+
+                <label class="form-label manual-group-field">Group
                   <select id="manual-group">
-                    <option>BSN 3A - Group 1</option>
-                    <option>BSN 3A - Group 2</option>
-                    <option>BSN 3B - Group 1</option>
-                    <option>BSN 4A - Group 1</option>
+                    <option>Group 1</option>
+                    <option>Group 2</option>
+                    <option>Group 3</option>
+                    <option>Group 4</option>
                     <option>Make-up Duty</option>
                   </select>
                 </label>
 
-                <label class="form-label">Start date
+                <label class="form-label">Start Date
                   <input id="manual-start-date" type="date">
                 </label>
 
-                <label class="form-label">End date
+                <label class="form-label">End Date
                   <input id="manual-end-date" type="date">
                 </label>
 
-                <label class="form-label">Hospital
+                <label class="form-label manual-hospital">Hospital
                   <select id="manual-hospital">
                     <option>CCMC</option>
                     <option>VSMMC</option>
@@ -137,7 +127,7 @@
                   </select>
                 </label>
 
-                <label class="form-label">Duty area
+                <label class="form-label">Duty Area
                   <select id="manual-area">
                     <option>Emergency Room</option>
                     <option>Pedia Pulmo Ward</option>
@@ -147,28 +137,36 @@
                   </select>
                 </label>
 
-                <label class="form-label">Shift start
+                <label class="form-label manual-duty-type">Duty Type
+                  <select id="manual-duty-type">
+                    <option>Regular</option>
+                    <option>Extension</option>
+                    <option>Completion</option>
+                  </select>
+                </label>
+
+                <label class="form-label manual-shift-start">Shift Start
                   <input id="manual-shift-start" type="time">
                 </label>
 
-                <label class="form-label">Shift end
+                <label class="form-label manual-shift-end">Shift End
                   <input id="manual-shift-end" type="time">
                 </label>
 
-                <label class="form-label">Case presentation date
+                <label class="form-label manual-case-date">Case Presentation Date
                   <input id="manual-case-date" type="date" data-manual-case-input>
                 </label>
 
-                <label class="form-label">Case presentation time
+                <label class="form-label manual-case-time">Case Presentation Time
                   <input id="manual-case-time" type="time" data-manual-case-input>
                 </label>
 
                 <label class="checkbox-line selected-schedule-tba">
                   <input id="manual-case-tba" type="checkbox" checked>
-                  Case presentation TBA
+                  Case Presentation TBA
                 </label>
 
-                <label class="form-label">Supervising CI
+                <label class="form-label manual-ci-field">Supervising CI
                   <select id="manual-ci">
                     <option>Patricia Reyes, RN, MAN</option>
                     <option>Miguel Santos, RN, MAN</option>
@@ -178,19 +176,11 @@
                   </select>
                 </label>
 
-                <label class="form-label selected-schedule-notes">Chair notes
+                <label class="form-label selected-schedule-notes">Chair Notes
                   <textarea id="manual-notes" rows="4" placeholder="Add instructions or rotation notes"></textarea>
                 </label>
 
-                <div class="schedule-maker-actions selected-schedule-actions">
-                  <div class="selected-schedule-button-row">
-                    <a class="ghost-button button-link" href="schedule-maker.html">Cancel</a>
-                    <button class="primary-button workspace-action" type="submit">Save Manual Schedule</button>
-                  </div>
-                </div>
               </form>
-
-              <div id="manual-schedule-message" class="form-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the manual draft.</div>
             </article>
 
             <article class="workspace-panel manual-student-picker-panel">
@@ -259,6 +249,10 @@
                     <p>BSN 3B - School ID 23-1023-441</p>
                   </div>
                 </label>
+
+                <div class="manual-empty-picker" id="manual-no-students-message" hidden>
+                  No more students to add.
+                </div>
               </div>
 
               <div class="button-row manual-student-actions">
@@ -275,7 +269,16 @@
                 <span class="status-badge status-pending" id="manual-student-count">0 students</span>
               </div>
 
+              <div id="manual-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the manual draft.</div>
+
               <div class="student-roster-table" id="manual-assigned-students"></div>
+
+              <div class="student-roster-actions">
+                <div class="selected-schedule-button-row">
+                  <a class="ghost-button button-link" href="schedule-maker.html">Cancel</a>
+                  <button class="primary-button workspace-action" form="manual-schedule-form" type="submit">Save Manual Schedule</button>
+                </div>
+              </div>
             </article>
           </section>
         </main>

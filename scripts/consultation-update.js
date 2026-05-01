@@ -7,6 +7,7 @@
     const isStudent = path.includes("/nursing-student/");
     const page = path.split("/").pop();
     const legacyAdminPages = new Set(["user-list-manage-users.html", "user-management.html", "role-assignment.html"]);
+    const removedAdminFeaturePages = new Set(["manage-users.html", "role-assignment.html", "enrollment-archive.html"]);
 
     const one = (selector) => document.querySelector(selector);
     const all = (selector) => Array.from(document.querySelectorAll(selector));
@@ -22,17 +23,18 @@
       { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-maker.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
       { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
       { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html", "student-progress-detail.html"] },
+      { label: "Clearance", href: "student-clearance.html", pages: ["student-clearance.html", "student-clearance-detail.html"] },
       { label: "Clinical Cases View", href: "clinical-cases-view.html", pages: ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"] },
       { label: "CI Recommendations", href: "student-appeals.html", pages: ["student-appeals.html"] },
-      { label: "Overtime Details", href: "overtime-details.html", pages: ["overtime-details.html"] },
+      { label: "Overtime Details", href: "overtime-details.html", pages: ["overtime-details.html", "overtime-rendered.html"] },
       { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] }
     ];
 
     const adminNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
-      { label: "Manage Users", href: "manage-users.html", pages: ["manage-users.html"] },
-      { label: "Role Assignment", href: "role-assignment.html", pages: ["role-assignment.html"] },
-      { label: "Enrollment Summary / Archive", href: "enrollment-archive.html", pages: ["enrollment-archive.html"] }
+      { label: "Section Import", href: "section-import.html", pages: ["section-import.html"] },
+      { label: "Hospitals / Duty Areas", href: "hospital-duty-area.html", pages: ["hospital-duty-area.html"] },
+      { label: "Audit Logs", href: "audit-logs.html", pages: ["audit-logs.html"] }
     ];
 
     const instructorNavItems = [
@@ -43,6 +45,15 @@
       { label: "Student Progress", href: "instructor-student-view.html", pages: ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"] },
       { label: "Student Appeals", href: "student-appeals.html", pages: ["student-appeals.html"] },
       { label: "Reports", href: "instructor-reports.html", pages: ["instructor-reports.html"] }
+    ];
+
+    const studentNavItems = [
+      { label: "Dashboard", href: "student-dashboard.html", pages: ["student-dashboard.html"] },
+      { label: "Clinical Cases", href: "case-history.html", pages: ["case-history.html", "case-detail.html", "add-clinical-case.html", "edit-case.html", "checklist-form.html"] },
+      { label: "Assigned Schedules", href: "view-schedule.html", pages: ["view-schedule.html", "assigned-roster.html", "schedule-details.html"] },
+      { label: "Progress", href: "student-progress.html", pages: ["student-progress.html", "student-pending-items.html"] },
+      { label: "Student Appeals", href: "student-appeals.html", pages: ["student-appeals.html"] },
+      { label: "Reports", href: "student-reports.html", pages: ["student-reports.html"] }
     ];
 
     const renderSidebarNav = (items) => {
@@ -130,6 +141,17 @@
       if (isInstructor) {
         renderSidebarNav(instructorNavItems);
       }
+
+      if (isStudent) {
+        setText(".role-chip", "Nursing Student");
+        setText(".sidebar-account strong", "Maria Cruz");
+        setText(".sidebar-account span", "BSN 3A");
+        const avatar = one(".sidebar-account .avatar");
+        if (avatar) {
+          avatar.textContent = "MC";
+        }
+        renderSidebarNav(studentNavItems);
+      }
     };
 
     const enhanceLegacyAdminRouteNotice = () => {
@@ -137,17 +159,32 @@
         return false;
       }
 
-      const targetHref = page === "role-assignment.html" ? "../admin/role-assignment.html" : "../admin/manage-users.html";
-      const targetLabel = page === "role-assignment.html" ? "Open Admin Role Assignment" : "Open Admin Manage Users";
-
       setText(".topbar-title p", "Chair Workspace");
       setText(".topbar-title h1", "Admin-only module moved");
       replaceMainWithNotice({
         kicker: "Admin-owned Route",
-        title: "This account-management page now belongs to Admin.",
-        copy: "The Chair role handles schedules, student progress, and reports. User management and role assignment are owned by Admin.",
-        actionHref: targetHref,
-        actionLabel: targetLabel
+        title: "This account-management page was removed from the workflow.",
+        copy: "Admin now only handles semester section imports, hospital and duty area setup, and audit visibility.",
+        actionHref: "../admin/section-import.html",
+        actionLabel: "Open Section Import"
+      });
+
+      return true;
+    };
+
+    const enhanceRemovedAdminFeatureNotice = () => {
+      if (!isAdmin || !removedAdminFeaturePages.has(page)) {
+        return false;
+      }
+
+      setText(".topbar-title p", "Admin Workspace");
+      setText(".topbar-title h1", "Section Import");
+      replaceMainWithNotice({
+        kicker: "Admin Setup",
+        title: "This Admin feature has been removed.",
+        copy: "Use Section Import to upload the new semester Excel file and automatically assign student sections. User management, role assignment, and enrollment archive are no longer part of the Admin side.",
+        actionHref: "section-import.html",
+        actionLabel: "Open Section Import"
       });
 
       return true;
@@ -431,7 +468,9 @@
     };
 
     const simplifyAssignedSchedulePage = () => {
-      if (page !== "schedule-management.html") {
+      const isScheduleManagementPage = page === "schedule-management.html" || (isStudent && page === "view-schedule.html");
+
+      if (!isScheduleManagementPage) {
         return;
       }
 
@@ -581,11 +620,9 @@
         return;
       }
 
-      setText(".workspace-hero h2", "View your assigned clinical duty schedule.");
-      setText(
-        ".workspace-hero p:not(.section-kicker)",
-        "Schedules are published by the Chair. You can view your hospital, area, assigned CI, shift, rotation, and reminders."
-      );
+      document.title = "NurseTrack | Assigned Schedules";
+      setText(".topbar-title p", "Assigned Schedules");
+      setText(".topbar-title h1", "Assigned Schedules");
 
       one('[data-consultation="student-schedule-lock"]')?.remove();
     };
@@ -631,6 +668,10 @@
 
     const enhanceCaseEntry = () => {
       if (!isStudent || !["add-clinical-case.html", "edit-case.html"].includes(page)) {
+        return;
+      }
+
+      if (one("[data-student-case-submitted-format]")) {
         return;
       }
 
@@ -1052,6 +1093,10 @@
     }
 
     if (enhanceLegacyAdminRouteNotice()) {
+      return;
+    }
+
+    if (enhanceRemovedAdminFeatureNotice()) {
       return;
     }
 

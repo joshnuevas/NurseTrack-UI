@@ -12,6 +12,7 @@ const chairMakerRosterModal = document.querySelector("#schedule-roster-modal");
 const chairMakerRosterTitle = document.querySelector("#schedule-roster-title");
 const chairMakerRosterList = document.querySelector("#schedule-roster-list");
 const chairMakerRosterCloseButtons = Array.from(document.querySelectorAll("[data-close-roster-modal]"));
+const chairMakerRosterSaveButton = document.querySelector("[data-save-roster-modal]");
 const chairMakerRosterUndoButton = document.querySelector("[data-undo-roster-remove]");
 
 const chairMakerRosterData = {
@@ -24,6 +25,8 @@ const chairMakerRosterData = {
 };
 
 let chairMakerRemovedStudents = [];
+let chairMakerOpenRosterGroup = "";
+let chairMakerRosterSnapshot = [];
 
 function setChairMakerMessage(element, message, isSuccess = true) {
   if (!element) {
@@ -44,6 +47,14 @@ function setChairMakerStatus(element, text, statusClass) {
   element.className = `status-badge ${statusClass}`;
 }
 
+function updateRosterCountButtons() {
+  document.querySelectorAll("[data-view-draft-roster]").forEach((button) => {
+    const group = button.dataset.rosterGroup;
+    const count = chairMakerRosterData[group]?.length || 0;
+    button.textContent = `View students (${count})`;
+  });
+}
+
 function syncChairMakerCasePresentation(row) {
   const tbaOption = row?.querySelector("[data-case-presentation-tba]");
   const inputs = Array.from(row?.querySelectorAll("[data-case-presentation-input]") || []);
@@ -51,10 +62,62 @@ function syncChairMakerCasePresentation(row) {
 
   inputs.forEach((input) => {
     input.disabled = isTba;
+
     if (isTba) {
       input.value = "";
     }
   });
+}
+
+function findChairMakerDraftField(row, labelText) {
+  return Array.from(row?.querySelectorAll(".schedule-draft-fields > label") || []).find((label) => {
+    const ownText = Array.from(label.childNodes)
+      .filter((node) => node.nodeType === Node.TEXT_NODE)
+      .map((node) => node.textContent.trim())
+      .join(" ")
+      .toLowerCase();
+
+    return ownText === labelText.toLowerCase();
+  });
+}
+
+function enhanceChairMakerDraftRow(row) {
+  const fields = row?.querySelector(".schedule-draft-fields");
+
+  if (!fields) {
+    return;
+  }
+
+  const hospitalField = findChairMakerDraftField(row, "Hospital / Area");
+
+  if (hospitalField && !fields.querySelector("[data-duty-type-field]")) {
+    const dutyTypeField = document.createElement("label");
+    dutyTypeField.className = "form-label schedule-draft-duty-type";
+    dutyTypeField.dataset.dutyTypeField = "";
+    dutyTypeField.innerHTML = `
+      Duty Type
+      <select>
+        <option>Regular</option>
+        <option>Extension</option>
+        <option>Completion</option>
+      </select>
+    `;
+    hospitalField.after(dutyTypeField);
+  }
+
+  hospitalField?.classList.add("schedule-draft-hospital-area");
+  fields.querySelector("[data-duty-type-field]")?.classList.add("schedule-draft-duty-type");
+  findChairMakerDraftField(row, "Shift start")?.classList.add("schedule-draft-shift-start");
+  findChairMakerDraftField(row, "Shift end")?.classList.add("schedule-draft-shift-end");
+  findChairMakerDraftField(row, "Case presentation date")?.classList.add("schedule-draft-case-date");
+  findChairMakerDraftField(row, "Case presentation time")?.classList.add("schedule-draft-case-time");
+  findChairMakerDraftField(row, "Supervising CI")?.classList.add("schedule-draft-ci-field");
+  row.querySelector("[data-case-presentation-tba]")?.closest("label")?.classList.add("schedule-draft-tba");
+}
+
+function enhanceChairMakerDraftRows() {
+  document.querySelectorAll("[data-schedule-draft-row]").forEach(enhanceChairMakerDraftRow);
+  updateRosterCountButtons();
 }
 
 function bindChairMakerTbaRows() {
@@ -72,6 +135,32 @@ function closeChairMakerRosterModal() {
 
   chairMakerRosterModal.hidden = true;
   document.body.classList.remove("modal-open");
+  chairMakerOpenRosterGroup = "";
+  chairMakerRosterSnapshot = [];
+}
+
+function cancelChairMakerRosterModal() {
+  if (chairMakerOpenRosterGroup) {
+    chairMakerRosterData[chairMakerOpenRosterGroup] = [...chairMakerRosterSnapshot];
+    chairMakerRemovedStudents = chairMakerRemovedStudents.filter((item) => item.group !== chairMakerOpenRosterGroup);
+    updateRosterCountButtons();
+  }
+
+  closeChairMakerRosterModal();
+}
+
+function saveChairMakerRosterModal() {
+  if (!chairMakerOpenRosterGroup) {
+    closeChairMakerRosterModal();
+    return;
+  }
+
+  const count = chairMakerRosterData[chairMakerOpenRosterGroup]?.length || 0;
+
+  updateRosterCountButtons();
+  setChairMakerStatus(chairMakerScheduleStatus, "Edited draft", "status-pending");
+  setChairMakerMessage(chairMakerScheduleMessage, `${chairMakerOpenRosterGroup} student list saved with ${count} student${count === 1 ? "" : "s"}. Publish or republish when ready.`);
+  closeChairMakerRosterModal();
 }
 
 function openChairMakerRosterModal(group) {
@@ -81,12 +170,15 @@ function openChairMakerRosterModal(group) {
 
   const students = chairMakerRosterData[group] || [];
 
+  chairMakerOpenRosterGroup = group;
+  chairMakerRosterSnapshot = [...students];
+
   if (chairMakerRosterUndoButton) {
     chairMakerRosterUndoButton.disabled = !chairMakerRemovedStudents.some((item) => item.group === group);
   }
 
   if (chairMakerRosterTitle) {
-    chairMakerRosterTitle.textContent = `${group} students`;
+    chairMakerRosterTitle.textContent = `${group} Students`;
   }
 
   chairMakerRosterList.innerHTML = `
@@ -115,12 +207,21 @@ function openChairMakerRosterModal(group) {
 
 function createManualScheduleRow() {
   const manualCount = document.querySelectorAll("[data-schedule-draft-row]").length + 1;
+  const groupName = `Manual Schedule ${manualCount}`;
+
+  if (!chairMakerRosterData[groupName]) {
+    chairMakerRosterData[groupName] = [];
+  }
+
   const row = document.createElement("div");
   row.className = "schedule-draft-row is-edited";
   row.dataset.scheduleDraftRow = "";
   row.innerHTML = `
     <div class="schedule-draft-main">
-      <div><strong>Manual Schedule ${manualCount}</strong><button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="Manual Schedule ${manualCount}">0 students</button></div>
+      <div>
+        <strong>${groupName}</strong>
+        <button class="roster-count-button" type="button" data-view-draft-roster data-roster-group="${groupName}">View students (0)</button>
+      </div>
     </div>
     <div class="schedule-draft-actions">
       <button class="ghost-button" type="button" data-save-draft-row>Save edits</button>
@@ -133,6 +234,12 @@ function createManualScheduleRow() {
       <label class="form-label">End date
         <input type="date">
       </label>
+      <label class="form-label">Shift start
+        <input type="time">
+      </label>
+      <label class="form-label">Shift end
+        <input type="time">
+      </label>
       <label class="form-label">Hospital / Area
         <select>
           <option>SAMCH - Delivery Room</option>
@@ -140,12 +247,6 @@ function createManualScheduleRow() {
           <option>CCMC - Operating Room</option>
           <option>CHN Brgy. Dumlog - Community Health Nursing Area</option>
         </select>
-      </label>
-      <label class="form-label">Shift start
-        <input type="time">
-      </label>
-      <label class="form-label">Shift end
-        <input type="time">
       </label>
       <label class="form-label">Case presentation date
         <input type="date" data-case-presentation-input>
@@ -155,7 +256,7 @@ function createManualScheduleRow() {
       </label>
       <label class="checkbox-line">
         <input type="checkbox" data-case-presentation-tba checked>
-        TBA
+        Case presentation TBA
       </label>
       <label class="form-label">Supervising CI
         <select>
@@ -170,7 +271,9 @@ function createManualScheduleRow() {
   `;
 
   chairMakerDraftList?.append(row);
+  enhanceChairMakerDraftRow(row);
   syncChairMakerCasePresentation(row);
+  updateRosterCountButtons();
   setChairMakerStatus(chairMakerScheduleStatus, "Edited draft", "status-pending");
   setChairMakerMessage(chairMakerScheduleMessage, "Manual schedule added. Fill the fields, save, then publish when ready.");
 }
@@ -178,6 +281,7 @@ function createManualScheduleRow() {
 chairMakerFileButton?.addEventListener("click", () => {
   chairMakerFileInput?.click();
   setChairMakerStatus(chairMakerImportStatus, "File selected", "status-pending");
+  enhanceChairMakerDraftRows();
   setChairMakerMessage(chairMakerImportMessage, "Schedule source file selected. Edit the schedule rows before publishing.");
 });
 
@@ -217,6 +321,8 @@ chairMakerDraftList?.addEventListener("click", (event) => {
   if (target.matches("[data-remove-draft-row]")) {
     const group = row.querySelector("strong")?.textContent.trim() || "Schedule";
     row.remove();
+    delete chairMakerRosterData[group];
+    updateRosterCountButtons();
     setChairMakerStatus(chairMakerScheduleStatus, "Edited draft", "status-pending");
     setChairMakerMessage(chairMakerScheduleMessage, `${group} removed from this draft. Publish or republish when the schedule is correct.`);
   }
@@ -234,18 +340,20 @@ chairMakerPublishButton?.addEventListener("click", () => {
 });
 
 chairMakerRosterCloseButtons.forEach((button) => {
-  button.addEventListener("click", closeChairMakerRosterModal);
+  button.addEventListener("click", cancelChairMakerRosterModal);
 });
 
+chairMakerRosterSaveButton?.addEventListener("click", saveChairMakerRosterModal);
+
 chairMakerRosterUndoButton?.addEventListener("click", () => {
-  const openGroup = chairMakerRosterTitle?.textContent.replace(" students", "");
-  const undoIndex = chairMakerRemovedStudents.map((item) => item.group).lastIndexOf(openGroup);
+  const group = chairMakerOpenRosterGroup;
+  const undoIndex = chairMakerRemovedStudents.map((item) => item.group).lastIndexOf(group);
 
   if (undoIndex < 0) {
     return;
   }
 
-  const { group, student, index } = chairMakerRemovedStudents[undoIndex];
+  const { student, index } = chairMakerRemovedStudents[undoIndex];
   const roster = chairMakerRosterData[group] || [];
 
   if (!roster.includes(student)) {
@@ -255,13 +363,14 @@ chairMakerRosterUndoButton?.addEventListener("click", () => {
 
   chairMakerRemovedStudents.splice(undoIndex, 1);
   openChairMakerRosterModal(group);
+  updateRosterCountButtons();
   setChairMakerStatus(chairMakerScheduleStatus, "Edited draft", "status-pending");
   setChairMakerMessage(chairMakerScheduleMessage, `${student} restored to ${group}.`);
 });
 
 chairMakerRosterModal?.addEventListener("click", (event) => {
   if (event.target === chairMakerRosterModal) {
-    closeChairMakerRosterModal();
+    cancelChairMakerRosterModal();
   }
 
   const removeButton = event.target.closest("[data-remove-roster-student]");
@@ -274,9 +383,12 @@ chairMakerRosterModal?.addEventListener("click", (event) => {
     chairMakerRemovedStudents.push({ group, student, index: Math.max(removedIndex, 0) });
     chairMakerRosterData[group] = (chairMakerRosterData[group] || []).filter((name) => name !== student);
     openChairMakerRosterModal(group);
+    updateRosterCountButtons();
     setChairMakerStatus(chairMakerScheduleStatus, "Edited draft", "status-pending");
-    setChairMakerMessage(chairMakerScheduleMessage, `${student} removed from ${group}. Save edits or publish when ready.`);
+    setChairMakerMessage(chairMakerScheduleMessage, `${student} removed from ${group}. Save changes in the student modal to keep this roster update.`);
   }
 });
 
+enhanceChairMakerDraftRows();
 bindChairMakerTbaRows();
+updateRosterCountButtons();

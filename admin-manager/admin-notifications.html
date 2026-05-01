@@ -9,6 +9,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/nursetrack.css">
     <link rel="icon" type="image/png" href="../assets/cit-u-logo.png">
+
+    <style>
+      .notification-heading-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .notification-heading-actions .ghost-button {
+        min-width: 130px;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 720px) {
+        .notification-heading-actions {
+          justify-content: flex-start;
+          width: 100%;
+        }
+
+        .notification-heading-actions .ghost-button {
+          width: 100%;
+        }
+      }
+    </style>
   </head>
 
   <body class="app-body">
@@ -87,7 +113,11 @@
                 <div>
                   <h2>Recent Notifications</h2>
                 </div>
-                <button class="ghost-button" type="button" id="refresh-notifications">Refresh</button>
+
+                <div class="notification-heading-actions">
+                  <button class="ghost-button" type="button" id="mark-all-read">Mark all as read</button>
+                  <button class="ghost-button" type="button" id="refresh-notifications">Refresh</button>
+                </div>
               </div>
 
               <div class="history-filters notification-filters" aria-label="Notification filters">
@@ -218,6 +248,71 @@
     </div>
 
     <script src="../scripts/notifications.js"></script>
+
+    <script>
+      const markAllReadButton = document.querySelector("#mark-all-read");
+      const unreadCount = document.querySelector("#unread-count");
+      const notificationMessage = document.querySelector("#notification-message");
+
+      function updateUnreadCount() {
+        const unreadCards = document.querySelectorAll(".notification-card.is-unread").length;
+
+        if (unreadCount) {
+          unreadCount.textContent = unreadCards;
+        }
+
+        if (markAllReadButton) {
+          markAllReadButton.disabled = unreadCards === 0;
+        }
+      }
+
+      markAllReadButton?.addEventListener("click", () => {
+        const unreadCards = document.querySelectorAll(".notification-card.is-unread");
+
+        unreadCards.forEach((card) => {
+          card.classList.remove("is-unread");
+          card.dataset.status = "read";
+
+          const markReadButton = card.querySelector(".mark-read-button");
+
+          if (markReadButton) {
+            markReadButton.textContent = "Read";
+            markReadButton.disabled = true;
+          }
+        });
+
+        updateUnreadCount();
+
+        if (notificationMessage) {
+          notificationMessage.textContent = "All notifications marked as read.";
+          notificationMessage.classList.remove("is-error");
+          notificationMessage.classList.add("is-success");
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        const markReadButton = event.target.closest(".mark-read-button");
+
+        if (!markReadButton) {
+          return;
+        }
+
+        const card = markReadButton.closest(".notification-card");
+
+        if (!card) {
+          return;
+        }
+
+        card.classList.remove("is-unread");
+        card.dataset.status = "read";
+        markReadButton.textContent = "Read";
+        markReadButton.disabled = true;
+        updateUnreadCount();
+      });
+
+      updateUnreadCount();
+    </script>
+
     <script src="../scripts/logout-confirm.js"></script>
     <script src="../scripts/sidebar-icons.js"></script>
     <script src="../scripts/consultation-update.js"></script>

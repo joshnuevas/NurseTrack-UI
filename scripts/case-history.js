@@ -1,3 +1,4 @@
+(() => {
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const statusFilter = document.querySelector("#status-filter");
@@ -7,6 +8,10 @@ const historyRows = Array.from(document.querySelectorAll(".history-row:not(.hist
 const emptyState = document.querySelector("#history-empty");
 
 function filterRows() {
+  if (!statusFilter || !categoryFilter || !searchRecords || !emptyState) {
+    return;
+  }
+
   const status = statusFilter.value;
   const category = categoryFilter.value;
   const query = searchRecords.value.trim().toLowerCase();
@@ -28,14 +33,15 @@ function filterRows() {
   emptyState.hidden = visibleCount > 0;
 }
 
-menuButton.addEventListener("click", () => {
+menuButton?.addEventListener("click", () => {
   document.body.classList.add("sidebar-open");
 });
 
-sidebarBackdrop.addEventListener("click", () => {
+sidebarBackdrop?.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
-[statusFilter, categoryFilter, searchRecords].forEach((control) => {
+[statusFilter, categoryFilter, searchRecords].filter(Boolean).forEach((control) => {
   control.addEventListener("input", filterRows);
 });
+})();

@@ -5,6 +5,12 @@ const sectionFilter = document.querySelector("#validation-user-section");
 const userListContainer = document.querySelector("#validation-user-list");
 let userCards = Array.from(document.querySelectorAll("[data-validation-user]"));
 const userCount = document.querySelector("#validation-user-count");
+const emptyCaseMessage = document.createElement("div");
+
+emptyCaseMessage.className = "form-message validation-empty-message";
+emptyCaseMessage.textContent = "No clinical case found.";
+emptyCaseMessage.hidden = true;
+userListContainer?.after(emptyCaseMessage);
 
 function sortUsersAlphabetically() {
   userCards.sort((a, b) => {
@@ -36,6 +42,10 @@ function filterUsers() {
   });
 
   userCount.textContent = `${visibleCount} student${visibleCount === 1 ? "" : "s"}`;
+
+  if (emptyCaseMessage) {
+    emptyCaseMessage.hidden = visibleCount > 0;
+  }
 }
 
 menuButton.addEventListener("click", () => {

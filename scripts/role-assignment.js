@@ -301,8 +301,8 @@ removeChairButton?.addEventListener("click", () => {
   chairAssignmentStatus.textContent = "No Chair selected";
   chairAssignmentStatus.classList.remove("status-verified");
   chairAssignmentStatus.classList.add("status-pending");
-  setChairAssignmentMessage(`${card.dataset.name} Chair role removed. Assign a new Chair before publishing workflow changes.`, "is-success");
-  showTopToast(`${card.dataset.name} Chair role removed`);
+  setChairAssignmentMessage(`${card.dataset.name} Chair assignment cleared. Assign a new Chair before publishing workflow changes.`, "is-success");
+  showTopToast(`${card.dataset.name} Chair assignment cleared`);
 });
 
 selectUser(selectedCard);

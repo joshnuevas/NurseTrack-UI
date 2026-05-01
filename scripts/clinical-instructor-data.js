@@ -249,7 +249,7 @@
     {
       id: "treasure-dr-newborn-0424",
       studentKey: "treasure-abadinas",
-      title: "DR - Newborn Care",
+      title: "DR Major Case - Assist",
       code: "CASE-0424-006",
       patientInitials: "J. A. K.",
       date: "April 24, 2026",
@@ -318,7 +318,7 @@
     {
       id: "maria-or-scrub-0425",
       studentKey: "maria-cruz",
-      title: "OR Major Case - Scrub Case",
+      title: "OR Major Case - Scrub",
       code: "CASE-0425-006",
       patientInitials: "L. M. D.",
       date: "April 25, 2026",
@@ -327,7 +327,7 @@
       submittedTime: "1:40 PM",
       shiftTime: "6:00 AM - 2:00 PM",
       caseGroup: "OR",
-      category: "Major Case - Scrub Case",
+      category: "Major Case - Scrub",
       procedure: "Appendectomy",
       procedurePerformed: "Appendectomy",
       site: "CCMC",
@@ -366,7 +366,7 @@
     {
       id: "nicole-medication-0424",
       studentKey: "nicole-dela-pena",
-      title: "Medication Administration",
+      title: "OR Minor Case",
       code: "CASE-0424-009",
       patientInitials: "C. V. L.",
       date: "April 24, 2026",
@@ -389,7 +389,7 @@
     {
       id: "carlo-surgical-0424",
       studentKey: "carlo-fernandez",
-      title: "Surgical Case",
+      title: "OR Major Case - Assist",
       code: "CASE-0424-010",
       patientInitials: "D. N. E.",
       date: "April 24, 2026",
@@ -412,7 +412,7 @@
     {
       id: "zander-medication-0423",
       studentKey: "zander-aligato",
-      title: "Medication Administration",
+      title: "OR Minor Case",
       code: "CASE-0423-008",
       patientInitials: "E. B. R.",
       date: "April 23, 2026",
@@ -509,15 +509,35 @@
     return getAllCases().filter((caseRecord) => caseRecord.studentKey === studentKey);
   }
 
+  function getCasesGroupedByStudent(studentKey) {
+    const studentCases = getCasesByStudent(studentKey);
+
+    return {
+      DR: studentCases.filter((caseRecord) => caseRecord.caseGroup === "DR"),
+      OR: studentCases.filter((caseRecord) => caseRecord.caseGroup === "OR")
+    };
+  }
+
+  function getCasesGroupedByStudentAndStatus(studentKey, status) {
+    const studentCases = getCasesByStudent(studentKey).filter((caseRecord) => caseRecord.status === status);
+
+    return {
+      DR: studentCases.filter((caseRecord) => caseRecord.caseGroup === "DR"),
+      OR: studentCases.filter((caseRecord) => caseRecord.caseGroup === "OR")
+    };
+  }
+
   function updateCase(caseId, updates) {
     const overrides = loadOverrides();
     const previous = overrides[caseId] || {};
+
     overrides[caseId] = {
       ...previous,
       ...updates
     };
 
     saveOverrides(overrides);
+
     return getCaseById(caseId);
   }
 
@@ -550,6 +570,8 @@
       all: getAllCases,
       getById: getCaseById,
       getByStudent: getCasesByStudent,
+      getGroupedByStudent: getCasesGroupedByStudent,
+      getGroupedByStudentAndStatus: getCasesGroupedByStudentAndStatus,
       update: updateCase,
       statusMeta
     }
