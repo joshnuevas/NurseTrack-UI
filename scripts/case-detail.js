@@ -28,6 +28,7 @@ const studentCases = {
     submittedDate: "April 23, 2026",
     submittedTime: "2:10 PM",
     status: "Approved",
+    approvedDate: "April 23, 2026, 3:18 PM",
     reflection: "I observed sterile field maintenance, circulating nurse responsibilities, and documentation flow during an OR major case."
   },
   "maria-dr-handled-0422": {
@@ -42,6 +43,7 @@ const studentCases = {
     submittedDate: "April 22, 2026",
     submittedTime: "11:45 AM",
     status: "Approved",
+    approvedDate: "April 22, 2026, 1:30 PM",
     reflection: "I practiced proper handoff documentation and reflected on patient safety checks before and after the procedure."
   }
 };
@@ -59,6 +61,7 @@ function applySelectedCase() {
   const record = studentCases[caseId] || studentCases["maria-dr-assist-0424"];
   const isApproved = record.status === "Approved";
   const badge = document.querySelector("#detail-case-status-badge");
+  const approvedBox = document.querySelector("#detail-case-approved-box");
 
   setText("#detail-case-date", record.date);
   setText("#detail-case-shift-time", record.shiftTime);
@@ -73,13 +76,15 @@ function applySelectedCase() {
   setText("#detail-case-reflection", record.reflection);
   setText("#detail-case-status-badge", record.status);
   setText("#detail-case-status-title", isApproved ? "Approved by CI" : "Awaiting CI validation");
-  setText("#detail-case-status-copy", isApproved
-    ? "This page is view-only. The case has already been reviewed and approved."
-    : "This page is view-only. Updates and decisions are handled by the assigned Clinical Instructor and Chair workflows.");
   setText("#detail-case-reviewer", record.ci);
+  setText("#detail-case-approved-date", record.approvedDate || "");
 
   if (badge) {
     badge.className = `status-badge ${isApproved ? "status-verified" : "status-pending"}`;
+  }
+
+  if (approvedBox) {
+    approvedBox.hidden = !isApproved;
   }
 }
 

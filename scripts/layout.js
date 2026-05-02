@@ -34,7 +34,7 @@ const roleContent = {
     kicker: "Instructor Workspace",
     name: "Prof. Reyes",
     role: "Clinical Instructor",
-    hero: "Good evening, Prof. Reyes.",
+    hero: "Good evening, Reyes.",
     copy: "Clinical case submissions, student appeals, schedule updates, and progress summaries are ready for review.",
     action: "Review cases",
     notifications: "clinical-instructor/instructor-notifications.html",
