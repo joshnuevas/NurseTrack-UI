@@ -27,6 +27,7 @@
         font-size: 0.86rem;
         font-weight: 800;
         line-height: 1;
+        text-decoration: none;
         cursor: pointer;
         transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
       }
@@ -34,6 +35,7 @@
       .roster-count-button:hover {
         background: #ffefad;
         border-color: rgba(138, 37, 44, 0.35);
+        text-decoration: none;
         transform: translateY(-1px);
       }
 
@@ -43,6 +45,224 @@
         justify-content: flex-end;
         gap: 10px;
         flex-wrap: wrap;
+      }
+
+      .schedule-roster-modal .modal-heading {
+        align-items: flex-start;
+        gap: 16px;
+        padding-right: 58px;
+      }
+
+      .schedule-roster-modal {
+        position: relative;
+        width: min(980px, calc(100vw - 32px));
+      }
+
+      .schedule-roster-title-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .schedule-roster-close {
+        position: absolute !important;
+        top: 18px !important;
+        right: 18px !important;
+        display: grid !important;
+        place-items: center !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+        text-align: center !important;
+      }
+
+      .schedule-roster-close::before,
+      .schedule-roster-close::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 14px;
+        height: 3px;
+        border-radius: 999px;
+        background: #0f172a;
+        transform-origin: center;
+      }
+
+      .schedule-roster-close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .schedule-roster-close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .schedule-roster-add-panel {
+        display: grid;
+        gap: 10px;
+        margin: 0 0 1rem;
+      }
+
+      .schedule-roster-add-panel label {
+        color: #14213d;
+        font-weight: 900;
+      }
+
+      .schedule-roster-add-panel input {
+        width: 100%;
+        min-height: 58px;
+        border: 1px solid rgba(138, 37, 44, 0.28);
+        border-radius: 8px;
+        background: #ffffff;
+        color: #14213d;
+        font-weight: 800;
+        padding: 0 18px;
+      }
+
+      .schedule-roster-add-panel input:focus {
+        border-color: #8a252c;
+        box-shadow: 0 0 0 4px rgba(138, 37, 44, 0.1);
+        outline: none;
+      }
+
+      .schedule-roster-add-results {
+        max-height: 280px;
+        overflow-y: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .schedule-roster-add-results[hidden] {
+        display: none;
+      }
+
+      .schedule-roster-add-option,
+      .schedule-roster-add-empty {
+        width: 100%;
+        display: block;
+        border: 0;
+        border-bottom: 1px solid #eef2f7;
+        background: #ffffff;
+        color: #14213d;
+        padding: 18px 20px;
+        text-align: left;
+      }
+
+      .schedule-roster-add-option {
+        cursor: pointer;
+      }
+
+      .schedule-roster-add-option:hover,
+      .schedule-roster-add-option:focus-visible {
+        background: #fff7d6;
+        outline: none;
+      }
+
+      .schedule-roster-add-option strong,
+      .schedule-roster-add-empty strong {
+        display: block;
+        color: #001f3f;
+        font-size: 1.02rem;
+        font-weight: 900;
+      }
+
+      .schedule-roster-add-option span,
+      .schedule-roster-add-empty span {
+        display: block;
+        margin-top: 4px;
+        color: #14213d;
+        font-weight: 800;
+      }
+
+      .schedule-roster-add-option:last-child,
+      .schedule-roster-add-empty:last-child {
+        border-bottom: 0;
+      }
+
+      .schedule-break-field {
+        display: grid;
+        grid-column: 1 / -1;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .schedule-break-field > span {
+        color: #344054;
+        font-size: 0.88rem;
+        font-weight: 800;
+      }
+
+      .schedule-break-controls {
+        display: grid;
+        grid-template-columns: minmax(180px, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .schedule-break-controls input {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #14213d;
+        font-weight: 800;
+        padding: 0 14px;
+      }
+
+      .schedule-break-controls .ghost-button {
+        min-height: 48px;
+        white-space: nowrap;
+      }
+
+      .schedule-break-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 34px;
+      }
+
+      .schedule-break-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        border: 1px solid rgba(138, 37, 44, 0.18);
+        border-radius: 999px;
+        background: #ffffff;
+        color: #8a252c;
+        font-family: "Kumbh Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 850;
+        padding: 0 12px;
+        cursor: pointer;
+      }
+
+      .schedule-break-chip:hover,
+      .schedule-break-chip:focus-visible {
+        background: #fff7d6;
+        outline: none;
+      }
+
+      .schedule-break-empty {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        color: #667085;
+        font-size: 0.84rem;
+        font-weight: 800;
       }
 
       .schedule-roster-modal-footer {
@@ -72,6 +292,10 @@
         .schedule-roster-modal-footer .ghost-button,
         .schedule-roster-modal-footer .primary-button {
           width: 100%;
+        }
+
+        .schedule-break-controls {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -180,7 +404,7 @@
             </div>
 
             <div class="schedule-draft-list" aria-label="Editable schedule draft">
-              <div class="schedule-draft-row" data-schedule-draft-row>
+              <div class="schedule-draft-row" data-schedule-draft-row data-break-dates="2026-04-29">
                 <div class="schedule-draft-main">
                   <div>
                     <strong>N1 G1</strong>
@@ -195,12 +419,21 @@
 
                 <div class="schedule-draft-fields">
                   <label class="form-label">Start Date
-                    <input type="date" value="2026-04-27">
+                    <input type="date" value="2026-04-27" data-schedule-start-date>
                   </label>
 
                   <label class="form-label">End Date
-                    <input type="date" value="2026-04-30">
+                    <input type="date" value="2026-04-30" data-schedule-end-date>
                   </label>
+
+                  <div class="schedule-break-field" data-break-date-manager>
+                    <span>Break Dates</span>
+                    <div class="schedule-break-controls">
+                      <input type="date" data-break-date-input>
+                      <button class="ghost-button" type="button" data-add-break-date>Add break</button>
+                    </div>
+                    <div class="schedule-break-list" data-break-date-list></div>
+                  </div>
 
                   <label class="form-label schedule-draft-shift-start">Shift Start
                     <input type="time" value="06:00">
@@ -237,7 +470,7 @@
 
                   <label class="checkbox-line schedule-draft-tba">
                     <input type="checkbox" data-case-presentation-tba>
-                    Case Presentation TBA
+                    No case presentation
                   </label>
 
                   <label class="form-label schedule-draft-ci-field">Supervising CI
@@ -266,12 +499,21 @@
 
                 <div class="schedule-draft-fields">
                   <label class="form-label">Start Date
-                    <input type="date" value="2026-04-27">
+                    <input type="date" value="2026-04-27" data-schedule-start-date>
                   </label>
 
                   <label class="form-label">End Date
-                    <input type="date" value="2026-04-30">
+                    <input type="date" value="2026-04-30" data-schedule-end-date>
                   </label>
+
+                  <div class="schedule-break-field" data-break-date-manager>
+                    <span>Break Dates</span>
+                    <div class="schedule-break-controls">
+                      <input type="date" data-break-date-input>
+                      <button class="ghost-button" type="button" data-add-break-date>Add break</button>
+                    </div>
+                    <div class="schedule-break-list" data-break-date-list></div>
+                  </div>
 
                   <label class="form-label schedule-draft-shift-start">Shift Start
                     <input type="time" value="14:00">
@@ -307,7 +549,7 @@
 
                   <label class="checkbox-line schedule-draft-tba">
                     <input type="checkbox" data-case-presentation-tba checked>
-                    Case Presentation TBA
+                    No case presentation
                   </label>
 
                   <label class="form-label schedule-draft-ci-field">Supervising CI
@@ -336,13 +578,23 @@
     <div class="modal-backdrop roster-modal-backdrop" id="schedule-roster-modal" hidden>
       <section class="modal-card schedule-roster-modal" role="dialog" aria-modal="true" aria-labelledby="schedule-roster-title">
         <div class="modal-heading">
-          <div>
-            <h2 id="schedule-roster-title">Schedule Students</h2>
+          <div class="schedule-roster-title-row">
+            <div>
+              <h2 id="schedule-roster-title">Schedule Students</h2>
+            </div>
+
+            <button class="modal-close schedule-roster-close" type="button" data-close-roster-modal aria-label="Close student roster">&times;</button>
           </div>
 
           <div class="schedule-roster-modal-actions">
             <button class="ghost-button" type="button" data-undo-roster-remove disabled>Undo</button>
           </div>
+        </div>
+
+        <div class="schedule-roster-add-panel">
+          <label for="schedule-roster-add-search">Search student to add</label>
+          <input id="schedule-roster-add-search" type="search" placeholder="Search by name, ID, section, or clinical site" autocomplete="off">
+          <div class="schedule-roster-add-results" id="schedule-roster-add-results" hidden></div>
         </div>
 
         <div class="assigned-roster-table" id="schedule-roster-list"></div>
@@ -359,5 +611,6 @@
     <script src="../scripts/logout-confirm.js"></script>
     <script src="../scripts/sidebar-icons.js"></script>
     <script src="../scripts/consultation-update.js"></script>
+    <script src="../scripts/global-back-button.js"></script>
   </body>
 </html>

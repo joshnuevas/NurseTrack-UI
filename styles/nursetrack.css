@@ -6808,7 +6808,7 @@ h2 {
 .roster-count-button:hover,
 .roster-count-button:focus-visible {
   color: var(--primary-dark);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .schedule-roster-modal {

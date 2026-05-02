@@ -136,6 +136,18 @@
       <path d="M8 13h5"></path>
       <path d="m15 17 2 2 4-5"></path>
     `,
+    "approved appeals": `
+      <path d="M4 5h16v11H8l-4 4V5Z"></path>
+      <path d="M8 9h8"></path>
+      <path d="M8 13h5"></path>
+      <path d="m15 17 2 2 4-5"></path>
+    `,
+    "ci recommendations": `
+      <path d="M4 5h16v11H8l-4 4V5Z"></path>
+      <path d="M8 9h8"></path>
+      <path d="M8 13h5"></path>
+      <path d="m15 17 2 2 4-5"></path>
+    `,
     "enrollment summary / archive": `
       <path d="M5 4h14v16H5z"></path>
       <path d="M8 8h8"></path>

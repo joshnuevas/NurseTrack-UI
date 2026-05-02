@@ -7,7 +7,17 @@
     const isStudent = path.includes("/nursing-student/");
     const page = path.split("/").pop();
     const legacyAdminPages = new Set(["user-list-manage-users.html", "user-management.html", "role-assignment.html"]);
-    const removedAdminFeaturePages = new Set(["manage-users.html", "role-assignment.html", "enrollment-archive.html"]);
+    const removedAdminFeaturePages = new Set(["role-assignment.html", "enrollment-archive.html"]);
+
+    let signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
+    if (!signedRole && isAdmin) {
+      signedRole = "admin";
+      window.sessionStorage?.setItem("nursetrackRole", signedRole);
+    }
+
+    const isSignedAdmin = signedRole === "admin";
+    const currentArea = isAdmin ? "admin" : isChair ? "admin-manager" : isInstructor ? "clinical-instructor" : isStudent ? "nursing-student" : "";
+    const isAdminExperience = isAdmin || (isSignedAdmin && (isChair || isInstructor));
 
     const one = (selector) => document.querySelector(selector);
     const all = (selector) => Array.from(document.querySelectorAll(selector));
@@ -17,6 +27,8 @@
       template.innerHTML = markup.trim();
       return template.content.firstElementChild;
     };
+
+    const hrefFor = (folder, file) => currentArea === folder ? file : `../${folder}/${file}`;
 
     const chairNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
@@ -30,12 +42,60 @@
       { label: "Reports", href: "generate-report.html", pages: ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"] }
     ];
 
+    const chairSchedulePages = ["admin-schedules.html", "schedule-maker.html", "manual-schedule.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"];
+    const chairLiveAttendancePages = ["live-attendance-tracker.html"];
+    const chairStudentProgressPages = ["chair-student-progress.html", "student-progress-detail.html"];
+    const chairClearancePages = ["student-clearance.html", "student-clearance-detail.html"];
+    const chairClinicalCasePages = ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"];
+    const chairRecommendationPages = ["student-appeals.html"];
+    const chairOvertimePages = ["overtime-details.html", "overtime-rendered.html"];
+    const chairReportPages = ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"];
+    const instructorSchedulePages = ["schedule-management.html", "assigned-roster.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html"];
+    const instructorLiveAttendancePages = ["live-attendance-tracker.html"];
+    const instructorClinicalCasePages = ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "review-submissions.html", "validation-history.html"];
+    const instructorStudentProgressPages = ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"];
+    const instructorRecommendationPages = ["student-appeals.html"];
+    const instructorReportPages = ["instructor-reports.html"];
+
     const adminNavItems = [
-      { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
-      { label: "Section Import", href: "section-import.html", pages: ["section-import.html"] },
-      { label: "Hospitals / Duty Areas", href: "hospital-duty-area.html", pages: ["hospital-duty-area.html"] },
-      { label: "Audit Logs", href: "audit-logs.html", pages: ["audit-logs.html"] }
+      { label: "Dashboard", folder: "admin", href: "admin-dashboard.html", pages: ["admin-dashboard.html", "admin-notifications.html", "view-profile.html", "edit-profile.html"] },
+      { label: "Manage Users", folder: "admin", href: "manage-users.html", pages: ["manage-users.html"] },
+      { label: "Section Import", folder: "admin", href: "section-import.html", pages: ["section-import.html"] },
+      { label: "Hospitals / Duty Areas", folder: "admin", href: "hospital-duty-area.html", pages: ["hospital-duty-area.html"] },
+      { label: "Schedules", folder: "admin-manager", href: "admin-schedules.html", pages: chairSchedulePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorSchedulePages }] },
+      { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorLiveAttendancePages }] },
+      { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorStudentProgressPages }] },
+      { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
+      { label: "Clinical Cases", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorClinicalCasePages }] },
+      { label: "CI Recommendations", folder: "admin-manager", href: "student-appeals.html", pages: chairRecommendationPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorRecommendationPages }] },
+      { label: "Overtime Details", folder: "admin-manager", href: "overtime-details.html", pages: chairOvertimePages },
+      { label: "Reports", folder: "admin-manager", href: "generate-report.html", pages: chairReportPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorReportPages }] },
+      { label: "Audit Logs", folder: "admin", href: "audit-logs.html", pages: ["audit-logs.html"] }
     ];
+
+    const adminAllowedChairPages = new Set([
+      ...chairSchedulePages,
+      ...chairLiveAttendancePages,
+      ...chairStudentProgressPages,
+      ...chairClearancePages,
+      ...chairClinicalCasePages,
+      ...chairRecommendationPages,
+      ...chairOvertimePages,
+      ...chairReportPages
+    ]);
+    const adminAllowedInstructorPages = new Set([
+      ...instructorSchedulePages,
+      ...instructorLiveAttendancePages,
+      ...instructorClinicalCasePages,
+      ...instructorStudentProgressPages,
+      ...instructorRecommendationPages,
+      ...instructorReportPages
+    ]);
+
+    const isAdminAllowedOperationalRoute = () => (
+      isSignedAdmin &&
+      ((isChair && adminAllowedChairPages.has(page)) || (isInstructor && adminAllowedInstructorPages.has(page)))
+    );
 
     const instructorNavItems = [
       { label: "Dashboard", href: "instructor-dashboard.html", pages: ["instructor-dashboard.html"] },
@@ -64,12 +124,46 @@
       }
 
       nav.innerHTML = items.map((item) => {
-        const isActive = item.pages.includes(page);
+        const isActive = (
+          ((!item.folder || item.folder === currentArea) && item.pages.includes(page)) ||
+          item.activeAreas?.some((area) => area.folder === currentArea && area.pages.includes(page))
+        );
         const ariaCurrent = isActive ? ' aria-current="page"' : "";
-        return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${ariaCurrent}><span class="nav-dot"></span>${item.label}</a>`;
+        const href = item.folder ? hrefFor(item.folder, item.href) : item.href;
+        return `<a class="nav-link${isActive ? " is-active" : ""}" href="${href}"${ariaCurrent}><span class="nav-dot"></span>${item.label}</a>`;
       }).join("");
 
       window.NurseTrackSidebarIcons?.refresh?.();
+    };
+
+    const applyAdminIdentity = () => {
+      setText(".role-chip", "Admin");
+      setText(".topbar-title p", "Admin Workspace");
+      setText(".sidebar-account strong", "Admin Santos");
+      setText(".sidebar-account span", "System Admin");
+
+      const avatar = one(".sidebar-account .avatar");
+      if (avatar) {
+        avatar.textContent = "AS";
+      }
+
+      const notificationLink = one(".notification-button");
+      if (notificationLink) {
+        notificationLink.setAttribute("href", hrefFor("admin", "admin-notifications.html"));
+      }
+
+      const brandLink = one(".sidebar-brand");
+      if (brandLink?.tagName.toLowerCase() === "a") {
+        brandLink.setAttribute("href", hrefFor("admin", "about.html"));
+      }
+
+      all(".topbar-profile-button").forEach((button) => button.remove());
+      renderSidebarNav(adminNavItems);
+
+      if (!isAdmin) {
+        const pageTitle = one(".topbar-title h1")?.textContent.trim();
+        document.title = `NurseTrack | ${pageTitle || "Admin Workspace"}`;
+      }
     };
 
     const replaceMainWithNotice = ({ kicker, title, copy, actionHref, actionLabel }) => {
@@ -93,10 +187,9 @@
     };
 
     const enforceRoleOwnership = () => {
-      const signedRole = window.sessionStorage?.getItem("nursetrackRole");
       const routeRole = isAdmin ? "admin" : isChair && legacyAdminPages.has(page) ? "admin" : isChair ? "chair" : isInstructor ? "instructor" : isStudent ? "student" : "";
 
-      if (!signedRole || !routeRole || signedRole === routeRole) {
+      if (!signedRole || !routeRole || signedRole === routeRole || isAdminAllowedOperationalRoute()) {
         return false;
       }
 
@@ -106,30 +199,34 @@
         instructor: "Clinical Instructor",
         student: "Nursing Student"
       };
+      const homeLinks = {
+        admin: ["../admin/admin-dashboard.html", "Open Admin Dashboard"],
+        chair: ["../admin-manager/admin-dashboard.html", "Open Chair Dashboard"],
+        instructor: ["../clinical-instructor/instructor-dashboard.html", "Open CI Dashboard"],
+        student: ["../nursing-student/student-dashboard.html", "Open Student Dashboard"]
+      };
+      const [actionHref, actionLabel] = homeLinks[signedRole] || ["../index.html", "Return to login"];
+
+      if (isSignedAdmin) {
+        applyAdminIdentity();
+      }
 
       setText(".topbar-title h1", "Access limited");
+      document.title = "NurseTrack | Access Limited";
       replaceMainWithNotice({
         kicker: "Role Guard",
         title: `${roleLabels[routeRole]} access is required for this page.`,
         copy: `You are signed in as ${roleLabels[signedRole] || signedRole}. This page is owned by the ${roleLabels[routeRole]} role.`,
-        actionHref: "../index.html",
-        actionLabel: "Return to login"
+        actionHref,
+        actionLabel
       });
 
       return true;
     };
 
     const enhanceRoleSidebars = () => {
-      if (isAdmin) {
-        setText(".role-chip", "Admin");
-        setText(".topbar-title p", "Admin Workspace");
-        setText(".sidebar-account strong", "Admin Santos");
-        setText(".sidebar-account span", "System Admin");
-        const avatar = one(".sidebar-account .avatar");
-        if (avatar) {
-          avatar.textContent = "AS";
-        }
-        renderSidebarNav(adminNavItems);
+      if (isAdminExperience) {
+        applyAdminIdentity();
         return;
       }
 
@@ -177,17 +274,1209 @@
         return false;
       }
 
+      const isRoleAssignment = page === "role-assignment.html";
+
       setText(".topbar-title p", "Admin Workspace");
-      setText(".topbar-title h1", "Section Import");
+      setText(".topbar-title h1", isRoleAssignment ? "Manage Users" : "Section Import");
       replaceMainWithNotice({
         kicker: "Admin Setup",
         title: "This Admin feature has been removed.",
-        copy: "Use Section Import to upload the new semester Excel file and automatically assign student sections. User management, role assignment, and enrollment archive are no longer part of the Admin side.",
-        actionHref: "section-import.html",
-        actionLabel: "Open Section Import"
+        copy: isRoleAssignment
+          ? "Use Manage Users to review accounts, edit user details, and update account status. Separate role assignment is no longer part of the Admin side."
+          : "Use Section Import to upload the new semester Excel file and automatically assign student sections. Enrollment archive is no longer part of the Admin side.",
+        actionHref: isRoleAssignment ? "manage-users.html" : "section-import.html",
+        actionLabel: isRoleAssignment ? "Open Manage Users" : "Open Section Import"
       });
 
       return true;
+    };
+
+    const enhanceAdminApprovedAppeals = () => {
+      if (!isAdminExperience || page !== "student-appeals.html") {
+        return;
+      }
+
+      const approvedAppeals = [
+        {
+          id: "appeal-janine-emergency",
+          student: "Janine Aquino",
+          initials: "JA",
+          section: "BSN 3C",
+          studentId: "22-6102-719",
+          site: "VSMMC",
+          dutyDate: "April 25, 2026",
+          approvedAt: "April 26, 2026, 8:30 AM",
+          type: "Attendance",
+          title: "Family emergency arrival adjustment",
+          reason: "Student requested attendance consideration after notifying the CI before shift start.",
+          ciNote: "CI call log and endorsed arrival record were reviewed before approval.",
+          result: "Arrival adjustment approved and reflected in attendance monitoring."
+        },
+        {
+          id: "appeal-zander-weather",
+          student: "Zander Aligato",
+          initials: "ZA",
+          section: "BSN 3B",
+          studentId: "21-7740-118",
+          site: "CCMC",
+          dutyDate: "April 27, 2026",
+          approvedAt: "April 28, 2026, 10:15 AM",
+          type: "Attendance",
+          title: "Late clock-in during heavy rain advisory",
+          reason: "Student arrived late after road closures delayed public transport from Talamban.",
+          ciNote: "Barangay traffic advisory and CI arrival note supported the appeal.",
+          result: "Late clock-in was accepted with approved appeal documentation."
+        },
+        {
+          id: "appeal-maria-bus-late",
+          student: "Maria Cruz",
+          initials: "MC",
+          section: "BSN 3A",
+          studentId: "12-3456-789",
+          site: "CCMC",
+          dutyDate: "April 29, 2026",
+          approvedAt: "April 29, 2026, 2:45 PM",
+          type: "Attendance",
+          title: "Late arrival due to bus delay",
+          reason: "CIT-U shuttle was delayed after traffic rerouting near the hospital entrance.",
+          ciNote: "Transport advisory and arrival photo timestamp were attached.",
+          result: "Attendance consideration approved for the affected duty day."
+        },
+        {
+          id: "appeal-nicole-case",
+          student: "Nicole Dela Pena",
+          initials: "ND",
+          section: "BSN 3A",
+          studentId: "23-1023-441",
+          site: "CCMC",
+          dutyDate: "April 26, 2026",
+          approvedAt: "April 27, 2026, 9:05 AM",
+          type: "Clinical case",
+          title: "Returned case clarification",
+          reason: "Student contested the returned medication administration case and added missing checklist context.",
+          ciNote: "Revised procedure note and medication safety checklist were reviewed.",
+          result: "Clinical case appeal approved for final validation review."
+        }
+      ];
+
+      if (!one("[data-admin-approved-appeals-style]")) {
+        const style = document.createElement("style");
+        style.dataset.adminApprovedAppealsStyle = "true";
+        style.textContent = `
+          .admin-approved-appeals-workspace {
+            gap: 1rem;
+          }
+
+          .admin-approved-appeals-panel {
+            display: grid;
+            grid-template-columns: minmax(300px, 0.9fr) minmax(0, 1.3fr);
+            gap: 1rem;
+          }
+
+          .admin-approved-appeals-list,
+          .admin-approved-appeal-detail {
+            min-width: 0;
+          }
+
+          .approved-appeal-list {
+            display: grid;
+            gap: 0.75rem;
+          }
+
+          .approved-appeal-item {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.9rem;
+            border: 1px solid #dbe3ee;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #111827;
+            text-align: left;
+            cursor: pointer;
+          }
+
+          .approved-appeal-item:hover,
+          .approved-appeal-item:focus-visible,
+          .approved-appeal-item.is-active {
+            border-color: rgba(138, 37, 44, 0.42);
+            background: #fff7d6;
+          }
+
+          .approved-appeal-item strong,
+          .admin-approved-appeal-detail strong {
+            color: #111827;
+          }
+
+          .approved-appeal-item small {
+            display: block;
+            margin-top: 0.2rem;
+            color: #667085;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+          }
+
+          .approved-appeal-detail-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5eaf1;
+          }
+
+          .approved-appeal-detail-title {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 0;
+          }
+
+          .approved-appeal-detail-title h3 {
+            margin: 0.15rem 0 0;
+            color: #111827;
+            font-size: 1.28rem;
+            line-height: 1.2;
+          }
+
+          .approved-appeal-facts,
+          .approved-appeal-notes {
+            display: grid;
+            gap: 0.75rem;
+          }
+
+          .approved-appeal-facts {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            margin-bottom: 1rem;
+          }
+
+          .approved-appeal-fact,
+          .approved-appeal-note {
+            min-width: 0;
+            padding: 0.9rem;
+            border: 1px solid #e5eaf1;
+            border-radius: 8px;
+            background: #f8fafc;
+          }
+
+          .approved-appeal-fact span,
+          .approved-appeal-note span {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: #667085;
+            font-size: 0.76rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }
+
+          .approved-appeal-note p {
+            margin: 0;
+            color: #334155;
+            font-weight: 750;
+            line-height: 1.55;
+          }
+
+          @media (max-width: 900px) {
+            .admin-approved-appeals-panel,
+            .approved-appeal-facts {
+              grid-template-columns: 1fr;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      setText(".topbar-title p", "Admin Workspace");
+      setText(".topbar-title h1", "Approved Appeals");
+      setText("#appeal-sync-pill", `${approvedAppeals.length} approved`);
+      document.title = "NurseTrack | Approved Appeals";
+
+      const main = one("main.workspace");
+      if (!main) {
+        return;
+      }
+
+      main.className = "workspace admin-approved-appeals-workspace";
+      main.innerHTML = `
+        <section class="admin-approved-appeals-panel">
+          <article class="workspace-panel admin-approved-appeals-list">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Approved Appeals</p>
+                <h2>Approved Appeal List</h2>
+              </div>
+              <span class="status-badge status-verified">${approvedAppeals.length} approved</span>
+            </div>
+
+            <div class="approved-appeal-list" id="admin-approved-appeal-list">
+              ${approvedAppeals.map((appeal, index) => `
+                <button class="approved-appeal-item${index === 0 ? " is-active" : ""}" type="button" data-approved-appeal="${appeal.id}">
+                  <span class="avatar small-avatar">${appeal.initials}</span>
+                  <span>
+                    <strong>${appeal.student}</strong>
+                    <small>${appeal.type} - ${appeal.section} - ${appeal.dutyDate}</small>
+                  </span>
+                  <mark class="status-badge status-verified">Approved</mark>
+                </button>
+              `).join("")}
+            </div>
+          </article>
+
+          <article class="workspace-panel admin-approved-appeal-detail" id="admin-approved-appeal-detail"></article>
+        </section>
+      `;
+
+      const detail = one("#admin-approved-appeal-detail");
+      const renderDetail = (appeal) => {
+        if (!detail) {
+          return;
+        }
+
+        detail.innerHTML = `
+          <div class="approved-appeal-detail-header">
+            <div class="approved-appeal-detail-title">
+              <span class="avatar">${appeal.initials}</span>
+              <div>
+                <p class="section-kicker">${appeal.type}</p>
+                <h3>${appeal.title}</h3>
+              </div>
+            </div>
+            <span class="status-badge status-verified">Approved</span>
+          </div>
+
+          <div class="approved-appeal-facts">
+            <div class="approved-appeal-fact">
+              <span>Student</span>
+              <strong>${appeal.student}</strong>
+              <p>${appeal.studentId} - ${appeal.section}</p>
+            </div>
+            <div class="approved-appeal-fact">
+              <span>Duty</span>
+              <strong>${appeal.dutyDate}</strong>
+              <p>${appeal.site}</p>
+            </div>
+            <div class="approved-appeal-fact">
+              <span>Approved</span>
+              <strong>${appeal.approvedAt}</strong>
+              <p>Final admin view</p>
+            </div>
+          </div>
+
+          <div class="approved-appeal-notes">
+            <div class="approved-appeal-note">
+              <span>Student Reason</span>
+              <p>${appeal.reason}</p>
+            </div>
+            <div class="approved-appeal-note">
+              <span>CI Recommendation Detail</span>
+              <p>${appeal.ciNote}</p>
+            </div>
+            <div class="approved-appeal-note">
+              <span>Approved Result</span>
+              <p>${appeal.result}</p>
+            </div>
+          </div>
+        `;
+      };
+
+      renderDetail(approvedAppeals[0]);
+
+      one("#admin-approved-appeal-list")?.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-approved-appeal]");
+        if (!button) {
+          return;
+        }
+
+        all("[data-approved-appeal]").forEach((item) => {
+          item.classList.toggle("is-active", item === button);
+        });
+
+        const appeal = approvedAppeals.find((item) => item.id === button.dataset.approvedAppeal);
+        if (appeal) {
+          renderDetail(appeal);
+        }
+      });
+    };
+
+    const enhanceCiRecommendationsFlow = () => {
+      if (page !== "student-appeals.html" || !(isChair || isInstructor || isAdminExperience)) {
+        return;
+      }
+
+      const students = [
+        {
+          slug: "maria-cruz",
+          name: "Maria Cruz",
+          initials: "MC",
+          id: "12-3456-789",
+          section: "BSN 3A",
+          area: "Emergency Room",
+          status: "Pending review",
+          badge: "status-pending",
+          appeals: [
+            {
+              type: "Attendance",
+              title: "Late arrival due to bus delay",
+              dutyDate: "April 29, 2026",
+              site: "CCMC",
+              submitted: "Today, 7:48 AM",
+              reason: "CIT-U shuttle was delayed after traffic rerouting near the hospital entrance.",
+              recommendation: "CI recommends accepting the appeal because transport evidence and arrival timestamp were attached."
+            }
+          ],
+          history: [
+            {
+              type: "Attendance",
+              title: "Excused tardiness request",
+              dutyDate: "April 12, 2026",
+              site: "CCMC",
+              submitted: "April 12, 2026, 8:04 AM",
+              status: "accepted",
+              reason: "Student submitted a transport delay notice before the duty shift ended.",
+              recommendation: "CI recommended acceptance after verifying the timestamped notice."
+            }
+          ]
+        },
+        {
+          slug: "treasure-abadinas",
+          name: "Treasure Abadinas",
+          initials: "TA",
+          id: "22-1845-103",
+          section: "BSN 3A",
+          area: "Delivery Room",
+          status: "Pending review",
+          badge: "status-pending",
+          appeals: [
+            {
+              type: "Schedule",
+              title: "Schedule conflict with reassigned duty area",
+              dutyDate: "April 28, 2026",
+              site: "CCMC",
+              submitted: "Today, 9:12 AM",
+              reason: "Student was moved from Emergency Room to Delivery Room after the printed roster was shared.",
+              recommendation: "CI recommends accepting the appeal based on the updated duty roster screenshot."
+            },
+            {
+              type: "Attendance",
+              title: "Manual scan review after area transfer",
+              dutyDate: "April 30, 2026",
+              site: "CCMC",
+              submitted: "Today, 10:35 AM",
+              reason: "Student requested review after the scanner was unavailable during transfer from ER to DR.",
+              recommendation: "CI recommends accepting the appeal after confirming the area transfer with the duty roster."
+            }
+          ],
+          history: [
+            {
+              type: "Schedule",
+              title: "Shift swap documentation",
+              dutyDate: "April 18, 2026",
+              site: "CCMC",
+              submitted: "April 18, 2026, 6:30 PM",
+              status: "accepted",
+              reason: "Student requested validation of an approved shift swap after the roster was updated.",
+              recommendation: "CI recommended acceptance because the swap was endorsed before the shift."
+            },
+            {
+              type: "Attendance",
+              title: "Missed first scan correction",
+              dutyDate: "April 10, 2026",
+              site: "CCMC",
+              submitted: "April 10, 2026, 7:15 AM",
+              status: "rejected",
+              reason: "Student asked to correct a missed first scan without supporting duty area confirmation.",
+              recommendation: "CI recommended rejection because the arrival could not be verified."
+            }
+          ]
+        },
+        {
+          slug: "zander-aligato",
+          name: "Zander Aligato",
+          initials: "ZA",
+          id: "21-7740-118",
+          section: "BSN 3B",
+          area: "Emergency Room",
+          status: "Recommended",
+          badge: "status-pending",
+          appeals: [
+            {
+              type: "Attendance",
+              title: "Late clock-in during heavy rain advisory",
+              dutyDate: "April 27, 2026",
+              site: "CCMC",
+              submitted: "Yesterday, 5:20 PM",
+              reason: "Student arrived late after road closures delayed public transport from Talamban.",
+              recommendation: "CI recommends accepting the appeal with the barangay advisory and CI arrival note."
+            }
+          ],
+          history: [
+            {
+              type: "Attendance",
+              title: "Prior road closure adjustment",
+              dutyDate: "April 15, 2026",
+              site: "CCMC",
+              submitted: "April 15, 2026, 7:44 AM",
+              status: "accepted",
+              reason: "Student submitted a city traffic advisory for delayed public transport.",
+              recommendation: "CI recommended acceptance after matching the advisory with the duty time."
+            }
+          ]
+        },
+        {
+          slug: "nicole-dela-pena",
+          name: "Nicole Dela Pena",
+          initials: "ND",
+          id: "23-1023-441",
+          section: "BSN 3A",
+          area: "Medical Ward",
+          status: "Pending review",
+          badge: "status-pending",
+          appeals: [
+            {
+              type: "Clinical case",
+              title: "Returned case clarification",
+              dutyDate: "April 26, 2026",
+              site: "CCMC",
+              submitted: "April 26, 2026, 6:18 PM",
+              reason: "Student contested the returned medication administration case and added missing checklist context.",
+              recommendation: "CI recommends accepting the clarification after reviewing the revised procedure note."
+            }
+          ],
+          history: [
+            {
+              type: "Clinical case",
+              title: "Medication checklist clarification",
+              dutyDate: "April 17, 2026",
+              site: "CCMC",
+              submitted: "April 17, 2026, 5:52 PM",
+              status: "accepted",
+              reason: "Student clarified missing checklist context after CI returned the clinical case.",
+              recommendation: "CI recommended acceptance after the revised checklist was attached."
+            }
+          ]
+        },
+        {
+          slug: "janine-aquino",
+          name: "Janine Aquino",
+          initials: "JA",
+          id: "22-6102-719",
+          section: "BSN 3C",
+          area: "Delivery Room",
+          status: "Accepted",
+          badge: "status-verified",
+          appeals: [
+            {
+              type: "Attendance",
+              title: "Family emergency arrival adjustment",
+              dutyDate: "April 25, 2026",
+              site: "VSMMC",
+              submitted: "April 25, 2026, 4:42 PM",
+              reason: "Student requested attendance consideration after notifying the CI before shift start.",
+              recommendation: "CI recommends acceptance because the call log and endorsed arrival record were verified."
+            }
+          ],
+          history: [
+            {
+              type: "Attendance",
+              title: "Clinic arrival correction",
+              dutyDate: "April 14, 2026",
+              site: "VSMMC",
+              submitted: "April 14, 2026, 8:20 AM",
+              status: "accepted",
+              reason: "Student requested correction after the CI confirmed a scanner sync delay.",
+              recommendation: "CI recommended acceptance because the ward log matched the arrival time."
+            }
+          ]
+        }
+      ];
+
+      const selectedSlug = new URLSearchParams(window.location.search).get("student") || "";
+      const selectedHistoryParam = new URLSearchParams(window.location.search).get("history");
+      const selectedHistoryIndex = selectedHistoryParam === null ? NaN : Number(selectedHistoryParam);
+      const selectedStudent = students.find((student) => student.slug === selectedSlug);
+      const title = isInstructor && !isAdminExperience ? "Student Appeals" : "CI Recommendations";
+      const storageKey = "nursetrack-ci-recommendation-decisions";
+
+      const decisionMap = (() => {
+        try {
+          return JSON.parse(window.localStorage.getItem(storageKey) || "{}");
+        } catch (error) {
+          return {};
+        }
+      })();
+
+      const decisionFor = (student, index) => (
+        decisionMap[`${student.slug}-${index}`] ||
+        (student.status === "Accepted" ? "accepted" : student.status === "Rejected" ? "rejected" : "")
+      );
+
+      const decisionLabel = (decision) => decision === "accepted" ? "Accepted" : decision === "rejected" ? "Rejected" : "CI Recommended";
+      const decisionBadge = (decision) => decision === "accepted" ? "status-verified" : decision === "rejected" ? "status-rejected" : "status-pending";
+      const possessiveName = (name) => `${name}${/s$/i.test(name) ? "'" : "'s"}`;
+
+      if (!one("[data-ci-recommendations-style]")) {
+        const style = document.createElement("style");
+        style.dataset.ciRecommendationsStyle = "true";
+        style.textContent = `
+          .student-progress-pick-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: #ffffff;
+          }
+
+          .student-progress-pick-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 0;
+            box-shadow: none;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.2s;
+          }
+
+          .student-progress-pick-card:hover,
+          .student-progress-pick-card:focus-visible {
+            background-color: #f8fafc;
+          }
+
+          .student-progress-pick-card:last-child {
+            border-bottom: none;
+          }
+
+          .student-progress-pick-card > span:nth-child(2) {
+            flex: 1;
+            margin-left: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+            min-width: 0;
+          }
+
+          .student-progress-pick-card small {
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 800;
+          }
+
+          .ci-recommendation-detail-stack {
+            display: grid;
+            gap: 1rem;
+          }
+
+          .student-progress-search-panel .panel-heading .section-kicker {
+            margin-bottom: 0.45rem;
+          }
+
+          .ci-recommendation-carousel {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) 48px;
+            align-items: center;
+            gap: 0.75rem;
+          }
+
+          .ci-recommendation-carousel.is-single {
+            grid-template-columns: minmax(0, 1fr);
+          }
+
+          .ci-recommendation-carousel-track {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+          }
+
+          .ci-recommendation-carousel-track .ci-recommendation-card {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+          }
+
+          .ci-recommendation-arrow {
+            width: 44px;
+            min-width: 44px;
+            height: 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: #ffffff;
+            color: #111827;
+            font-size: 1.35rem;
+            font-weight: 900;
+            line-height: 1;
+            cursor: pointer;
+          }
+
+          .ci-recommendation-arrow:hover,
+          .ci-recommendation-arrow:focus-visible {
+            border-color: rgba(138, 37, 44, 0.42);
+            background: #fff7d6;
+          }
+
+          .ci-recommendation-card {
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: #ffffff;
+            font-family: inherit;
+          }
+
+          .ci-recommendation-card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 0.9rem;
+            border-bottom: 1px solid #e2e8f0;
+          }
+
+          .ci-recommendation-facts,
+          .ci-recommendation-notes {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 0.9rem;
+          }
+
+          .ci-recommendation-facts {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+
+          .ci-recommendation-box {
+            padding: 0.85rem;
+            border: 1px solid #e5eaf1;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+            font-family: inherit;
+          }
+
+          .ci-recommendation-box span {
+            display: block;
+            margin-bottom: 0.35rem;
+            color: #64748b;
+            font-size: 0.76rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+          }
+
+          .ci-recommendation-box p,
+          .ci-recommendation-box strong {
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+          }
+
+          .ci-recommendation-box p {
+            margin: 0;
+            color: #334155;
+            font-weight: 800;
+          }
+
+          .ci-recommendation-box strong {
+            color: #111827;
+            font-weight: 850;
+          }
+
+          .ci-recommendation-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1rem;
+          }
+
+          .ci-recommendation-actions .ghost-button,
+          .ci-recommendation-actions .primary-button {
+            min-height: 54px;
+            padding: 0.95rem 1.35rem;
+            border-radius: 0.5rem;
+            line-height: 1.15;
+            white-space: nowrap;
+          }
+
+          .ci-recommendation-actions .primary-button {
+            min-width: 250px;
+          }
+
+          .ci-recommendation-actions .ghost-button {
+            min-width: 205px;
+          }
+
+          .ci-recommendation-history-list-panel {
+            margin-top: 1rem;
+          }
+
+          .ci-recommendation-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: #ffffff;
+          }
+
+          .ci-recommendation-history-item {
+            display: grid;
+            grid-template-columns: 44px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.35rem 1.6rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: inherit;
+            text-decoration: none;
+            background: #ffffff;
+          }
+
+          .ci-recommendation-history-item:last-child {
+            border-bottom: none;
+          }
+
+          .ci-recommendation-history-item:hover,
+          .ci-recommendation-history-item:focus-visible,
+          .ci-recommendation-history-item.is-active {
+            background: #fffdf2;
+          }
+
+          .ci-recommendation-history-item .avatar {
+            box-shadow: 0 8px 18px rgba(255, 207, 1, 0.28);
+          }
+
+          .ci-recommendation-history-item > span:nth-child(2) {
+            display: grid;
+            gap: 0.32rem;
+            min-width: 0;
+          }
+
+          .ci-recommendation-history-item strong {
+            color: #111827;
+            font-size: 1rem;
+            line-height: 1.3;
+          }
+
+          .ci-recommendation-history-item small {
+            display: block;
+            color: #64748b;
+            font-size: 0.875rem;
+            font-weight: 800;
+            line-height: 1.45;
+          }
+
+          .ci-recommendation-history-item small:first-of-type {
+            color: #415a7a;
+          }
+
+          .ci-recommendation-history-detail {
+            display: grid;
+            gap: 0.75rem;
+            margin-top: 1rem;
+          }
+
+          @media (max-width: 760px) {
+            .student-progress-pick-card {
+              align-items: flex-start;
+              gap: 0.75rem;
+              padding: 1rem;
+            }
+
+            .student-progress-pick-card > span:nth-child(2) {
+              margin-left: 0;
+            }
+
+            .ci-recommendation-facts {
+              grid-template-columns: 1fr;
+            }
+
+            .ci-recommendation-actions {
+              flex-direction: column;
+              align-items: stretch;
+            }
+
+          .ci-recommendation-actions .ghost-button,
+          .ci-recommendation-actions .primary-button {
+            width: 100%;
+            min-width: 0;
+          }
+
+          .ci-recommendation-history-item {
+            grid-template-columns: 44px minmax(0, 1fr);
+            padding: 1rem;
+          }
+
+            .ci-recommendation-history-item .status-badge {
+              grid-column: 2;
+              justify-self: start;
+            }
+
+            .ci-recommendation-carousel {
+              grid-template-columns: 1fr;
+            }
+
+            .ci-recommendation-arrow {
+              display: none;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      setText(".topbar-title h1", title);
+      if (isAdminExperience) {
+        setText(".topbar-title p", "Admin Workspace");
+      }
+      setText("#appeal-sync-pill", `${students.length} students`);
+      document.title = `NurseTrack | ${title}`;
+
+      const main = one("main.workspace");
+      if (!main) {
+        return;
+      }
+
+      main.className = "workspace instructor-student-workspace";
+
+      if (!selectedStudent) {
+        main.innerHTML = `
+          <section class="workspace-panel student-progress-search-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Student Appeal List</h2>
+              </div>
+              <span class="status-badge status-verified" id="ci-recommendation-count">${students.length} visible</span>
+            </div>
+
+            <div class="history-filters student-progress-filters" aria-label="CI recommendation filters">
+              <label class="form-label" for="ci-recommendation-search">
+                Search
+                <input id="ci-recommendation-search" type="search" placeholder="Search name, student ID, section, or duty area">
+              </label>
+
+              <label class="form-label" for="ci-recommendation-section">
+                Section
+                <select id="ci-recommendation-section">
+                  <option value="all">All sections</option>
+                  <option value="BSN 3A">BSN 3A</option>
+                  <option value="BSN 3B">BSN 3B</option>
+                  <option value="BSN 3C">BSN 3C</option>
+                </select>
+              </label>
+
+              <label class="form-label" for="ci-recommendation-status">
+                Status
+                <select id="ci-recommendation-status">
+                  <option value="all">All statuses</option>
+                  <option value="Pending review">Pending review</option>
+                  <option value="Recommended">Recommended</option>
+                  <option value="Accepted">Accepted</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="student-progress-pick-list" id="ci-recommendation-student-list">
+              ${students.map((student) => `
+                <a class="student-progress-pick-card" href="student-appeals.html?student=${student.slug}" data-ci-recommendation-card data-name="${student.name}" data-id="${student.id}" data-section="${student.section}" data-area="${student.area}" data-status="${student.status}">
+                  <span class="avatar small-avatar">${student.initials}</span>
+                  <span>
+                    <strong>${student.name}</strong>
+                    <small>${student.section} - ${student.id} - ${student.area}</small>
+                    <small>${student.appeals.length} appeal${student.appeals.length === 1 ? "" : "s"} for review</small>
+                  </span>
+                  <mark class="status-badge ${student.badge}">${student.status}</mark>
+                </a>
+              `).join("")}
+            </div>
+
+            <div id="ci-recommendation-empty" class="empty-state" hidden>No matching students found.</div>
+          </section>
+        `;
+
+        const cards = all("[data-ci-recommendation-card]");
+        const search = one("#ci-recommendation-search");
+        const section = one("#ci-recommendation-section");
+        const status = one("#ci-recommendation-status");
+        const count = one("#ci-recommendation-count");
+        const empty = one("#ci-recommendation-empty");
+
+        const filterCards = () => {
+          const query = search?.value.trim().toLowerCase() || "";
+          const sectionValue = section?.value || "all";
+          const statusValue = status?.value || "all";
+          let visible = 0;
+
+          cards.forEach((card) => {
+            const haystack = `${card.dataset.name} ${card.dataset.id} ${card.dataset.section} ${card.dataset.area}`.toLowerCase();
+            const matches = (!query || haystack.includes(query)) &&
+              (sectionValue === "all" || card.dataset.section === sectionValue) &&
+              (statusValue === "all" || card.dataset.status === statusValue);
+            card.hidden = !matches;
+            if (matches) {
+              visible += 1;
+            }
+          });
+
+          setText("#ci-recommendation-count", `${visible} visible`);
+          if (empty) {
+            empty.hidden = visible > 0;
+          }
+        };
+
+        [search, section, status].forEach((control) => {
+          control?.addEventListener("input", filterCards);
+          control?.addEventListener("change", filterCards);
+        });
+        filterCards();
+        return;
+      }
+
+      const selectedCurrentAppeals = selectedStudent.appeals
+        .map((appeal, index) => ({ appeal, index, decision: decisionFor(selectedStudent, index) }))
+        .filter((item) => !["accepted", "rejected"].includes(item.decision));
+      const selectedHistoryItems = [
+        ...(selectedStudent.history || []).map((appeal, index) => ({
+          appeal,
+          index,
+          id: `${selectedStudent.slug}-history-${index}`,
+          decision: decisionMap[`${selectedStudent.slug}-history-${index}`] || (appeal.status === "rejected" ? "rejected" : "accepted"),
+          source: "history"
+        })),
+        ...selectedStudent.appeals
+          .map((appeal, index) => ({ appeal, index, id: `${selectedStudent.slug}-${index}`, decision: decisionFor(selectedStudent, index), source: "current" }))
+          .filter((item) => ["accepted", "rejected"].includes(item.decision))
+      ];
+      const selectedHistoryItem = Number.isInteger(selectedHistoryIndex) ? selectedHistoryItems[selectedHistoryIndex] : null;
+
+      if (selectedHistoryItem) {
+        main.innerHTML = `
+          <section class="workspace-panel student-progress-search-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">${selectedStudent.section} - ${selectedStudent.id}</p>
+                <h2>${possessiveName(selectedStudent.name)} Appeal History</h2>
+              </div>
+              <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision)}</mark>
+            </div>
+
+            <article class="ci-recommendation-card">
+              <div class="ci-recommendation-card-head">
+                <div>
+                  <p class="section-kicker">${selectedHistoryItem.appeal.type}</p>
+                  <h3>${selectedHistoryItem.appeal.title}</h3>
+                </div>
+                <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision)}</mark>
+              </div>
+
+              <div class="ci-recommendation-facts">
+                <div class="ci-recommendation-box">
+                  <span>Duty date</span>
+                  <strong>${selectedHistoryItem.appeal.dutyDate}</strong>
+                </div>
+                <div class="ci-recommendation-box">
+                  <span>Clinical site</span>
+                  <strong>${selectedHistoryItem.appeal.site}</strong>
+                </div>
+                <div class="ci-recommendation-box">
+                  <span>Submitted</span>
+                  <strong>${selectedHistoryItem.appeal.submitted}</strong>
+                </div>
+              </div>
+
+              <div class="ci-recommendation-notes">
+                <div class="ci-recommendation-box">
+                  <span>Student Appeal</span>
+                  <p>${selectedHistoryItem.appeal.reason}</p>
+                </div>
+                <div class="ci-recommendation-box">
+                  <span>CI Recommendation</span>
+                  <p>${selectedHistoryItem.appeal.recommendation}</p>
+                </div>
+              </div>
+
+              ${isAdminExperience || isChair ? `
+                <div class="ci-recommendation-actions">
+                  <button class="ghost-button" type="button" data-ci-history-edit> Edit Decision </button>
+                  <button class="ghost-button" type="button" data-ci-history-cancel hidden>Cancel</button>
+                  <button class="ghost-button danger-button" type="button" data-ci-history-decision="rejected" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Rejected</button>
+                  <button class="primary-button workspace-action" type="button" data-ci-history-decision="accepted" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Accepted</button>
+                </div>
+              ` : ""}
+            </article>
+          </section>
+        `;
+
+        one("[data-ci-history-edit]")?.addEventListener("click", (event) => {
+          event.currentTarget.hidden = true;
+          one("[data-ci-history-cancel]")?.removeAttribute("hidden");
+          all("[data-ci-history-decision]").forEach((button) => {
+            button.hidden = false;
+          });
+        });
+
+        one("[data-ci-history-cancel]")?.addEventListener("click", (event) => {
+          event.currentTarget.hidden = true;
+          one("[data-ci-history-edit]")?.removeAttribute("hidden");
+          all("[data-ci-history-decision]").forEach((button) => {
+            button.hidden = true;
+          });
+        });
+
+        all("[data-ci-history-decision]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const id = button.dataset.ciHistoryId;
+            const decision = button.dataset.ciHistoryDecision;
+            decisionMap[id] = decision;
+
+            try {
+              window.localStorage.setItem(storageKey, JSON.stringify(decisionMap));
+            } catch (error) {
+              return;
+            }
+
+            all(".status-badge").forEach((item) => {
+              if (item.textContent.trim() === "Accepted" || item.textContent.trim() === "Rejected") {
+                item.className = `status-badge ${decisionBadge(decision)}`;
+                item.textContent = decisionLabel(decision);
+              }
+            });
+          });
+        });
+        return;
+      }
+
+      main.innerHTML = `
+        <section class="workspace-panel student-progress-search-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker">${selectedStudent.section} - ${selectedStudent.id}</p>
+              <h2>${possessiveName(selectedStudent.name)} Appeals</h2>
+            </div>
+          </div>
+
+          ${selectedCurrentAppeals.length ? `
+            <div class="ci-recommendation-carousel${selectedCurrentAppeals.length > 1 ? "" : " is-single"}">
+              ${selectedCurrentAppeals.length > 1 ? `<button class="ci-recommendation-arrow" type="button" data-ci-slide="prev" aria-label="Previous appeal">‹</button>` : ""}
+              <div class="ci-recommendation-carousel-track" data-ci-recommendation-track>
+                ${selectedCurrentAppeals.map(({ appeal, index, decision }) => {
+              const badgeText = decisionLabel(decision);
+              const badgeClass = decisionBadge(decision);
+
+              return `
+                <article class="ci-recommendation-card" data-ci-appeal-card="${selectedStudent.slug}-${index}">
+                  <div class="ci-recommendation-card-head">
+                    <div>
+                      <p class="section-kicker">${appeal.type}</p>
+                      <h3>${appeal.title}</h3>
+                    </div>
+                    <mark class="status-badge ${badgeClass}" data-ci-decision-badge>${badgeText}</mark>
+                  </div>
+
+                  <div class="ci-recommendation-facts">
+                    <div class="ci-recommendation-box">
+                      <span>Duty date</span>
+                      <strong>${appeal.dutyDate}</strong>
+                    </div>
+                    <div class="ci-recommendation-box">
+                      <span>Clinical site</span>
+                      <strong>${appeal.site}</strong>
+                    </div>
+                    <div class="ci-recommendation-box">
+                      <span>Submitted</span>
+                      <strong>${appeal.submitted}</strong>
+                    </div>
+                  </div>
+
+                  <div class="ci-recommendation-notes">
+                    <div class="ci-recommendation-box">
+                      <span>Student Appeal</span>
+                      <p>${appeal.reason}</p>
+                    </div>
+                    <div class="ci-recommendation-box">
+                      <span>CI Recommendation</span>
+                      <p>${appeal.recommendation}</p>
+                    </div>
+                  </div>
+
+                  <div class="ci-recommendation-actions">
+                    <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Reject Recommendation</button>
+                    <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Accept CI Recommendation</button>
+                  </div>
+                </article>
+              `;
+                }).join("")}
+              </div>
+              ${selectedCurrentAppeals.length > 1 ? `<button class="ci-recommendation-arrow" type="button" data-ci-slide="next" aria-label="Next appeal">›</button>` : ""}
+            </div>
+          ` : `<div class="empty-state">No unchecked CI recommendations for this student.</div>`}
+        </section>
+
+        <section class="workspace-panel ci-recommendation-history-list-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>${possessiveName(selectedStudent.name)} Appeal History</h2>
+            </div>
+            <span class="status-badge status-verified">${selectedHistoryItems.length} records</span>
+          </div>
+
+          ${selectedHistoryItems.length ? `
+            <div class="ci-recommendation-history-list">
+              ${selectedHistoryItems.map((item, historyIndex) => `
+                <a class="ci-recommendation-history-item" href="student-appeals.html?student=${selectedStudent.slug}&history=${historyIndex}">
+                  <span class="avatar small-avatar">${selectedStudent.initials}</span>
+                  <span>
+                    <strong>${item.appeal.title}</strong>
+                    <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site}</small>
+                    <small>Submitted ${item.appeal.submitted}</small>
+                  </span>
+                  <mark class="status-badge ${decisionBadge(item.decision)}">${decisionLabel(item.decision)}</mark>
+                </a>
+              `).join("")}
+            </div>
+          ` : `<div class="empty-state">No accepted or rejected appeals for this student yet.</div>`}
+        </section>
+      `;
+
+      all("[data-ci-decision]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.ciDecisionId;
+          const decision = button.dataset.ciDecision;
+          const card = button.closest("[data-ci-appeal-card]");
+          const badge = card?.querySelector("[data-ci-decision-badge]");
+
+          decisionMap[id] = decision;
+          try {
+            window.localStorage.setItem(storageKey, JSON.stringify(decisionMap));
+          } catch (error) {
+            return;
+          }
+
+          if (badge) {
+            badge.className = `status-badge ${decision === "accepted" ? "status-verified" : "status-rejected"}`;
+            badge.textContent = decision === "accepted" ? "Accepted" : "Rejected";
+          }
+        });
+      });
+
+      all("[data-ci-slide]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const track = one("[data-ci-recommendation-track]");
+          if (!track) {
+            return;
+          }
+
+          const direction = button.dataset.ciSlide === "next" ? 1 : -1;
+          track.scrollBy({
+            left: direction * track.clientWidth,
+            behavior: "smooth"
+          });
+        });
+      });
+
     };
 
     const insertAfterHero = (key, markup) => {
@@ -347,7 +1636,7 @@
         return;
       }
 
-      const href = isStudent || isChair || isInstructor ? "about.html" : isAdmin ? "../about.html" : "about.html";
+      const href = isAdminExperience ? hrefFor("admin", "about.html") : "about.html";
 
       if (brand.tagName.toLowerCase() === "a") {
         brand.setAttribute("href", href);
@@ -564,7 +1853,7 @@
     };
 
     const enhanceChairTerminology = () => {
-      if (!isChair) {
+      if (!isChair || isAdminExperience) {
         return;
       }
 
@@ -1100,6 +2389,7 @@
       return;
     }
 
+    enhanceCiRecommendationsFlow();
     enhanceChairTerminology();
     enhanceChairSchedules();
     enhanceUserImportPages();
@@ -1111,6 +2401,10 @@
     enhanceAttendanceMonitoring();
     enhanceInstructorScheduling();
     removeStudentDutyHours();
+
+    if (isAdminExperience) {
+      applyAdminIdentity();
+    }
   };
 
   if (document.readyState === "loading") {

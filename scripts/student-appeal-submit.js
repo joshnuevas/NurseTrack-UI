@@ -88,7 +88,6 @@ function buildAppealCard(formData) {
   const reason = escapeHtml(String(formData.get("reason") || "").trim());
   const evidence = escapeHtml(String(formData.get("evidence") || "").trim());
   const relatedDate = formatDate(String(formData.get("dutyDate") || ""));
-  const reference = escapeHtml(String(formData.get("reference") || "").trim());
   const ci = escapeHtml(String(formData.get("recommendedByCi") || "").trim());
 
   return `
@@ -128,10 +127,6 @@ function buildAppealCard(formData) {
           <div>
             <span>Duty area</span>
             <strong>${area}</strong>
-          </div>
-          <div>
-            <span>Reference</span>
-            <strong>${reference || "Not provided"}</strong>
           </div>
         </div>
 
