@@ -722,7 +722,7 @@
                   </span>
                 </div>
 
-                <div class="user-row" data-role="instructor" data-status="active" data-section="Ward B">
+                <div class="user-row" data-role="instructor" data-status="active">
                   <span>
                     <strong>Prof. Reyes</strong>
                     <small>reyes@cit.edu</small>
@@ -939,12 +939,6 @@
                   <option value="BSN 3B">BSN 3B</option>
                   <option value="BSN 4A">BSN 4A</option>
                   <option value="BSN 4B">BSN 4B</option>
-                  <option value="Ward A">Ward A</option>
-                  <option value="Ward B">Ward B</option>
-                  <option value="Ward C">Ward C</option>
-                  <option value="Nursing Office">Nursing Office</option>
-                  <option value="Admin Office">Admin Office</option>
-                  <option value="System Admin">System Admin</option>
                 </select>
               </label>
 
@@ -998,6 +992,26 @@
             </form>
           </section>
         </div>
+
+        <div class="modal-backdrop" id="reset-password-modal" hidden>
+          <section class="modal-card status-modal-card" role="dialog" aria-modal="true" aria-labelledby="reset-password-title">
+            <div class="modal-heading">
+              <button class="ghost-button modal-back-button" type="button" data-back-to-actions aria-label="Back to account actions"></button>
+              <div>
+                <p class="section-kicker">Password Reset</p>
+                <h2 id="reset-password-title">Confirm Password Reset</h2>
+              </div>
+              <button class="icon-button modal-close" type="button" data-close-reset-modal aria-label="Close modal"></button>
+            </div>
+
+            <p class="modal-copy" id="reset-password-copy">Are you sure you want to reset this password?</p>
+
+            <div class="status-modal-actions">
+              <button class="ghost-button" type="button" data-back-to-actions>Back</button>
+              <button class="primary-button" type="button" id="confirm-reset-password">Reset Password</button>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
 
@@ -1015,9 +1029,12 @@
       const userActionModal = document.querySelector("#user-action-modal");
       const editUserModal = document.querySelector("#edit-user-modal");
       const statusUserModal = document.querySelector("#status-user-modal");
+      const resetPasswordModal = document.querySelector("#reset-password-modal");
       const accountActionSummary = document.querySelector("#account-action-summary");
       const actionButtons = Array.from(document.querySelectorAll("[data-account-action]"));
       const confirmUserAction = document.querySelector("#confirm-user-action");
+      const resetPasswordCopy = document.querySelector("#reset-password-copy");
+      const confirmResetPassword = document.querySelector("#confirm-reset-password");
 
       const editUserForm = document.querySelector("#edit-user-form");
       const editName = document.querySelector("#edit-name");
@@ -1044,12 +1061,14 @@
         userActionModal.hidden = true;
         editUserModal.hidden = true;
         statusUserModal.hidden = true;
+        resetPasswordModal.hidden = true;
         document.body.classList.remove("modal-open");
       }
 
       function backToActions() {
         editUserModal.hidden = true;
         statusUserModal.hidden = true;
+        resetPasswordModal.hidden = true;
         openModal(userActionModal);
       }
 
@@ -1058,7 +1077,8 @@
         const email = row.querySelector("span:first-child small")?.textContent.trim() || "";
         const roleText = row.children[1]?.textContent.trim() || "";
         const id = row.children[2]?.querySelector("strong")?.textContent.trim() || "";
-        const section = row.dataset.section || row.children[2]?.querySelector("small")?.textContent.trim() || "";
+        const isStudent = row.dataset.role === "student" || roleText.toLowerCase().includes("student");
+        const section = isStudent ? row.dataset.section || row.children[2]?.querySelector("small")?.textContent.trim() || "" : "";
         const status = row.dataset.status || "active";
 
         return { name, email, roleText, id, section, status };
@@ -1099,6 +1119,21 @@
         }
 
         editSection.value = value;
+      }
+
+      function syncEditSectionVisibility() {
+        const sectionWrapper = editSection?.closest(".form-label");
+        const isStudent = editRole.value === "student";
+
+        if (sectionWrapper) {
+          sectionWrapper.hidden = !isStudent;
+        }
+
+        editSection.required = isStudent;
+
+        if (!isStudent) {
+          editSection.value = "";
+        }
       }
 
       function updateSummary(row) {
@@ -1164,7 +1199,10 @@
 
         editName.value = user.name;
         editRole.value = roleTextToValue(user.roleText);
-        ensureSectionOption(user.section);
+        if (editRole.value === "student") {
+          ensureSectionOption(user.section);
+        }
+        syncEditSectionVisibility();
 
         closeModal(userActionModal);
         openModal(editUserModal);
@@ -1205,7 +1243,7 @@
           return;
         }
 
-        if (event.target.matches("[data-close-action-modal], [data-close-edit-modal], [data-close-status-modal]")) {
+        if (event.target.matches("[data-close-action-modal], [data-close-edit-modal], [data-close-status-modal], [data-close-reset-modal]")) {
           closeAllModals();
         }
       });
@@ -1222,11 +1260,19 @@
         }
 
         if (selectedAction === "reset") {
-          closeAllModals();
-          userMessage.textContent = "Password reset request recorded.";
-          userMessage.classList.remove("is-error");
-          userMessage.classList.add("is-success");
+          const user = selectedUserRow ? getUserData(selectedUserRow) : null;
+
+          resetPasswordCopy.textContent = `Are you sure you want to reset the password for ${user?.name || "this account"}?`;
+          closeModal(userActionModal);
+          openModal(resetPasswordModal);
         }
+      });
+
+      confirmResetPassword.addEventListener("click", () => {
+        closeAllModals();
+        userMessage.textContent = "Password reset request recorded.";
+        userMessage.classList.remove("is-error");
+        userMessage.classList.add("is-success");
       });
 
       editUserForm.addEventListener("submit", (event) => {
@@ -1236,8 +1282,23 @@
 
         selectedUserRow.querySelector("span:first-child strong").textContent = editName.value.trim();
         selectedUserRow.children[1].textContent = editRole.options[editRole.selectedIndex].textContent;
-        selectedUserRow.children[2].querySelector("small").textContent = editSection.value.trim();
         selectedUserRow.dataset.role = editRole.value;
+
+        const identityCell = selectedUserRow.children[2];
+        let sectionSmall = identityCell.querySelector("small");
+
+        if (editRole.value === "student") {
+          if (!sectionSmall) {
+            sectionSmall = document.createElement("small");
+            identityCell.appendChild(sectionSmall);
+          }
+
+          sectionSmall.textContent = editSection.value.trim();
+          selectedUserRow.dataset.section = editSection.value.trim();
+        } else {
+          sectionSmall?.remove();
+          delete selectedUserRow.dataset.section;
+        }
 
         closeAllModals();
         filterUsers();
@@ -1246,6 +1307,8 @@
         userMessage.classList.remove("is-error");
         userMessage.classList.add("is-success");
       });
+
+      editRole.addEventListener("change", syncEditSectionVisibility);
 
       statusUserForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -1279,7 +1342,7 @@
         document.body.classList.remove("sidebar-open");
       });
 
-      [userActionModal, editUserModal, statusUserModal].forEach((modal) => {
+      [userActionModal, editUserModal, statusUserModal, resetPasswordModal].forEach((modal) => {
         modal.addEventListener("click", (event) => {
           if (event.target === modal) {
             closeAllModals();

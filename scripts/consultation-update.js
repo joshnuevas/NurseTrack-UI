@@ -1212,11 +1212,11 @@
 
           .ci-recommendation-card-head > div {
             display: grid;
-            gap: 0.8rem;
+            gap: 0.65rem;
           }
 
           .ci-recommendation-card-head h3 {
-            margin: -0.1rem 0 0;
+            margin: 0;
             line-height: 1.16;
           }
 
@@ -1509,7 +1509,7 @@
             <div class="history-filters student-progress-filters" aria-label="CI recommendation filters">
               <label class="form-label" for="ci-recommendation-search">
                 Search
-                <input id="ci-recommendation-search" type="search" placeholder="Search name, student ID, section, or duty area">
+                <input id="ci-recommendation-search" type="search" placeholder="Search name, student ID, section, or status">
               </label>
 
               <label class="form-label" for="ci-recommendation-section">
@@ -1538,7 +1538,7 @@
                   <span class="avatar small-avatar">${student.initials}</span>
                   <span>
                     <strong>${student.name}</strong>
-                    <small>${student.section} - ${student.id} - ${student.area}</small>
+                    <small>${student.section} - ${student.id}</small>
                     <small>${student.appeals.length} appeal${student.appeals.length === 1 ? "" : "s"} for review</small>
                   </span>
                   <mark class="status-badge ${student.badge}">${student.status}</mark>
@@ -1731,7 +1731,7 @@
                       <span class="avatar small-avatar">${selectedStudent.initials}</span>
                       <span>
                         <strong>${item.appeal.title}</strong>
-                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
+                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site}</small>
                         <small>Submitted ${item.appeal.submitted}</small>
                       </span>
                       <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>
@@ -1753,7 +1753,7 @@
                       <span class="avatar small-avatar">${selectedStudent.initials}</span>
                       <span>
                         <strong>${item.appeal.title}</strong>
-                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
+                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site}</small>
                         <small>Submitted ${item.appeal.submitted}</small>
                       </span>
                       <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>

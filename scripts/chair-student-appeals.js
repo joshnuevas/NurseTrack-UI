@@ -256,7 +256,6 @@ function renderAppealCard(appeal) {
       <div class="appeal-card-body">
         <div class="appeal-title-row">
           <div>
-            <span class="appeal-type-label">${typeLabels[appeal.type]}</span>
             <h3>${appeal.title}</h3>
           </div>
           <div class="appeal-title-meta">

@@ -297,12 +297,13 @@ function renderManualAssignedStudents() {
 function filterManualStudents() {
   const query = manualStudentSearch?.value.trim().toLowerCase() || "";
   const section = manualSectionFilter?.value || "BSN 3A";
+  const hasSearch = query.length > 0;
   let visibleCount = 0;
 
   manualStudentItems.forEach((item) => {
     const student = item.dataset.manualAddStudent || "";
     const isAssigned = manualSelectedStudents.includes(student);
-    const matchesSearch = !query || item.dataset.student.toLowerCase().includes(query);
+    const matchesSearch = hasSearch && item.dataset.student.toLowerCase().includes(query);
     const matchesSection = item.dataset.section === section;
     const shouldHide = isAssigned || !matchesSearch || !matchesSection;
 
@@ -315,7 +316,7 @@ function filterManualStudents() {
   });
 
   if (manualNoStudentsMessage) {
-    manualNoStudentsMessage.hidden = visibleCount > 0;
+    manualNoStudentsMessage.hidden = !hasSearch || visibleCount > 0;
   }
 
   if (manualPickerCount) {
@@ -348,6 +349,11 @@ manualStudentList?.addEventListener("click", (event) => {
   }
 
   manualSelectedStudents = [...manualSelectedStudents, student];
+
+  if (manualStudentSearch) {
+    manualStudentSearch.value = "";
+  }
+
   renderManualAssignedStudents();
   setManualStatus("Draft edited", "status-pending");
   setManualMessage(`${student} added to the manual schedule.`);

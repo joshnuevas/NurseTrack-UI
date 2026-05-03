@@ -326,7 +326,7 @@ function renderStudentCards() {
         <span class="avatar small-avatar">${escapeHtml(student.initials)}</span>
         <span>
           <strong>${escapeHtml(student.name)}</strong>
-          <small>${escapeHtml(student.section)} - ${escapeHtml(student.id)} - ${escapeHtml(student.area || "Assigned area")}</small>
+          <small>${escapeHtml(student.section)} - ${escapeHtml(student.id)}</small>
           <small>${record.submittedAt ? `Submitted: ${escapeHtml(record.submittedAt)}` : "Waiting for student submission"}</small>
         </span>
         <mark class="status-badge ${meta.badgeClass}">${meta.label}</mark>

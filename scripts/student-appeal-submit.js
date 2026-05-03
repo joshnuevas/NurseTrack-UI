@@ -138,7 +138,7 @@ function buildAppealCard(formData) {
       <span class="avatar small-avatar">MC</span>
       <span class="student-appeal-history-copy">
         <strong>${title}</strong>
-        <small>${typeLabels[type] || "Appeal"} - ${relatedDate} - ${site} - ${area}</small>
+        <small>${typeLabels[type] || "Appeal"} - ${relatedDate} - ${site}</small>
         <small>Submitted just now${fileCount ? ` - ${fileCount} file${fileCount === 1 ? "" : "s"} attached` : ""}</small>
       </span>
       <span class="status-badge status-pending">Pending</span>
@@ -254,7 +254,7 @@ function renderInitialAppealHistory() {
           <span class="avatar small-avatar">MC</span>
           <span class="student-appeal-history-copy">
             <strong>Late arrival due to bus delay</strong>
-            <small>Attendance - April 29, 2026 - CCMC - Emergency Room</small>
+            <small>Attendance - April 29, 2026 - CCMC</small>
             <small>Submitted today, 7:48 AM - 2 files attached</small>
           </span>
           <span class="status-badge status-pending">Pending</span>
@@ -273,7 +273,7 @@ function renderInitialAppealHistory() {
           <span class="avatar small-avatar">MC</span>
           <span class="student-appeal-history-copy">
             <strong>Excused tardiness request</strong>
-            <small>Attendance - April 12, 2026 - CCMC - Emergency Room</small>
+            <small>Attendance - April 12, 2026 - CCMC</small>
             <small>Submitted April 12, 2026, 8:04 AM - 1 file attached</small>
           </span>
           <span class="status-badge status-verified">Accepted</span>

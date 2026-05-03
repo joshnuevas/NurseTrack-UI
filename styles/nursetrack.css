@@ -6281,6 +6281,38 @@ h2 {
   color: var(--primary);
 }
 
+.confirm-modal .icon-button.modal-close {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  padding: 0;
+  background: #ffffff;
+  font-size: 0;
+  line-height: 0;
+}
+
+.confirm-modal .icon-button.modal-close::before,
+.confirm-modal .icon-button.modal-close::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.confirm-modal .icon-button.modal-close::before {
+  transform: rotate(45deg);
+}
+
+.confirm-modal .icon-button.modal-close::after {
+  transform: rotate(-45deg);
+}
+
 .danger-confirm-button {
   background: var(--primary);
 }
@@ -7156,7 +7188,7 @@ h2 {
 .selected-schedule-button-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   gap: 16px;
   padding: 8px 0 14px;
@@ -7174,6 +7206,10 @@ h2 {
 
 .selected-schedule-button-row .primary-button {
   min-width: 220px;
+}
+
+.selected-schedule-button-row .danger-action {
+  margin-right: auto;
 }
 
 .schedule-break-field {
@@ -8910,7 +8946,7 @@ h2 {
 }
 
 .live-attendance-filters {
-  grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+  grid-template-columns: minmax(180px, 0.85fr) minmax(220px, 1fr) minmax(280px, 1.2fr);
   gap: 18px;
   margin-bottom: 22px;
 }
@@ -9617,7 +9653,7 @@ h2 {
 }
 
 .manual-attendance-history-panel {
-  margin-top: 0;
+  margin-top: 28px;
   display: grid;
   gap: 24px;
 }
@@ -9689,14 +9725,19 @@ h2 {
 }
 
 .manual-attendance-history-actions {
-  display: grid;
-  justify-items: end;
-  gap: 10px;
   min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 24px;
 }
 
 .manual-attendance-history-actions .status-badge {
-  min-width: 118px;
+  min-width: 112px;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
   justify-content: center;
 }
 
@@ -10797,6 +10838,10 @@ button.management-row:focus-visible {
   .schedule-draft-actions,
   .selected-schedule-button-row {
     justify-content: stretch;
+  }
+
+  .selected-schedule-button-row .danger-action {
+    margin-right: 0;
   }
 
   .schedule-draft-actions .ghost-button,

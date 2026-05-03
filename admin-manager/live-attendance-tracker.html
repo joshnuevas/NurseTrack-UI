@@ -169,12 +169,28 @@
 
               <div class="history-filters live-attendance-filters" aria-label="Live attendance filters">
                 <label class="form-label" for="attendance-site-filter">
-                  Duty location
+                  Hospital
                   <select id="attendance-site-filter">
                     <option value="CCMC">CCMC</option>
                     <option value="VSMMC">VSMMC</option>
                     <option value="CHN Brgy. Dumlog">CHN Brgy. Dumlog</option>
                     <option value="CSMC">CSMC</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="attendance-area-filter">
+                  Duty area
+                  <select id="attendance-area-filter">
+                    <option value="all">All duty areas</option>
+                    <option value="Emergency Room">Emergency Room</option>
+                    <option value="Delivery Room">Delivery Room</option>
+                    <option value="Operating Room">Operating Room</option>
+                    <option value="Medical Ward">Medical Ward</option>
+                    <option value="Pedia Pulmo Ward">Pedia Pulmo Ward</option>
+                    <option value="Community Health Nursing Area">Community Health Nursing Area</option>
+                    <option value="Community Assessment">Community Assessment</option>
+                    <option value="Outpatient Department">Outpatient Department</option>
+                    <option value="Dialysis Center">Dialysis Center</option>
                   </select>
                 </label>
 
@@ -194,7 +210,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CCMC" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">MC</span><span><strong>Maria Cruz</strong><small>BSN 3A - Emergency Room</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">MC</span><span><strong>Maria Cruz</strong><small>BSN 3A</small></span></span>
                   <span role="cell"><strong>CCMC</strong><small>Emergency Room</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">6:54 AM</span>
                   <span role="cell" data-live-minutes="1">1 min</span>
@@ -202,7 +218,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CCMC" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">JA</span><span><strong>Josh Anton Nuevas</strong><small>BSN 3A - Emergency Room</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">JA</span><span><strong>Josh Anton Nuevas</strong><small>BSN 3A</small></span></span>
                   <span role="cell"><strong>CCMC</strong><small>Emergency Room</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">7:18 AM</span>
                   <span role="cell" data-live-minutes="4">4 min</span>
@@ -210,7 +226,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="Vicente Mendiola Center for Health Infirmary" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">ND</span><span><strong>Nicole Dela Pena</strong><small>BSN 3A - Medical Ward</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">ND</span><span><strong>Nicole Dela Pena</strong><small>BSN 3A</small></span></span>
                   <span role="cell"><strong>Vicente Mendiola Center for Health Infirmary</strong><small>Medical Ward</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">6:59 AM</span>
                   <span role="cell" data-live-minutes="2">2 min</span>
@@ -218,7 +234,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="VSMMC" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">TA</span><span><strong>Treasure Abadinas</strong><small>BSN 3A - Delivery Room</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">TA</span><span><strong>Treasure Abadinas</strong><small>BSN 3A</small></span></span>
                   <span role="cell"><strong>SAMCH</strong><small>Delivery Room</small><small>CI: Miguel Santos</small></span>
                   <span role="cell">6:48 AM</span>
                   <span role="cell" data-live-minutes="2">2 min</span>
@@ -226,7 +242,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="VSMMC" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">ZA</span><span><strong>Zander Aligato</strong><small>BSN 3B - Emergency Room</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">ZA</span><span><strong>Zander Aligato</strong><small>BSN 3B</small></span></span>
                   <span role="cell"><strong>CCMC</strong><small>Emergency Room</small><small>CI: Miguel Santos</small></span>
                   <span role="cell">6:52 AM</span>
                   <span role="cell" data-live-minutes="3">3 min</span>
@@ -234,7 +250,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CCMC" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">HB</span><span><strong>Hannah Bautista</strong><small>BSN 3B - Pedia Pulmo Ward</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">HB</span><span><strong>Hannah Bautista</strong><small>BSN 3B</small></span></span>
                   <span role="cell"><strong>CCMC</strong><small>Pedia Pulmo Ward</small><small>CI: Miguel Santos</small></span>
                   <span role="cell">7:21 AM</span>
                   <span role="cell" data-live-minutes="5">5 min</span>
@@ -242,7 +258,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CHN Brgy. Dumlog" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">AG</span><span><strong>Andrea Gomez</strong><small>BSN 3B - Community Health Nursing Area</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">AG</span><span><strong>Andrea Gomez</strong><small>BSN 3B</small></span></span>
                   <span role="cell"><strong>CHN Brgy. Dumlog</strong><small>Community Health Nursing Area</small><small>CI: Elena Dela Cruz</small></span>
                   <span role="cell">7:02 AM</span>
                   <span role="cell" data-live-minutes="1">1 min</span>
@@ -250,7 +266,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CHN Brgy. Dumlog" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">MR</span><span><strong>Miguel Reyes</strong><small>BSN 3C - Community Health Nursing Area</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">MR</span><span><strong>Miguel Reyes</strong><small>BSN 3C</small></span></span>
                   <span role="cell"><strong>CHN Brgy. Dumlog</strong><small>Community Health Nursing Area</small><small>CI: Elena Dela Cruz</small></span>
                   <span role="cell">6:57 AM</span>
                   <span role="cell" data-live-minutes="2">2 min</span>
@@ -258,7 +274,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="CHN Brgy. Dumlog" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">PU</span><span><strong>Patricia Uy</strong><small>BSN 3C - Community Health Nursing Area</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">PU</span><span><strong>Patricia Uy</strong><small>BSN 3C</small></span></span>
                   <span role="cell"><strong>CHN Brgy. Dumlog</strong><small>Community Assessment</small><small>CI: Elena Dela Cruz</small></span>
                   <span role="cell">7:25 AM</span>
                   <span role="cell" data-live-minutes="6">6 min</span>
@@ -266,7 +282,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="ECS" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">LU</span><span><strong>Lichael Ursulo</strong><small>BSN 3C - Outpatient Department</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">LU</span><span><strong>Lichael Ursulo</strong><small>BSN 3C</small></span></span>
                   <span role="cell"><strong>ECS</strong><small>Outpatient Department</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">6:55 AM</span>
                   <span role="cell" data-live-minutes="3">3 min</span>
@@ -274,7 +290,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="Healing Hands Dialysis Center" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">SV</span><span><strong>Sean Villamor</strong><small>BSN 3C - Dialysis Center</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">SV</span><span><strong>Sean Villamor</strong><small>BSN 3C</small></span></span>
                   <span role="cell"><strong>Healing Hands Dialysis Center</strong><small>Dialysis Center</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">6:51 AM</span>
                   <span role="cell" data-live-minutes="2">2 min</span>
@@ -282,7 +298,7 @@
                 </div>
 
                 <div class="live-attendance-row" role="row" data-site="Vicente Mendiola Center for Health Infirmary" data-status="present">
-                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">AG</span><span><strong>Andrea Gomez</strong><small>BSN 4A - Emergency Room</small></span></span>
+                  <span role="cell" class="roster-student-cell"><span class="avatar small-avatar">AG</span><span><strong>Andrea Gomez</strong><small>BSN 4A</small></span></span>
                   <span role="cell"><strong>Vicente Mendiola Center for Health Infirmary</strong><small>Emergency Room</small><small>CI: Patricia Reyes</small></span>
                   <span role="cell">7:16 AM</span>
                   <span role="cell" data-live-minutes="4">4 min</span>

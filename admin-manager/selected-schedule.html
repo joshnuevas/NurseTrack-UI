@@ -200,7 +200,7 @@
       .student-roster-button-row {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
         gap: 12px;
         flex-wrap: wrap;
       }
@@ -214,6 +214,7 @@
       }
 
       .selected-schedule-button-row .danger-action {
+        margin-right: auto;
         border-color: rgba(198, 40, 40, 0.34);
         color: #b42318;
       }
@@ -341,6 +342,10 @@
         .selected-schedule-button-row,
         .student-roster-button-row {
           justify-content: flex-start;
+        }
+
+        .selected-schedule-button-row .danger-action {
+          margin-right: 0;
         }
 
         .student-roster-button-row .ghost-button,

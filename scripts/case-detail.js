@@ -14,6 +14,7 @@ const studentCases = {
     submittedDate: "April 24, 2026",
     submittedTime: "4:35 PM",
     status: "Pending",
+    instructorComment: "Patricia Reyes noted that the submitted case is queued for CI validation.",
     reflection: "I learned how to assist properly during a DR major case, maintain sterile technique, and document accurately for clinical case documentation."
   },
   "maria-or-circulate-0423": {
@@ -29,6 +30,7 @@ const studentCases = {
     submittedTime: "2:10 PM",
     status: "Approved",
     approvedDate: "April 23, 2026, 3:18 PM",
+    instructorComment: "Validated by Patricia Reyes. Documentation and reflection matched the assigned OR case requirements.",
     reflection: "I observed sterile field maintenance, circulating nurse responsibilities, and documentation flow during an OR major case."
   },
   "maria-dr-handled-0422": {
@@ -44,6 +46,7 @@ const studentCases = {
     submittedTime: "11:45 AM",
     status: "Approved",
     approvedDate: "April 22, 2026, 1:30 PM",
+    instructorComment: "Approved after checking the student log and clinical case entry.",
     reflection: "I practiced proper handoff documentation and reflected on patient safety checks before and after the procedure."
   }
 };
@@ -77,6 +80,7 @@ function applySelectedCase() {
   setText("#detail-case-status-badge", record.status);
   setText("#detail-case-status-title", isApproved ? "Approved by CI" : "Awaiting CI validation");
   setText("#detail-case-reviewer", record.ci);
+  setText("#detail-case-comment", record.instructorComment || "No instructor comments added yet.");
   setText("#detail-case-approved-date", record.approvedDate || "");
 
   if (badge) {

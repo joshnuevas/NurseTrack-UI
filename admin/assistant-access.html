@@ -104,10 +104,6 @@
         transform: translateX(26px);
       }
 
-      #assistant-access-message {
-        margin-top: 1.15rem;
-      }
-
       @media (max-width: 760px) {
         .assistant-access-toggle-list {
           grid-template-columns: 1fr;
@@ -169,7 +165,6 @@
           <section class="workspace-panel">
             <div class="panel-heading">
               <div>
-                <p class="section-kicker">Assistant Permission</p>
                 <h2>Assistant Edit Permissions</h2>
               </div>
               <span class="status-badge status-pending">Edit controls</span>
@@ -178,7 +173,6 @@
             <div class="assistant-access-toggle-list">
               <div class="assistant-access-toggle-card">
                 <div class="assistant-access-copy">
-                  <span class="status-badge status-pending" data-assistant-access-status="manualBackup">Off</span>
                   <h3>Manual Backup</h3>
                   <p>Assistant can already view Manual Backup. Turn this on only to allow approving or returning encoded attendance.</p>
                 </div>
@@ -190,7 +184,6 @@
 
               <div class="assistant-access-toggle-card">
                 <div class="assistant-access-copy">
-                  <span class="status-badge status-pending" data-assistant-access-status="clearance">Off</span>
                   <h3>Clearance</h3>
                   <p>Assistant can already view Clearance. Turn this on only to allow approving or canceling clearance approval.</p>
                 </div>
@@ -202,7 +195,6 @@
 
               <div class="assistant-access-toggle-card">
                 <div class="assistant-access-copy">
-                  <span class="status-badge status-pending" data-assistant-access-status="clinicalCases">Off</span>
                   <h3>Clinical Cases View</h3>
                   <p>Assistant can already view Clinical Cases. Turn this on only to allow editing approval or rejection decisions.</p>
                 </div>
@@ -214,7 +206,6 @@
 
               <div class="assistant-access-toggle-card">
                 <div class="assistant-access-copy">
-                  <span class="status-badge status-pending" data-assistant-access-status="ciRecommendations">Off</span>
                   <h3>CI Recommendations</h3>
                   <p>Assistant can already view CI Recommendations. Turn this on only to allow accepting, rejecting, or editing decisions.</p>
                 </div>
@@ -225,9 +216,6 @@
               </div>
             </div>
 
-            <div id="assistant-access-message" class="form-message" role="status" aria-live="polite">
-              All Assistant edit permissions are off by default. View access remains available.
-            </div>
           </section>
 
         </main>

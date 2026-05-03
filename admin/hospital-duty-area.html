@@ -160,9 +160,55 @@
       }
 
       .admin-location-modal-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 48px;
+        gap: 1rem;
+        align-items: start;
         padding: 1.65rem 1.75rem 1.1rem;
         border-bottom: 1px solid #e5eaf1;
         background: #ffffff;
+      }
+
+      .admin-location-modal-title {
+        min-width: 0;
+      }
+
+      .admin-location-modal-close {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f1b33;
+      }
+
+      .admin-location-modal-close::before,
+      .admin-location-modal-close::after {
+        content: "";
+        position: absolute;
+        width: 15px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .admin-location-modal-close::before {
+        transform: rotate(45deg);
+      }
+
+      .admin-location-modal-close::after {
+        transform: rotate(-45deg);
+      }
+
+      .admin-location-modal-close:hover,
+      .admin-location-modal-close:focus-visible {
+        border-color: rgba(138, 37, 44, 0.4);
+        background: #fff7d6;
+        color: #8a252c;
       }
 
       .admin-location-modal-header h2 {
@@ -574,8 +620,11 @@
     <div class="modal-backdrop" id="edit-location-modal" hidden>
       <section class="modal-card admin-location-modal-card" role="dialog" aria-modal="true" aria-labelledby="edit-location-title">
         <div class="admin-location-modal-header">
-          <h2 id="edit-location-title">Edit Record</h2>
-          <p id="edit-location-subtitle">Update this record before saving changes.</p>
+          <div class="admin-location-modal-title">
+            <h2 id="edit-location-title">Edit Record</h2>
+            <p id="edit-location-subtitle">Update this record before saving changes.</p>
+          </div>
+          <button class="icon-button admin-location-modal-close" type="button" id="close-edit-location" aria-label="Close modal"></button>
         </div>
 
         <form class="edit-location-form" id="edit-location-form">
@@ -587,6 +636,12 @@
           <label class="form-label" for="edit-location-code">
             <span id="edit-location-code-label">Code / Hospital</span>
             <input id="edit-location-code" type="text" required>
+            <select id="edit-location-hospital" hidden>
+              <option>CCMC</option>
+              <option>VSMMC</option>
+              <option>SAMCH</option>
+              <option>Mactan Medical Hospital</option>
+            </select>
           </label>
 
           <label class="form-label full-width" for="edit-location-extra" id="edit-location-extra-wrapper">
@@ -599,7 +654,6 @@
           <button class="ghost-button danger-modal-button" type="button" id="open-delete-location">Deactivate</button>
 
           <div class="admin-location-edit-actions-main">
-            <button class="ghost-button" type="button" id="cancel-edit-location">Cancel</button>
             <button class="primary-button workspace-action" type="submit" form="edit-location-form">Review Changes</button>
           </div>
         </div>
@@ -660,12 +714,14 @@
       const editLocationForm = document.querySelector("#edit-location-form");
       const editLocationName = document.querySelector("#edit-location-name");
       const editLocationCode = document.querySelector("#edit-location-code");
+      const editLocationHospital = document.querySelector("#edit-location-hospital");
       const editLocationExtra = document.querySelector("#edit-location-extra");
       const editLocationNameLabel = document.querySelector("#edit-location-name-label");
       const editLocationCodeLabel = document.querySelector("#edit-location-code-label");
       const editLocationExtraLabel = document.querySelector("#edit-location-extra-label");
       const editLocationExtraWrapper = document.querySelector("#edit-location-extra-wrapper");
       const cancelEditLocation = document.querySelector("#cancel-edit-location");
+      const closeEditLocation = document.querySelector("#close-edit-location");
       const openDeleteLocation = document.querySelector("#open-delete-location");
 
       const saveLocationModal = document.querySelector("#save-location-modal");
@@ -757,11 +813,16 @@
           editLocationExtraWrapper.hidden = true;
           editLocationExtra.required = false;
           editLocationExtra.value = "";
+          editLocationCode.hidden = false;
+          editLocationCode.required = true;
+          editLocationHospital.hidden = true;
+          editLocationHospital.required = false;
           openDeleteLocation.hidden = false;
           openDeleteLocation.textContent = "Deactivate";
 
           editLocationName.value = hospitalName;
           editLocationCode.value = hospitalCode;
+          editLocationHospital.value = "CCMC";
         }
 
         if (activeEditType === "duty") {
@@ -775,10 +836,15 @@
           editLocationExtraWrapper.hidden = true;
           editLocationExtra.required = false;
           editLocationExtra.value = "";
+          editLocationCode.hidden = true;
+          editLocationCode.required = false;
+          editLocationHospital.hidden = false;
+          editLocationHospital.required = true;
           openDeleteLocation.hidden = true;
 
           editLocationName.value = dutyName;
-          editLocationCode.value = dutyHospital;
+          editLocationCode.value = "";
+          editLocationHospital.value = dutyHospital;
         }
 
         openModal(editLocationModal);
@@ -794,7 +860,7 @@
       function openSaveConfirmModal() {
         pendingEditValues = {
           name: editLocationName.value.trim(),
-          code: editLocationCode.value.trim(),
+          code: activeEditType === "duty" ? editLocationHospital.value.trim() : editLocationCode.value.trim(),
           extra: editLocationExtra.value.trim()
         };
 
@@ -908,6 +974,7 @@
       });
 
       cancelEditLocation?.addEventListener("click", closeEditLocationModal);
+      closeEditLocation?.addEventListener("click", closeEditLocationModal);
       openDeleteLocation?.addEventListener("click", openDeleteConfirmModal);
 
       cancelSaveLocation?.addEventListener("click", () => {

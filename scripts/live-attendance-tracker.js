@@ -1,6 +1,7 @@
 const menuButton = document.querySelector("[data-menu-button]");
 const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
 const siteFilter = document.querySelector("#attendance-site-filter");
+const areaFilter = document.querySelector("#attendance-area-filter");
 const attendanceSearch = document.querySelector("#attendance-search");
 const tableContainer = document.querySelector("#live-attendance-table");
 let attendanceRows = Array.from(document.querySelectorAll(".live-attendance-row:not(.live-attendance-head)"));
@@ -323,11 +324,17 @@ function renderManualAttendanceStudentResults() {
 
   const selectedIds = new Set(manualAttendanceSelected.map((student) => student.id));
   const query = search.value.trim().toLowerCase();
+
+  if (!query) {
+    results.innerHTML = "";
+    return;
+  }
+
   const matches = manualAttendanceStudents
     .filter((student) => !selectedIds.has(student.id))
     .filter((student) => {
       const searchable = `${student.name} ${student.studentId} ${student.section} ${student.site}`.toLowerCase();
-      return !query || searchable.includes(query);
+      return searchable.includes(query);
     })
     .slice(0, 6);
 
@@ -445,7 +452,7 @@ function loadManualAttendanceRecordForEdit(recordId) {
   }
 
   if (record.status !== "pending") {
-    updateManualAttendanceMessage(`${manualAttendanceStatusLabel(record.status)} records are locked. Only pending records can be edited by the Clinical Instructor.`, "error");
+    window.location.href = "manual-attendance.html";
     return;
   }
 
@@ -720,15 +727,9 @@ function renderManualAttendanceEntry() {
   if (!editRecordId) {
     document.querySelector("#manual-attendance-ci-history-list")?.addEventListener("click", (event) => {
       const editButton = event.target.closest("[data-manual-edit-record]");
-      const lockedButton = event.target.closest("[data-manual-locked-record]");
 
       if (editButton) {
         window.location.href = `manual-attendance.html?record=${encodeURIComponent(editButton.dataset.manualEditRecord)}`;
-        return;
-      }
-
-      if (lockedButton) {
-        updateManualAttendanceMessage(`${manualAttendanceStatusLabel(lockedButton.dataset.manualLockedStatus)} records are locked. Only pending records can be edited.`, "error");
       }
     });
   }
@@ -1145,15 +1146,18 @@ function sortAttendanceAlphabetically() {
 function filterAttendance() {
   updateConnectedTimes();
 
-  const site = siteFilter.value;
-  const query = attendanceSearch.value.trim().toLowerCase();
+  const site = siteFilter?.value || "all";
+  const area = areaFilter?.value || "all";
+  const query = attendanceSearch?.value.trim().toLowerCase() || "";
   let shown = 0;
 
   attendanceRows.forEach((row) => {
     const isConnected = row.dataset.connected === "true";
-    const matchesSite = row.dataset.site === site;
+    const matchesSite = site === "all" || row.dataset.site === site;
+    const rowArea = row.dataset.area || row.children[1]?.querySelector("small")?.textContent.trim() || "";
+    const matchesArea = area === "all" || rowArea === area;
     const matchesSearch = !query || row.textContent.toLowerCase().includes(query);
-    const isVisible = isConnected && matchesSite && matchesSearch;
+    const isVisible = isConnected && matchesSite && matchesArea && matchesSearch;
 
     row.hidden = !isVisible;
 
@@ -1265,8 +1269,9 @@ if (sidebarBackdrop) {
 }
 
 if (isLiveAttendancePage && tableContainer && siteFilter && attendanceSearch && emptyState) {
-  [siteFilter, attendanceSearch].forEach((control) => {
-    control.addEventListener("input", filterAttendance);
+  [siteFilter, areaFilter, attendanceSearch].forEach((control) => {
+    control?.addEventListener("input", filterAttendance);
+    control?.addEventListener("change", filterAttendance);
   });
 
   if (siteCards.length > 0) {

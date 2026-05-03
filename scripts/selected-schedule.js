@@ -203,6 +203,7 @@ let selectedRosterSnapshot = [];
 let assignedStudentsDirty = false;
 let pendingStudentMove = null;
 let pendingStudentRemove = null;
+let selectedScheduleDeleteDialog = null;
 
 function cloneSelectedSchedule(schedule) {
   return schedule ? JSON.parse(JSON.stringify(schedule)) : null;
@@ -458,6 +459,61 @@ function deleteSelectedSchedule() {
 
   const nextSchedule = selectedDaySchedules[deletedIndex] || selectedDaySchedules[deletedIndex - 1] || null;
   populateSelectedSchedule(nextSchedule);
+}
+
+function createSelectedScheduleDeleteDialog() {
+  const dialog = document.createElement("div");
+  dialog.className = "modal-backdrop";
+  dialog.hidden = true;
+  dialog.innerHTML = `
+    <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="selected-delete-title">
+      <div class="modal-heading">
+        <div>
+          <h2 id="selected-delete-title">Delete this schedule?</h2>
+        </div>
+        <button class="icon-button modal-close" type="button" data-close-selected-delete aria-label="Close modal"></button>
+      </div>
+      <p class="modal-copy" data-selected-delete-copy>Are you sure you want to delete this schedule?</p>
+      <div class="modal-actions">
+        <button class="ghost-button" type="button" data-close-selected-delete>Cancel</button>
+        <button class="primary-button workspace-action" type="button" data-confirm-selected-delete>Delete Schedule</button>
+      </div>
+    </section>
+  `;
+
+  document.body.appendChild(dialog);
+  return dialog;
+}
+
+function openSelectedScheduleDeleteDialog() {
+  if (!selectedScheduleActive) {
+    return;
+  }
+
+  if (!selectedScheduleDeleteDialog) {
+    selectedScheduleDeleteDialog = createSelectedScheduleDeleteDialog();
+  }
+
+  const copy = selectedScheduleDeleteDialog.querySelector("[data-selected-delete-copy]");
+  if (copy) {
+    copy.textContent = `Are you sure you want to delete ${selectedScheduleActive.title}? This removes it from the day schedule list.`;
+  }
+
+  selectedScheduleDeleteDialog.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function closeSelectedScheduleDeleteDialog() {
+  if (selectedScheduleDeleteDialog) {
+    selectedScheduleDeleteDialog.hidden = true;
+  }
+
+  document.body.classList.remove("modal-open");
+}
+
+function confirmSelectedScheduleDelete() {
+  deleteSelectedSchedule();
+  closeSelectedScheduleDeleteDialog();
 }
 
 function closeSelectedStudentMoveDialog() {
@@ -728,6 +784,12 @@ function renderStudentRosterAddOptions(query = "") {
   studentRosterAddOptions.innerHTML = "";
 
   const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+
+  if (!terms.length) {
+    studentRosterAddOptions.hidden = true;
+    return;
+  }
+
   const assignedStudents = selectedScheduleActive?.students || [];
   const availableStudents = chairStudentRosterOptions.filter((student) => {
     const isAssigned = assignedStudents.some((name) => name.toLowerCase() === student.name.toLowerCase());
@@ -801,6 +863,9 @@ function addStudentToSelectedRoster(student) {
   syncSelectedScheduleSummary();
   renderSelectedStudents(selectedScheduleActive);
   renderStudentRosterAddOptions();
+  if (studentRosterAddOptions) {
+    studentRosterAddOptions.hidden = true;
+  }
   renderSelectedDayList();
   clearScheduleDetailsMessage();
   markAssignedStudentsDirty();
@@ -1085,13 +1150,13 @@ selectedScheduleForm?.addEventListener("submit", (event) => {
   clearScheduleDetailsMessage();
 });
 
-selectedScheduleDeleteButton?.addEventListener("click", deleteSelectedSchedule);
+selectedScheduleDeleteButton?.addEventListener("click", openSelectedScheduleDeleteDialog);
 
 studentRosterAddSearch?.addEventListener("focus", () => {
   renderStudentRosterAddOptions(studentRosterAddSearch.value);
 
   if (studentRosterAddOptions) {
-    studentRosterAddOptions.hidden = false;
+    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim();
   }
 });
 
@@ -1099,7 +1164,7 @@ studentRosterAddSearch?.addEventListener("input", () => {
   renderStudentRosterAddOptions(studentRosterAddSearch.value);
 
   if (studentRosterAddOptions) {
-    studentRosterAddOptions.hidden = false;
+    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim();
   }
 });
 
@@ -1150,6 +1215,21 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("click", (event) => {
+  if (selectedScheduleDeleteDialog && event.target.closest("[data-close-selected-delete]")) {
+    closeSelectedScheduleDeleteDialog();
+    return;
+  }
+
+  if (selectedScheduleDeleteDialog && event.target.closest("[data-confirm-selected-delete]")) {
+    confirmSelectedScheduleDelete();
+    return;
+  }
+
+  if (selectedScheduleDeleteDialog && event.target === selectedScheduleDeleteDialog) {
+    closeSelectedScheduleDeleteDialog();
+    return;
+  }
+
   if (!studentRosterAddSearch || !studentRosterAddOptions) {
     return;
   }
