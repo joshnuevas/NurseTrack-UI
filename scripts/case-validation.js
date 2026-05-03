@@ -19,7 +19,12 @@ const panelTitle = document.querySelector("#validation-panel-title");
 const backToCases = document.querySelector("#back-to-cases");
 const instructorData = window.NurseTrackInstructorData;
 const isChairCaseValidation = window.location.pathname.replace(/\\/g, "/").includes("/admin-manager/");
-const reviewerRoleLabel = isChairCaseValidation ? "Chair" : "Instructor";
+const signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
+const isAdminCaseValidation = isChairCaseValidation && signedRole === "admin";
+const ASSISTANT_CLINICAL_CASES_ACCESS_KEY = "nursetrack-assistant-clinical-cases-access";
+const assistantClinicalCasesAccessEnabled = window.localStorage?.getItem(ASSISTANT_CLINICAL_CASES_ACCESS_KEY) === "true";
+const isReadOnlyCaseValidation = isChairCaseValidation && (signedRole === "coordinator" || (signedRole === "assistant" && !assistantClinicalCasesAccessEnabled));
+const reviewerRoleLabel = isAdminCaseValidation ? "Admin" : isChairCaseValidation ? "Chair" : "Instructor";
 const reviewerRoleLower = reviewerRoleLabel.toLowerCase();
 
 const params = new URLSearchParams(window.location.search);
@@ -74,6 +79,18 @@ function friendlyReviewDate(status) {
   });
 
   return `${label} ${date}, ${time}`;
+}
+
+function reviewerNameForDecision(status) {
+  if (isAdminCaseValidation) {
+    return "Admin Santos";
+  }
+
+  if (isChairCaseValidation) {
+    return "Reyes, Chair";
+  }
+
+  return selectedCase.supervisingCi || instructorData?.defaultCiFullName || "Patricia Reyes, RN, MAN";
 }
 
 function updateStatusUI(status) {
@@ -221,12 +238,16 @@ function renderCase() {
 
   applyCaseInformation();
 
-  if (isChairCaseValidation) {
+  const isReviewed = selectedCase.status === "approved" || selectedCase.status === "rejected";
+
+  if (isReadOnlyCaseValidation) {
     showReviewedSummary();
+    if (editReview) {
+      editReview.hidden = true;
+    }
+    setMessage("This role can view clinical case details but cannot edit validation decisions.", null);
     return;
   }
-
-  const isReviewed = selectedCase.status === "approved" || selectedCase.status === "rejected";
 
   if (isReviewed && !isEditingReviewed) {
     showReviewedSummary();
@@ -237,6 +258,11 @@ function renderCase() {
 }
 
 function saveDecision(status) {
+  if (isReadOnlyCaseValidation) {
+    setMessage("This role can view clinical case details but cannot edit validation decisions.", "is-error");
+    return;
+  }
+
   if (!selectedCase) {
     return;
   }
@@ -253,15 +279,15 @@ function saveDecision(status) {
     status,
     summary: status === "approved" ? friendlyReviewDate("approved") : "Returned for missing case details",
     reviewedAt: friendlyReviewDate(status),
-    reviewedBy: selectedCase.supervisingCi || instructorData?.defaultCiFullName || "Patricia Reyes, RN, MAN",
-    approvedBy: status === "approved" ? selectedCase.supervisingCi || instructorData?.defaultCiFullName || "Patricia Reyes, RN, MAN" : "",
+    reviewedBy: reviewerNameForDecision(status),
+    approvedBy: status === "approved" ? reviewerNameForDecision(status) : "",
     reviewComment: comment
   }) || {
     ...selectedCase,
     status,
     reviewedAt: friendlyReviewDate(status),
-    reviewedBy: selectedCase.supervisingCi || instructorData?.defaultCiFullName || "Patricia Reyes, RN, MAN",
-    approvedBy: status === "approved" ? selectedCase.supervisingCi || instructorData?.defaultCiFullName || "Patricia Reyes, RN, MAN" : "",
+    reviewedBy: reviewerNameForDecision(status),
+    approvedBy: status === "approved" ? reviewerNameForDecision(status) : "",
     reviewComment: comment
   };
 

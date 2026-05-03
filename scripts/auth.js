@@ -33,6 +33,30 @@ const mockAccounts = [
     schoolId: "AD-1001",
     password: "NurseTrack123",
     destination: "admin/admin-dashboard.html?login=admin"
+  },
+  {
+    role: "coordinator",
+    label: "Coordinator",
+    email: "coordinator.lim@cit.edu",
+    schoolId: "CO-1001",
+    password: "NurseTrack123",
+    destination: "admin-manager/coordinator-dashboard.html?login=coordinator"
+  },
+  {
+    role: "enrollment",
+    label: "Enrollment Team",
+    email: "enrollment.team@cit.edu",
+    schoolId: "EN-1001",
+    password: "NurseTrack123",
+    destination: "admin-manager/chair-student-progress.html?login=enrollment"
+  },
+  {
+    role: "assistant",
+    label: "Assistant",
+    email: "assistant.garcia@cit.edu",
+    schoolId: "AS-1001",
+    password: "NurseTrack123",
+    destination: "admin-manager/assistant-dashboard.html?login=assistant"
   }
 ];
 

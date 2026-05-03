@@ -148,11 +148,11 @@
               <article class="workspace-panel validation-comment-card">
                 <div class="panel-heading">
                   <div>
-                    <h2>Clinical Case Decision</h2>
+                    <h2 id="validation-panel-title">Clinical Case Decision</h2>
                   </div>
                 </div>
 
-                <div class="reviewed-case-panel chair-case-review-summary">
+                <div class="reviewed-case-panel chair-case-review-summary" id="reviewed-case-panel" hidden>
                   <div class="reviewed-status-line">
                     <span class="status-badge status-verified" id="reviewed-status-badge">Approved</span>
                     <strong id="reviewed-status-title">Approved Apr 30, 2026, 5:46 AM</strong>
@@ -167,6 +167,24 @@
                   <div class="reviewed-comment-box">
                     <p class="section-kicker">Instructor comment</p>
                     <p id="reviewed-comment">Recorded.</p>
+                  </div>
+
+                  <button class="ghost-button" type="button" id="edit-review">Edit</button>
+                </div>
+
+                <div class="validation-comment-form" id="validation-comment-form">
+                  <label class="form-label" for="validation-comment">
+                    Comment (Required for rejection)
+                    <textarea id="validation-comment" rows="5" placeholder="Add a comment or feedback for the student"></textarea>
+                  </label>
+
+                  <div id="form-message" class="form-message" role="status" aria-live="polite">
+                    Review the case details, then make an approval decision.
+                  </div>
+
+                  <div class="button-row validation-comment-actions">
+                    <button class="ghost-button" type="button" id="reject-case" style="color: #dc2626; border-color: #fca5a5;">Reject case</button>
+                    <button class="primary-button workspace-action" type="button" id="approve-case" style="background-color: #16a34a; border-color: #15803d;">Approve case</button>
                   </div>
                 </div>
               </article>

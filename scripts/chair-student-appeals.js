@@ -259,31 +259,38 @@ function renderAppealCard(appeal) {
             <span class="appeal-type-label">${typeLabels[appeal.type]}</span>
             <h3>${appeal.title}</h3>
           </div>
-          <span class="appeal-submitted">${appeal.submittedAt}</span>
+          <div class="appeal-title-meta">
+            <span class="appeal-submitted">Submitted ${appeal.submittedAt}</span>
+            <span class="appeal-submitted">Assigned CI: ${appeal.assignedCi || "Patricia Reyes, RN, MAN"}</span>
+          </div>
         </div>
 
         <div class="appeal-fact-grid">
           <div>
-            <span>Concern</span>
+            <span>Appeal Type</span>
             <strong>${typeLabels[appeal.type]}</strong>
           </div>
           <div>
-            <span>Duty date</span>
+            <span>Related Duty Date</span>
             <strong>${appeal.dutyDate}</strong>
           </div>
           <div>
-            <span>Clinical site</span>
+            <span>Clinical Site</span>
             <strong>${appeal.site}</strong>
+          </div>
+          <div>
+            <span>Duty Area</span>
+            <strong>${appeal.area || "Emergency Room"}</strong>
           </div>
         </div>
 
         <div class="appeal-detail-grid">
           <div class="appeal-detail-note">
-            <p class="section-kicker">Student reason</p>
+            <p class="section-kicker">Student Reason</p>
             <p>${appeal.reason}</p>
           </div>
           <div class="appeal-detail-note">
-            <p class="section-kicker">CI recommendation note</p>
+            <p class="section-kicker">Supporting Evidence or Notes</p>
             <p>${appeal.evidence}</p>
           </div>
         </div>

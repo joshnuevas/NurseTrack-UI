@@ -158,6 +158,7 @@ function renderSelectedPerson() {
   const params = new URLSearchParams(window.location.search);
   const personId = params.get("id");
   const person = overtimePeople.find((item) => item.id === personId);
+  const selectedPeriod = params.get("period") || person?.period || getCurrentMonthYear();
 
   if (!person) {
     if (overtimeDetailHeading) {
@@ -220,7 +221,7 @@ function renderSelectedPerson() {
   }
 
   if (overtimePersonPeriod) {
-    overtimePersonPeriod.textContent = person.period;
+    overtimePersonPeriod.textContent = selectedPeriod;
   }
 
   if (overtimePersonTotal) {
@@ -228,11 +229,11 @@ function renderSelectedPerson() {
   }
 
   if (overtimeSheetTitle) {
-    overtimeSheetTitle.textContent = `${person.role === "Clinical Instructor" ? "CNAHS FACULTY" : "CNAHS STUDENT"} WHO RENDERED OVERTIME FOR THE PERIOD OF ${person.period.toUpperCase()}`;
+    overtimeSheetTitle.textContent = `${person.role === "Clinical Instructor" ? "CNAHS FACULTY" : "CNAHS STUDENT"} WHO RENDERED OVERTIME FOR THE PERIOD OF ${selectedPeriod.toUpperCase()}`;
   }
 
   if (overtimeDetailMessage) {
-    overtimeDetailMessage.textContent = `${person.name} has ${formatOvertimeHours(total)} recorded for ${person.period}.`;
+    overtimeDetailMessage.textContent = `${person.name} has ${formatOvertimeHours(total)} recorded for ${selectedPeriod}.`;
   }
 
   renderOvertimeTable(person);

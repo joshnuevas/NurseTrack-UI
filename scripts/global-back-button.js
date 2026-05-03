@@ -63,6 +63,21 @@
       }
     }
 
+    if (query.has("record")) {
+      if (key === "admin-manager/manual-attendance-review.html") {
+        const ci = query.get("ci");
+        return ci ? `manual-attendance-review.html?ci=${encodeURIComponent(ci)}` : "manual-attendance-review.html";
+      }
+
+      if (key === "clinical-instructor/manual-attendance.html") {
+        return "manual-attendance.html";
+      }
+    }
+
+    if (query.has("ci") && key === "admin-manager/manual-attendance-review.html") {
+      return "manual-attendance-review.html";
+    }
+
     const destinations = {
       "admin-manager/case-validation.html": "clinical-case-selection.html",
       "admin-manager/student-progress-detail.html": "chair-student-progress.html",
@@ -79,10 +94,6 @@
 
   const mappedDestination = mappedBackDestination();
   const parentLink = activeParentLink();
-
-  if (!mappedDestination && !parentLink) {
-    return;
-  }
 
   const style = document.createElement("style");
   style.textContent = `

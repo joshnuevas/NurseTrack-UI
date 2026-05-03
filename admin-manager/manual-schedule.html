@@ -118,6 +118,15 @@
                   <input id="manual-end-date" type="date">
                 </label>
 
+                <div class="schedule-break-field" id="manual-break-field">
+                  <span>Break Dates</span>
+                  <div class="schedule-break-controls">
+                    <input id="manual-break-date" type="date" aria-label="Break date">
+                    <button class="ghost-button" type="button" id="manual-add-break-date">Add break</button>
+                  </div>
+                  <div class="schedule-break-list" id="manual-break-list"></div>
+                </div>
+
                 <label class="form-label manual-hospital">Hospital
                   <select id="manual-hospital">
                     <option>CCMC</option>
@@ -163,7 +172,7 @@
 
                 <label class="checkbox-line selected-schedule-tba">
                   <input id="manual-case-tba" type="checkbox" checked>
-                  No case presentation
+                  No Case Presentation
                 </label>
 
                 <label class="form-label manual-ci-field">Supervising CI
@@ -269,11 +278,11 @@
                 <span class="status-badge status-pending" id="manual-student-count">0 students</span>
               </div>
 
-              <div id="manual-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the manual draft.</div>
-
               <div class="student-roster-table" id="manual-assigned-students"></div>
 
               <div class="student-roster-actions">
+                <div id="manual-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the schedule.</div>
+
                 <div class="selected-schedule-button-row">
                   <a class="ghost-button button-link" href="schedule-maker.html">Cancel</a>
                   <button class="primary-button workspace-action" form="manual-schedule-form" type="submit">Save Manual Schedule</button>

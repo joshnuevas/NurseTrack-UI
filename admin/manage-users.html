@@ -646,6 +646,9 @@
                     <option value="instructor">Instructor</option>
                     <option value="chair">Chair</option>
                     <option value="admin">Admin</option>
+                    <option value="coordinator">Coordinator</option>
+                    <option value="enrollment">Enrollment Team</option>
+                    <option value="assistant">Assistant</option>
                   </select>
                 </label>
 
@@ -762,6 +765,72 @@
                   </span>
                 </div>
 
+                <div class="user-row" data-role="coordinator" data-status="active">
+                  <span>
+                    <strong>Coordinator Lim</strong>
+                    <small>coordinator.lim@cit.edu</small>
+                  </span>
+                  <span>Coordinator</span>
+                  <span>
+                    <strong>CO-1001</strong>
+                    <small>Nursing Operations</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span>
+                    <button class="icon-button kebab-button user-action" type="button" aria-label="Open account action" title="Actions">
+                      <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="5" r="1.8"></circle>
+                        <circle cx="12" cy="12" r="1.8"></circle>
+                        <circle cx="12" cy="19" r="1.8"></circle>
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+
+                <div class="user-row" data-role="enrollment" data-status="active">
+                  <span>
+                    <strong>Enrollment Team</strong>
+                    <small>enrollment.team@cit.edu</small>
+                  </span>
+                  <span>Enrollment Team</span>
+                  <span>
+                    <strong>EN-1001</strong>
+                    <small>Registrar Coordination</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span>
+                    <button class="icon-button kebab-button user-action" type="button" aria-label="Open account action" title="Actions">
+                      <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="5" r="1.8"></circle>
+                        <circle cx="12" cy="12" r="1.8"></circle>
+                        <circle cx="12" cy="19" r="1.8"></circle>
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+
+                <div class="user-row" data-role="assistant" data-status="active">
+                  <span>
+                    <strong>Assistant Garcia</strong>
+                    <small>assistant.garcia@cit.edu</small>
+                  </span>
+                  <span>Assistant</span>
+                  <span>
+                    <strong>AS-1001</strong>
+                    <small>Chair Support</small>
+                  </span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
+                  <span>
+                    <button class="icon-button kebab-button user-action" type="button" aria-label="Open account action" title="Actions">
+                      <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="5" r="1.8"></circle>
+                        <circle cx="12" cy="12" r="1.8"></circle>
+                        <circle cx="12" cy="19" r="1.8"></circle>
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+
                 <div class="user-row" data-role="student" data-status="suspended">
                   <span>
                     <strong>Paolo Lim</strong>
@@ -853,6 +922,9 @@
                   <option value="instructor">Clinical Instructor</option>
                   <option value="chair">Chair</option>
                   <option value="admin">Admin</option>
+                  <option value="coordinator">Coordinator</option>
+                  <option value="enrollment">Enrollment Team</option>
+                  <option value="assistant">Assistant</option>
                 </select>
               </label>
 
@@ -999,6 +1071,9 @@
         if (value.includes("instructor")) return "instructor";
         if (value.includes("chair")) return "chair";
         if (value.includes("admin")) return "admin";
+        if (value.includes("coordinator")) return "coordinator";
+        if (value.includes("enrollment")) return "enrollment";
+        if (value.includes("assistant")) return "assistant";
 
         return "student";
       }

@@ -18,8 +18,17 @@ const accessCopy = document.querySelector("#clearance-access-copy");
 const pendingCount = document.querySelector("#clearance-pending-count");
 const approvedCount = document.querySelector("#clearance-approved-count");
 const approveButton = document.querySelector("#approve-clearance");
+const editApprovalButton = document.querySelector("#edit-clearance-approval");
+const clearanceConfirmModal = document.querySelector("#clearance-confirm-modal");
+const clearanceConfirmCopy = document.querySelector("#clearance-confirm-copy");
+const cancelClearanceConfirm = document.querySelector("#cancel-clearance-confirm");
+const confirmClearanceApproval = document.querySelector("#confirm-clearance-approval");
 const chairNotes = document.querySelector("#clearance-chair-notes");
 const detailMessage = document.querySelector("#clearance-detail-message");
+const signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
+const ASSISTANT_CLEARANCE_ACCESS_KEY = "nursetrack-assistant-clearance-access";
+const assistantClearanceAccessEnabled = window.localStorage?.getItem(ASSISTANT_CLEARANCE_ACCESS_KEY) === "true";
+const isClearanceReadOnly = signedRole === "assistant" && !assistantClearanceAccessEnabled;
 
 const detail = {
   avatar: document.querySelector("#clearance-detail-avatar"),
@@ -228,6 +237,29 @@ function setDetailMessage(text, state = "") {
   detailMessage.classList.toggle("is-error", state === "error");
 }
 
+function closeClearanceConfirmModal() {
+  if (!clearanceConfirmModal) {
+    return;
+  }
+
+  clearanceConfirmModal.hidden = true;
+  document.body.classList.remove("modal-open");
+}
+
+function openClearanceConfirmModal(student) {
+  if (!clearanceConfirmModal) {
+    approveSelectedClearance();
+    return;
+  }
+
+  if (clearanceConfirmCopy) {
+    clearanceConfirmCopy.textContent = `Approve clearance for ${student?.name || "this student"}? This will mark the student as cleared for this semester.`;
+  }
+
+  clearanceConfirmModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
 function updateAccessState() {
   const open = isSubmissionOpen();
 
@@ -237,7 +269,8 @@ function updateAccessState() {
   }
 
   if (accessToggle) {
-    accessToggle.textContent = open ? "Disable submissions" : "Enable submissions";
+    accessToggle.textContent = isClearanceReadOnly ? "View Only" : open ? "Disable submissions" : "Enable submissions";
+    accessToggle.disabled = isClearanceReadOnly;
   }
 
   if (accessStat) {
@@ -497,18 +530,28 @@ function selectStudent(studentKey) {
 
   if (chairNotes) {
     chairNotes.value = record.notes || "";
+    chairNotes.disabled = isClearanceReadOnly;
   }
 
   if (approveButton) {
-    approveButton.disabled = !record.submitted || record.approved;
+    approveButton.disabled = isClearanceReadOnly || !record.submitted || record.approved;
     approveButton.textContent = record.approved
       ? "Clearance Approved"
-      : record.submitted
+      : isClearanceReadOnly
+        ? "View Only"
+        : record.submitted
         ? "Approve Clearance"
         : "Waiting for Submission";
   }
 
-  if (record.approved) {
+  if (editApprovalButton) {
+    editApprovalButton.hidden = isClearanceReadOnly || !record.approved;
+    editApprovalButton.textContent = "Cancel Approval";
+  }
+
+  if (isClearanceReadOnly) {
+    setDetailMessage("Assistant can view clearance status but cannot approve or cancel approval.");
+  } else if (record.approved) {
     setDetailMessage(`${student.name} is approved and can print clearance.`, "success");
   } else if (record.submitted) {
     setDetailMessage(`${student.name} submitted for clearance. Review and approve when ready.`);
@@ -560,7 +603,12 @@ accessToggle?.addEventListener("click", () => {
   updateAccessState();
 });
 
-approveButton?.addEventListener("click", () => {
+function approveSelectedClearance() {
+  if (isClearanceReadOnly) {
+    setDetailMessage("Assistant can view clearance status but cannot approve clearance.", "error");
+    return;
+  }
+
   const records = loadRecords();
   const student = students[selectedStudentKey];
   const record = records[selectedStudentKey] || {};
@@ -575,7 +623,7 @@ approveButton?.addEventListener("click", () => {
     submitted: true,
     approved: true,
     approvedAt: formatDate(),
-    chairName: "Reyes, Chair",
+    chairName: signedRole === "admin" ? "Admin Santos" : "Reyes, Chair",
     notes: chairNotes?.value.trim() || "Approved for final clinical clearance."
   };
 
@@ -584,6 +632,59 @@ approveButton?.addEventListener("click", () => {
   updateSummaryCounts();
   selectStudent(selectedStudentKey);
   setDetailMessage(`${student.name} is now approved for clearance printing.`, "success");
+  closeClearanceConfirmModal();
+}
+
+approveButton?.addEventListener("click", () => {
+  if (isClearanceReadOnly) {
+    setDetailMessage("Assistant can view clearance status but cannot approve clearance.", "error");
+    return;
+  }
+
+  const records = loadRecords();
+  const student = students[selectedStudentKey];
+  const record = records[selectedStudentKey] || {};
+
+  if (!record.submitted) {
+    setDetailMessage("This student must submit for clearance before approval.", "error");
+    return;
+  }
+
+  openClearanceConfirmModal(student);
+});
+
+editApprovalButton?.addEventListener("click", () => {
+  if (isClearanceReadOnly) {
+    setDetailMessage("Assistant can view clearance status but cannot cancel clearance approval.", "error");
+    return;
+  }
+
+  const records = loadRecords();
+  const student = students[selectedStudentKey];
+  const record = records[selectedStudentKey] || {};
+
+  records[selectedStudentKey] = {
+    ...record,
+    approved: false,
+    approvedAt: "",
+    chairName: "",
+    notes: chairNotes?.value.trim() || record.notes || "Approval cancelled for correction."
+  };
+
+  saveRecords(records);
+  renderStudentCards();
+  updateSummaryCounts();
+  selectStudent(selectedStudentKey);
+  setDetailMessage(`${student.name}'s clearance approval was cancelled. You can approve it again when ready.`, "success");
+});
+
+cancelClearanceConfirm?.addEventListener("click", closeClearanceConfirmModal);
+confirmClearanceApproval?.addEventListener("click", approveSelectedClearance);
+
+clearanceConfirmModal?.addEventListener("click", (event) => {
+  if (event.target === clearanceConfirmModal) {
+    closeClearanceConfirmModal();
+  }
 });
 
 [clearanceSearch, clearanceSection, clearanceStatus].filter(Boolean).forEach((control) => {

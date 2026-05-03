@@ -6,9 +6,15 @@ const overtimeHoursFilter = document.querySelector("#overtime-hours-filter");
 const overtimePersonList = document.querySelector("#overtime-person-list");
 const overtimeEmpty = document.querySelector("#overtime-empty");
 const overtimeResultCount = document.querySelector("#overtime-result-count");
+const overtimePeriodLabel = document.querySelector("#overtime-period-label");
+const overtimePrevMonth = document.querySelector("#overtime-prev-month");
+const overtimeNextMonth = document.querySelector("#overtime-next-month");
 
-function getCurrentMonthYear() {
-  return new Date().toLocaleDateString("en-US", {
+let overtimeMonthDate = new Date();
+overtimeMonthDate = new Date(overtimeMonthDate.getFullYear(), overtimeMonthDate.getMonth(), 1);
+
+function getCurrentMonthYear(date = overtimeMonthDate) {
+  return date.toLocaleDateString("en-US", {
     month: "long",
     year: "numeric"
   });
@@ -129,10 +135,15 @@ function renderPeople() {
   const query = (overtimeSearch?.value || "").trim().toLowerCase();
   const role = overtimeRoleFilter?.value || "Clinical Instructor";
   const hoursFilter = overtimeHoursFilter?.value || "1";
+  const period = getCurrentMonthYear();
   let visibleCount = 0;
 
+  if (overtimePeriodLabel) {
+    overtimePeriodLabel.textContent = period;
+  }
+
   overtimePersonList.innerHTML = overtimePeople.map((person) => {
-    const searchable = `${person.name} ${person.identifier} ${person.role} ${person.section} ${person.site} ${person.period}`.toLowerCase();
+    const searchable = `${person.name} ${person.identifier} ${person.role} ${person.section} ${person.site} ${period}`.toLowerCase();
     const matchesQuery = !query || searchable.includes(query);
     const matchesRole = person.role === role;
     const matchesHours = matchesOvertimeHours(person.weeklyTotal, hoursFilter);
@@ -143,12 +154,12 @@ function renderPeople() {
     }
 
     return `
-      <a class="validation-user-card" href="overtime-rendered.html?id=${person.id}" data-overtime-person data-name="${person.name}" data-role="${person.role}" ${isVisible ? "" : "hidden"}>
+      <a class="validation-user-card" href="overtime-rendered.html?id=${person.id}&period=${encodeURIComponent(period)}" data-overtime-person data-name="${person.name}" data-role="${person.role}" ${isVisible ? "" : "hidden"}>
         <span class="avatar small-avatar">${person.initials}</span>
         <span>
           <strong>${person.name}</strong>
           <small>${person.role} - ${person.identifier} - ${person.section}</small>
-          <small>${person.site} - ${person.period}</small>
+          <small>${person.site} - ${period}</small>
         </span>
         <span class="status-badge status-pending">${formatOvertimeHours(person.weeklyTotal)}</span>
       </a>
@@ -174,6 +185,16 @@ sidebarBackdrop?.addEventListener("click", () => {
 
 [overtimeSearch, overtimeRoleFilter, overtimeHoursFilter].filter(Boolean).forEach((control) => {
   control.addEventListener("input", renderPeople);
+});
+
+overtimePrevMonth?.addEventListener("click", () => {
+  overtimeMonthDate = new Date(overtimeMonthDate.getFullYear(), overtimeMonthDate.getMonth() - 1, 1);
+  renderPeople();
+});
+
+overtimeNextMonth?.addEventListener("click", () => {
+  overtimeMonthDate = new Date(overtimeMonthDate.getFullYear(), overtimeMonthDate.getMonth() + 1, 1);
+  renderPeople();
 });
 
 renderPeople();

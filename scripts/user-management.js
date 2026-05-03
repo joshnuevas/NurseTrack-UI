@@ -62,6 +62,18 @@ function roleLabel(role) {
     return "Admin";
   }
 
+  if (role === "coordinator") {
+    return "Coordinator";
+  }
+
+  if (role === "enrollment") {
+    return "Enrollment Team";
+  }
+
+  if (role === "assistant") {
+    return "Assistant";
+  }
+
   return "Nursing Student";
 }
 
@@ -76,6 +88,18 @@ function roleValue(label) {
 
   if (label === "Admin" || label === "System Admin") {
     return "admin";
+  }
+
+  if (label === "Coordinator") {
+    return "coordinator";
+  }
+
+  if (label === "Enrollment Team") {
+    return "enrollment";
+  }
+
+  if (label === "Assistant") {
+    return "assistant";
   }
 
   return "student";

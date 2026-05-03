@@ -12,6 +12,9 @@ const manualAssignedStudents = document.querySelector("#manual-assigned-students
 const manualStudentCount = document.querySelector("#manual-student-count");
 const manualCaseTba = document.querySelector("#manual-case-tba");
 const manualCaseInputs = Array.from(document.querySelectorAll("[data-manual-case-input]"));
+const manualBreakDateInput = document.querySelector("#manual-break-date");
+const manualAddBreakDateButton = document.querySelector("#manual-add-break-date");
+const manualBreakList = document.querySelector("#manual-break-list");
 
 const manualFields = {
   title: document.querySelector("#manual-title"),
@@ -32,6 +35,7 @@ const manualSummary = {
 };
 
 let manualSelectedStudents = [];
+let manualBreakDates = [];
 
 function manualInitials(name) {
   return name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
@@ -59,20 +63,129 @@ function setManualStatus(text, statusClass) {
 function formatManualDateRange() {
   const startDate = manualFields.startDate?.value || "";
   const endDate = manualFields.endDate?.value || "";
+  const breakSummary = manualBreakDates.length
+    ? ` (${manualBreakDates.length} break date${manualBreakDates.length === 1 ? "" : "s"})`
+    : "";
 
   if (!startDate && !endDate) {
     return "Not set";
   }
 
   if (startDate === endDate || !endDate) {
-    return startDate;
+    return `${startDate}${breakSummary}`;
   }
 
   if (!startDate) {
-    return endDate;
+    return `${endDate}${breakSummary}`;
   }
 
-  return `${startDate} to ${endDate}`;
+  return `${startDate} to ${endDate}${breakSummary}`;
+}
+
+function parseManualDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) {
+    return null;
+  }
+
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function formatManualBreakDate(value) {
+  const date = parseManualDate(value);
+
+  if (!date) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+}
+
+function isManualBreakInRange(date) {
+  const start = manualFields.startDate?.value || "";
+  const end = manualFields.endDate?.value || "";
+  return Boolean(date && start && end && start <= end && date >= start && date <= end);
+}
+
+function setManualBreakDates(dates) {
+  manualBreakDates = Array.from(new Set((dates || [])
+    .filter((date) => Boolean(parseManualDate(date)))))
+    .sort();
+}
+
+function renderManualBreakDates() {
+  if (!manualBreakList) {
+    return;
+  }
+
+  if (!manualBreakDates.length) {
+    manualBreakList.innerHTML = `<span class="schedule-break-empty">No breaks added</span>`;
+    return;
+  }
+
+  manualBreakList.innerHTML = manualBreakDates.map((date) => `
+    <button class="schedule-break-chip" type="button" data-remove-manual-break="${date}">
+      <span>${formatManualBreakDate(date)}</span>
+      <span aria-hidden="true">x</span>
+    </button>
+  `).join("");
+}
+
+function syncManualBreakControls(options = {}) {
+  const start = manualFields.startDate?.value || "";
+  const end = manualFields.endDate?.value || "";
+  const hasValidRange = Boolean(parseManualDate(start) && parseManualDate(end) && start <= end);
+
+  if (manualBreakDateInput) {
+    manualBreakDateInput.min = start || "";
+    manualBreakDateInput.max = end || "";
+    manualBreakDateInput.disabled = !hasValidRange;
+  }
+
+  if (manualAddBreakDateButton) {
+    manualAddBreakDateButton.disabled = !hasValidRange;
+  }
+
+  if (options.prune && hasValidRange) {
+    const previousCount = manualBreakDates.length;
+    setManualBreakDates(manualBreakDates.filter(isManualBreakInRange));
+
+    if (previousCount !== manualBreakDates.length) {
+      setManualMessage("Break dates outside the selected date range were removed.");
+    }
+  }
+
+  renderManualBreakDates();
+  syncManualSummary();
+}
+
+function addManualBreakDate() {
+  const date = manualBreakDateInput?.value || "";
+
+  if (!isManualBreakInRange(date)) {
+    setManualMessage("Break date must be inside the selected start and end dates.", false);
+    return;
+  }
+
+  if (manualBreakDates.includes(date)) {
+    setManualMessage(`${formatManualBreakDate(date)} is already marked as a break.`, false);
+    return;
+  }
+
+  setManualBreakDates([...manualBreakDates, date]);
+
+  if (manualBreakDateInput) {
+    manualBreakDateInput.value = "";
+  }
+
+  syncManualBreakControls();
+  setManualStatus("Draft edited", "status-pending");
+  setManualMessage(`${formatManualBreakDate(date)} added as a break date.`);
 }
 
 function getManualAssignedGroup() {
@@ -241,17 +354,34 @@ manualAddStudentsButton?.addEventListener("click", () => {
 Object.values(manualFields).forEach((field) => {
   field?.addEventListener("input", () => {
     syncManualPickerSection();
+    syncManualBreakControls({ prune: true });
     syncManualSummary();
     renderManualAssignedStudents();
   });
   field?.addEventListener("change", () => {
     syncManualPickerSection();
+    syncManualBreakControls({ prune: true });
     syncManualSummary();
     renderManualAssignedStudents();
   });
 });
 
 manualCaseTba?.addEventListener("change", syncManualCasePresentation);
+manualAddBreakDateButton?.addEventListener("click", addManualBreakDate);
+
+manualBreakList?.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-manual-break]");
+
+  if (!removeButton) {
+    return;
+  }
+
+  const date = removeButton.dataset.removeManualBreak;
+  setManualBreakDates(manualBreakDates.filter((item) => item !== date));
+  syncManualBreakControls();
+  setManualStatus("Draft edited", "status-pending");
+  setManualMessage(`${formatManualBreakDate(date)} removed from break dates.`, false);
+});
 
 manualScheduleForm?.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -261,11 +391,17 @@ manualScheduleForm?.addEventListener("submit", (event) => {
     return;
   }
 
-  setManualStatus("Saved draft", "status-verified");
-  setManualMessage("Manual schedule saved as a draft. Publish it from Schedule Maker when ready.");
+  if (manualBreakDates.some((date) => !isManualBreakInRange(date))) {
+    setManualMessage("Remove break dates outside the selected start and end dates before saving.", false);
+    return;
+  }
+
+  setManualStatus("Saved", "status-verified");
+  setManualMessage("Manual schedule saved successfully.");
 });
 
 syncManualCasePresentation();
 syncManualPickerSection();
+syncManualBreakControls();
 renderManualAssignedStudents();
 syncManualSummary();

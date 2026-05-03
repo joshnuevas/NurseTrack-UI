@@ -8,6 +8,12 @@
     const page = path.split("/").pop();
     const legacyAdminPages = new Set(["user-list-manage-users.html", "user-management.html", "role-assignment.html"]);
     const removedAdminFeaturePages = new Set(["role-assignment.html", "enrollment-archive.html"]);
+    const ASSISTANT_ACCESS_KEYS = {
+      manualBackup: "nursetrack-assistant-manual-backup-access",
+      clearance: "nursetrack-assistant-clearance-access",
+      clinicalCases: "nursetrack-assistant-clinical-cases-access",
+      ciRecommendations: "nursetrack-assistant-ci-recommendations-access"
+    };
 
     let signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
     if (!signedRole && isAdmin) {
@@ -16,6 +22,11 @@
     }
 
     const isSignedAdmin = signedRole === "admin";
+    const isCoordinatorRole = signedRole === "coordinator";
+    const isEnrollmentRole = signedRole === "enrollment";
+    const isAssistantRole = signedRole === "assistant";
+    const assistantAccessEnabled = (key) => window.localStorage?.getItem(ASSISTANT_ACCESS_KEYS[key]) === "true";
+    const assistantCiRecommendationsEnabled = assistantAccessEnabled("ciRecommendations");
     const currentArea = isAdmin ? "admin" : isChair ? "admin-manager" : isInstructor ? "clinical-instructor" : isStudent ? "nursing-student" : "";
     const isAdminExperience = isAdmin || (isSignedAdmin && (isChair || isInstructor));
 
@@ -34,6 +45,7 @@
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
       { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-maker.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
       { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
+      { label: "Manual Backup", href: "manual-attendance-review.html", pages: ["manual-attendance-review.html"] },
       { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html", "student-progress-detail.html"] },
       { label: "Clearance", href: "student-clearance.html", pages: ["student-clearance.html", "student-clearance-detail.html"] },
       { label: "Clinical Cases View", href: "clinical-cases-view.html", pages: ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"] },
@@ -44,14 +56,47 @@
 
     const chairSchedulePages = ["admin-schedules.html", "schedule-maker.html", "manual-schedule.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"];
     const chairLiveAttendancePages = ["live-attendance-tracker.html"];
+    const chairManualAttendancePages = ["manual-attendance-review.html"];
     const chairStudentProgressPages = ["chair-student-progress.html", "student-progress-detail.html"];
     const chairClearancePages = ["student-clearance.html", "student-clearance-detail.html"];
     const chairClinicalCasePages = ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"];
     const chairRecommendationPages = ["student-appeals.html"];
     const chairOvertimePages = ["overtime-details.html", "overtime-rendered.html"];
     const chairReportPages = ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"];
+    const coordinatorDashboardPages = ["coordinator-dashboard.html"];
+    const coordinatorSchedulePages = ["schedule-management.html", "assigned-roster.html"];
+    const coordinatorChairPages = [
+      "coordinator-dashboard.html",
+      "live-attendance-tracker.html",
+      "chair-student-progress.html",
+      "student-progress-detail.html",
+      "clinical-cases-view.html",
+      "clinical-case-selection.html",
+      "case-validation.html",
+      "overtime-details.html",
+      "overtime-rendered.html",
+      "generate-report.html",
+      "case-report.html",
+      "duty-report.html",
+      "export-page.html"
+    ];
+    const enrollmentPages = ["chair-student-progress.html", "student-progress-detail.html"];
+    const assistantDashboardPages = ["assistant-dashboard.html"];
+    const assistantChairPages = [
+      "assistant-dashboard.html",
+      ...chairSchedulePages,
+      ...chairLiveAttendancePages,
+      ...chairStudentProgressPages,
+      ...chairOvertimePages,
+      ...chairReportPages,
+      ...chairManualAttendancePages,
+      ...chairClearancePages,
+      ...chairClinicalCasePages,
+      ...chairRecommendationPages
+    ];
     const instructorSchedulePages = ["schedule-management.html", "assigned-roster.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html"];
     const instructorLiveAttendancePages = ["live-attendance-tracker.html"];
+    const instructorManualAttendancePages = ["manual-attendance.html"];
     const instructorClinicalCasePages = ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "review-submissions.html", "validation-history.html"];
     const instructorStudentProgressPages = ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"];
     const instructorRecommendationPages = ["student-appeals.html"];
@@ -60,10 +105,12 @@
     const adminNavItems = [
       { label: "Dashboard", folder: "admin", href: "admin-dashboard.html", pages: ["admin-dashboard.html", "admin-notifications.html", "view-profile.html", "edit-profile.html"] },
       { label: "Manage Users", folder: "admin", href: "manage-users.html", pages: ["manage-users.html"] },
+      { label: "Assistant Access", folder: "admin", href: "assistant-access.html", pages: ["assistant-access.html"] },
       { label: "Section Import", folder: "admin", href: "section-import.html", pages: ["section-import.html"] },
       { label: "Hospitals / Duty Areas", folder: "admin", href: "hospital-duty-area.html", pages: ["hospital-duty-area.html"] },
       { label: "Schedules", folder: "admin-manager", href: "admin-schedules.html", pages: chairSchedulePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorSchedulePages }] },
       { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorLiveAttendancePages }] },
+      { label: "Manual Backup", folder: "admin-manager", href: "manual-attendance-review.html", pages: chairManualAttendancePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorManualAttendancePages }] },
       { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorStudentProgressPages }] },
       { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
       { label: "Clinical Cases", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorClinicalCasePages }] },
@@ -73,9 +120,37 @@
       { label: "Audit Logs", folder: "admin", href: "audit-logs.html", pages: ["audit-logs.html"] }
     ];
 
+    const coordinatorNavItems = [
+      { label: "Dashboard", folder: "admin-manager", href: "coordinator-dashboard.html", pages: coordinatorDashboardPages },
+      { label: "Schedules", folder: "clinical-instructor", href: "schedule-management.html", pages: coordinatorSchedulePages },
+      { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages },
+      { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages },
+      { label: "Clinical Cases", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages },
+      { label: "Overtime Details", folder: "admin-manager", href: "overtime-details.html", pages: chairOvertimePages },
+      { label: "Reports", folder: "admin-manager", href: "generate-report.html", pages: chairReportPages }
+    ];
+
+    const enrollmentNavItems = [
+      { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: enrollmentPages }
+    ];
+
+    const assistantNavItems = [
+      { label: "Dashboard", folder: "admin-manager", href: "assistant-dashboard.html", pages: assistantDashboardPages },
+      { label: "Schedules", folder: "admin-manager", href: "admin-schedules.html", pages: chairSchedulePages },
+      { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages },
+      { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages },
+      { label: "Manual Backup", folder: "admin-manager", href: "manual-attendance-review.html", pages: chairManualAttendancePages },
+      { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
+      { label: "Clinical Cases View", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages },
+      { label: "CI Recommendations", folder: "admin-manager", href: "student-appeals.html", pages: chairRecommendationPages },
+      { label: "Overtime Details", folder: "admin-manager", href: "overtime-details.html", pages: chairOvertimePages },
+      { label: "Reports", folder: "admin-manager", href: "generate-report.html", pages: chairReportPages }
+    ];
+
     const adminAllowedChairPages = new Set([
       ...chairSchedulePages,
       ...chairLiveAttendancePages,
+      ...chairManualAttendancePages,
       ...chairStudentProgressPages,
       ...chairClearancePages,
       ...chairClinicalCasePages,
@@ -86,21 +161,42 @@
     const adminAllowedInstructorPages = new Set([
       ...instructorSchedulePages,
       ...instructorLiveAttendancePages,
+      ...instructorManualAttendancePages,
       ...instructorClinicalCasePages,
       ...instructorStudentProgressPages,
       ...instructorRecommendationPages,
       ...instructorReportPages
     ]);
+    const coordinatorAllowedChairPages = new Set(coordinatorChairPages);
+    const coordinatorAllowedInstructorPages = new Set(coordinatorSchedulePages);
+    const enrollmentAllowedChairPages = new Set(enrollmentPages);
+    const assistantAllowedChairPages = new Set(assistantChairPages);
 
-    const isAdminAllowedOperationalRoute = () => (
-      isSignedAdmin &&
-      ((isChair && adminAllowedChairPages.has(page)) || (isInstructor && adminAllowedInstructorPages.has(page)))
-    );
+    const isAllowedOperationalRoute = () => {
+      if (isSignedAdmin) {
+        return (isChair && adminAllowedChairPages.has(page)) || (isInstructor && adminAllowedInstructorPages.has(page));
+      }
+
+      if (isCoordinatorRole) {
+        return (isChair && coordinatorAllowedChairPages.has(page)) || (isInstructor && coordinatorAllowedInstructorPages.has(page));
+      }
+
+      if (isEnrollmentRole) {
+        return isChair && enrollmentAllowedChairPages.has(page);
+      }
+
+      if (isAssistantRole) {
+        return isChair && assistantAllowedChairPages.has(page);
+      }
+
+      return false;
+    };
 
     const instructorNavItems = [
       { label: "Dashboard", href: "instructor-dashboard.html", pages: ["instructor-dashboard.html"] },
       { label: "Assigned Schedules", href: "schedule-management.html", pages: ["schedule-management.html", "assigned-roster.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html"] },
       { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
+      { label: "Manual Backup", href: "manual-attendance.html", pages: ["manual-attendance.html"] },
       { label: "Clinical Cases Review", href: "select-validation-user.html", pages: ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "validation-history.html"] },
       { label: "Student Progress", href: "instructor-student-view.html", pages: ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"] },
       { label: "Student Appeals", href: "student-appeals.html", pages: ["student-appeals.html"] },
@@ -166,6 +262,52 @@
       }
     };
 
+    const applyScopedIdentity = ({ roleChip, topbar, accountName, accountRole, avatarText, navItems }) => {
+      setText(".role-chip", roleChip);
+      setText(".topbar-title p", topbar);
+      setText(".sidebar-account strong", accountName);
+      setText(".sidebar-account span", accountRole);
+
+      const avatar = one(".sidebar-account .avatar");
+      if (avatar) {
+        avatar.textContent = avatarText;
+      }
+
+      all(".notification-button").forEach((button) => button.remove());
+      all(".topbar-profile-button").forEach((button) => button.remove());
+      renderSidebarNav(navItems);
+
+      const pageTitle = one(".topbar-title h1")?.textContent.trim();
+      document.title = `NurseTrack | ${pageTitle || roleChip}`;
+    };
+
+    const applyCoordinatorIdentity = () => applyScopedIdentity({
+      roleChip: "Coordinator",
+      topbar: "Coordinator Workspace",
+      accountName: "Coordinator Lim",
+      accountRole: "Coordinator",
+      avatarText: "CL",
+      navItems: coordinatorNavItems
+    });
+
+    const applyEnrollmentIdentity = () => applyScopedIdentity({
+      roleChip: "Enrollment Team",
+      topbar: "Enrollment Workspace",
+      accountName: "Enrollment Team",
+      accountRole: "Student Progress",
+      avatarText: "ET",
+      navItems: enrollmentNavItems
+    });
+
+    const applyAssistantIdentity = () => applyScopedIdentity({
+      roleChip: "Assistant",
+      topbar: "Assistant Workspace",
+      accountName: "Assistant Garcia",
+      accountRole: "Assistant",
+      avatarText: "AG",
+      navItems: assistantNavItems
+    });
+
     const replaceMainWithNotice = ({ kicker, title, copy, actionHref, actionLabel }) => {
       const main = one("main.workspace");
 
@@ -187,9 +329,11 @@
     };
 
     const enforceRoleOwnership = () => {
-      const routeRole = isAdmin ? "admin" : isChair && legacyAdminPages.has(page) ? "admin" : isChair ? "chair" : isInstructor ? "instructor" : isStudent ? "student" : "";
+      const routeRole = page === "coordinator-dashboard.html" ? "coordinator" :
+        page === "assistant-dashboard.html" ? "assistant" :
+          isAdmin ? "admin" : isChair && legacyAdminPages.has(page) ? "admin" : isChair ? "chair" : isInstructor ? "instructor" : isStudent ? "student" : "";
 
-      if (!signedRole || !routeRole || signedRole === routeRole || isAdminAllowedOperationalRoute()) {
+      if (!signedRole || !routeRole || signedRole === routeRole || isAllowedOperationalRoute()) {
         return false;
       }
 
@@ -197,18 +341,30 @@
         admin: "Admin",
         chair: "Chair",
         instructor: "Clinical Instructor",
-        student: "Nursing Student"
+        student: "Nursing Student",
+        coordinator: "Coordinator",
+        enrollment: "Enrollment Team",
+        assistant: "Assistant"
       };
       const homeLinks = {
         admin: ["../admin/admin-dashboard.html", "Open Admin Dashboard"],
         chair: ["../admin-manager/admin-dashboard.html", "Open Chair Dashboard"],
         instructor: ["../clinical-instructor/instructor-dashboard.html", "Open CI Dashboard"],
-        student: ["../nursing-student/student-dashboard.html", "Open Student Dashboard"]
+        student: ["../nursing-student/student-dashboard.html", "Open Student Dashboard"],
+        coordinator: ["../admin-manager/coordinator-dashboard.html", "Open Coordinator Dashboard"],
+        enrollment: ["../admin-manager/chair-student-progress.html", "Open Student Progress"],
+        assistant: ["../admin-manager/assistant-dashboard.html", "Open Assistant Dashboard"]
       };
       const [actionHref, actionLabel] = homeLinks[signedRole] || ["../index.html", "Return to login"];
 
       if (isSignedAdmin) {
         applyAdminIdentity();
+      } else if (isCoordinatorRole) {
+        applyCoordinatorIdentity();
+      } else if (isEnrollmentRole) {
+        applyEnrollmentIdentity();
+      } else if (isAssistantRole) {
+        applyAssistantIdentity();
       }
 
       setText(".topbar-title h1", "Access limited");
@@ -227,6 +383,21 @@
     const enhanceRoleSidebars = () => {
       if (isAdminExperience) {
         applyAdminIdentity();
+        return;
+      }
+
+      if (isCoordinatorRole) {
+        applyCoordinatorIdentity();
+        return;
+      }
+
+      if (isEnrollmentRole) {
+        applyEnrollmentIdentity();
+        return;
+      }
+
+      if (isAssistantRole) {
+        applyAssistantIdentity();
         return;
       }
 
@@ -289,6 +460,39 @@
       });
 
       return true;
+    };
+
+    const enhanceEnrollmentProgressView = () => {
+      if (!isEnrollmentRole || !isChair || !enrollmentAllowedChairPages.has(page)) {
+        return;
+      }
+
+      setText(".topbar-title h1", "Student Progress");
+
+      all("[data-student-progress-card]").forEach((card) => {
+        if (card.querySelector("[data-enrollment-clearance-note]")) {
+          return;
+        }
+
+        const copy = card.querySelector("span:nth-child(2)");
+        copy?.insertAdjacentHTML("beforeend", `<small data-enrollment-clearance-note>Cleared by Chair</small>`);
+      });
+
+      const detailPanel = one(".student-progress-detail, .student-progress-detail-card, .progress-detail-panel, main.workspace");
+      if (page === "student-progress-detail.html" && detailPanel && !one("[data-enrollment-clearance-panel]")) {
+        detailPanel.insertAdjacentHTML("afterbegin", `
+          <section class="workspace-panel" data-enrollment-clearance-panel>
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Enrollment Clearance</p>
+                <h2>Cleared by Chair</h2>
+              </div>
+              <span class="status-badge status-verified">Cleared</span>
+            </div>
+            <div class="form-message is-success">This student is cleared by the Chair for enrollment team review.</div>
+          </section>
+        `);
+      }
     };
 
     const enhanceAdminApprovedAppeals = () => {
@@ -814,9 +1018,60 @@
         (student.status === "Accepted" ? "accepted" : student.status === "Rejected" ? "rejected" : "")
       );
 
-      const decisionLabel = (decision) => decision === "accepted" ? "Accepted" : decision === "rejected" ? "Rejected" : "CI Recommended";
+      const decisionLabel = (decision, pendingLabel = "CI Recommended") => (
+        decision === "accepted" ? "Accepted" : decision === "rejected" ? "Rejected" : pendingLabel
+      );
       const decisionBadge = (decision) => decision === "accepted" ? "status-verified" : decision === "rejected" ? "status-rejected" : "status-pending";
       const possessiveName = (name) => `${name}${/s$/i.test(name) ? "'" : "'s"}`;
+      const appealArea = (student, appeal) => appeal.area || student.area || "Assigned duty area";
+      const appealAssignedCi = (appeal) => appeal.assignedCi || "Patricia Reyes, RN, MAN";
+      const appealEvidence = (appeal) => appeal.evidence || appeal.supportingNote || {
+        Attendance: "Transport advisory, timestamped arrival note, or CI attendance record attached.",
+        Schedule: "Updated duty roster screenshot or endorsed schedule change attached.",
+        "Clinical case": "Revised procedure note, checklist context, or case documentation attached."
+      }[appeal.type] || "Supporting note is recorded with the submitted appeal.";
+      const renderAppealMeta = (appeal) => `
+        <div class="ci-recommendation-meta">
+          <small>Submitted ${appeal.submitted}</small>
+          <small>Assigned CI: ${appealAssignedCi(appeal)}</small>
+        </div>
+      `;
+      const renderAppealFacts = (student, appeal) => `
+        <div class="ci-recommendation-facts">
+          <div class="ci-recommendation-box">
+            <span>Appeal Type</span>
+            <strong>${appeal.type}</strong>
+          </div>
+          <div class="ci-recommendation-box">
+            <span>Related Duty Date</span>
+            <strong>${appeal.dutyDate}</strong>
+          </div>
+          <div class="ci-recommendation-box">
+            <span>Clinical Site</span>
+            <strong>${appeal.site}</strong>
+          </div>
+          <div class="ci-recommendation-box">
+            <span>Duty Area</span>
+            <strong>${appealArea(student, appeal)}</strong>
+          </div>
+        </div>
+      `;
+      const renderAppealNotes = (appeal) => `
+        <div class="ci-recommendation-notes">
+          <div class="ci-recommendation-box">
+            <span>Student Reason</span>
+            <p>${appeal.reason}</p>
+          </div>
+          <div class="ci-recommendation-box">
+            <span>Supporting Evidence or Notes</span>
+            <p>${appealEvidence(appeal)}</p>
+          </div>
+          <div class="ci-recommendation-box">
+            <span>CI Recommendation</span>
+            <p>${appeal.recommendation}</p>
+          </div>
+        </div>
+      `;
 
       if (!one("[data-ci-recommendations-style]")) {
         const style = document.createElement("style");
@@ -938,6 +1193,20 @@
             border-bottom: 1px solid #e2e8f0;
           }
 
+          .ci-recommendation-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem 0.85rem;
+            margin-top: 0.45rem;
+          }
+
+          .ci-recommendation-meta small {
+            color: #64748b;
+            font-size: 0.88rem;
+            font-weight: 800;
+            line-height: 1.45;
+          }
+
           .ci-recommendation-facts,
           .ci-recommendation-notes {
             display: grid;
@@ -946,7 +1215,7 @@
           }
 
           .ci-recommendation-facts {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
           }
 
           .ci-recommendation-box {
@@ -1161,7 +1430,6 @@
               <label class="form-label" for="ci-recommendation-section">
                 Section
                 <select id="ci-recommendation-section">
-                  <option value="all">All sections</option>
                   <option value="BSN 3A">BSN 3A</option>
                   <option value="BSN 3B">BSN 3B</option>
                   <option value="BSN 3C">BSN 3C</option>
@@ -1206,14 +1474,14 @@
 
         const filterCards = () => {
           const query = search?.value.trim().toLowerCase() || "";
-          const sectionValue = section?.value || "all";
+          const sectionValue = section?.value || "BSN 3A";
           const statusValue = status?.value || "all";
           let visible = 0;
 
           cards.forEach((card) => {
             const haystack = `${card.dataset.name} ${card.dataset.id} ${card.dataset.section} ${card.dataset.area}`.toLowerCase();
             const matches = (!query || haystack.includes(query)) &&
-              (sectionValue === "all" || card.dataset.section === sectionValue) &&
+              card.dataset.section === sectionValue &&
               (statusValue === "all" || card.dataset.status === statusValue);
             card.hidden = !matches;
             if (matches) {
@@ -1248,9 +1516,9 @@
         })),
         ...selectedStudent.appeals
           .map((appeal, index) => ({ appeal, index, id: `${selectedStudent.slug}-${index}`, decision: decisionFor(selectedStudent, index), source: "current" }))
-          .filter((item) => ["accepted", "rejected"].includes(item.decision))
       ];
       const selectedHistoryItem = Number.isInteger(selectedHistoryIndex) ? selectedHistoryItems[selectedHistoryIndex] : null;
+      const canDecideRecommendations = !isAssistantRole || assistantCiRecommendationsEnabled;
 
       if (selectedHistoryItem) {
         main.innerHTML = `
@@ -1260,7 +1528,7 @@
                 <p class="section-kicker">${selectedStudent.section} - ${selectedStudent.id}</p>
                 <h2>${possessiveName(selectedStudent.name)} Appeal History</h2>
               </div>
-              <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision)}</mark>
+              <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision, "Pending")}</mark>
             </div>
 
             <article class="ci-recommendation-card">
@@ -1268,39 +1536,17 @@
                 <div>
                   <p class="section-kicker">${selectedHistoryItem.appeal.type}</p>
                   <h3>${selectedHistoryItem.appeal.title}</h3>
+                  ${renderAppealMeta(selectedHistoryItem.appeal)}
                 </div>
-                <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision)}</mark>
+                <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision, "Pending")}</mark>
               </div>
 
-              <div class="ci-recommendation-facts">
-                <div class="ci-recommendation-box">
-                  <span>Duty date</span>
-                  <strong>${selectedHistoryItem.appeal.dutyDate}</strong>
-                </div>
-                <div class="ci-recommendation-box">
-                  <span>Clinical site</span>
-                  <strong>${selectedHistoryItem.appeal.site}</strong>
-                </div>
-                <div class="ci-recommendation-box">
-                  <span>Submitted</span>
-                  <strong>${selectedHistoryItem.appeal.submitted}</strong>
-                </div>
-              </div>
+              ${renderAppealFacts(selectedStudent, selectedHistoryItem.appeal)}
+              ${renderAppealNotes(selectedHistoryItem.appeal)}
 
-              <div class="ci-recommendation-notes">
-                <div class="ci-recommendation-box">
-                  <span>Student Appeal</span>
-                  <p>${selectedHistoryItem.appeal.reason}</p>
-                </div>
-                <div class="ci-recommendation-box">
-                  <span>CI Recommendation</span>
-                  <p>${selectedHistoryItem.appeal.recommendation}</p>
-                </div>
-              </div>
-
-              ${isAdminExperience || isChair ? `
+              ${(isAdminExperience || isChair) && canDecideRecommendations ? `
                 <div class="ci-recommendation-actions">
-                  <button class="ghost-button" type="button" data-ci-history-edit> Edit Decision </button>
+                  <button class="ghost-button" type="button" data-ci-history-edit>${selectedHistoryItem.decision ? "Edit Decision" : "Review Decision"}</button>
                   <button class="ghost-button" type="button" data-ci-history-cancel hidden>Cancel</button>
                   <button class="ghost-button danger-button" type="button" data-ci-history-decision="rejected" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Rejected</button>
                   <button class="primary-button workspace-action" type="button" data-ci-history-decision="accepted" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Accepted</button>
@@ -1338,11 +1584,9 @@
               return;
             }
 
-            all(".status-badge").forEach((item) => {
-              if (item.textContent.trim() === "Accepted" || item.textContent.trim() === "Rejected") {
-                item.className = `status-badge ${decisionBadge(decision)}`;
-                item.textContent = decisionLabel(decision);
-              }
+            all(".student-progress-search-panel .status-badge, .ci-recommendation-card .status-badge").forEach((item) => {
+              item.className = `status-badge ${decisionBadge(decision)}`;
+              item.textContent = decisionLabel(decision);
             });
           });
         });
@@ -1372,40 +1616,20 @@
                     <div>
                       <p class="section-kicker">${appeal.type}</p>
                       <h3>${appeal.title}</h3>
+                      ${renderAppealMeta(appeal)}
                     </div>
                     <mark class="status-badge ${badgeClass}" data-ci-decision-badge>${badgeText}</mark>
                   </div>
 
-                  <div class="ci-recommendation-facts">
-                    <div class="ci-recommendation-box">
-                      <span>Duty date</span>
-                      <strong>${appeal.dutyDate}</strong>
-                    </div>
-                    <div class="ci-recommendation-box">
-                      <span>Clinical site</span>
-                      <strong>${appeal.site}</strong>
-                    </div>
-                    <div class="ci-recommendation-box">
-                      <span>Submitted</span>
-                      <strong>${appeal.submitted}</strong>
-                    </div>
-                  </div>
+                  ${renderAppealFacts(selectedStudent, appeal)}
+                  ${renderAppealNotes(appeal)}
 
-                  <div class="ci-recommendation-notes">
-                    <div class="ci-recommendation-box">
-                      <span>Student Appeal</span>
-                      <p>${appeal.reason}</p>
+                  ${canDecideRecommendations ? `
+                    <div class="ci-recommendation-actions">
+                      <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Reject Recommendation</button>
+                      <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Accept CI Recommendation</button>
                     </div>
-                    <div class="ci-recommendation-box">
-                      <span>CI Recommendation</span>
-                      <p>${appeal.recommendation}</p>
-                    </div>
-                  </div>
-
-                  <div class="ci-recommendation-actions">
-                    <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Reject Recommendation</button>
-                    <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Accept CI Recommendation</button>
-                  </div>
+                  ` : `<div class="form-message">Assistant can view CI recommendations but cannot accept or reject them.</div>`}
                 </article>
               `;
                 }).join("")}
@@ -1430,14 +1654,14 @@
                   <span class="avatar small-avatar">${selectedStudent.initials}</span>
                   <span>
                     <strong>${item.appeal.title}</strong>
-                    <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site}</small>
+                    <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
                     <small>Submitted ${item.appeal.submitted}</small>
                   </span>
-                  <mark class="status-badge ${decisionBadge(item.decision)}">${decisionLabel(item.decision)}</mark>
+                  <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>
                 </a>
               `).join("")}
             </div>
-          ` : `<div class="empty-state">No accepted or rejected appeals for this student yet.</div>`}
+          ` : `<div class="empty-state">No appeal records for this student yet.</div>`}
         </section>
       `;
 
@@ -1459,6 +1683,11 @@
             badge.className = `status-badge ${decision === "accepted" ? "status-verified" : "status-rejected"}`;
             badge.textContent = decision === "accepted" ? "Accepted" : "Rejected";
           }
+
+          all(`[data-ci-history-badge-id="${id}"]`).forEach((historyBadge) => {
+            historyBadge.className = `status-badge ${decisionBadge(decision)}`;
+            historyBadge.textContent = decisionLabel(decision, "Pending");
+          });
         });
       });
 
@@ -2389,6 +2618,7 @@
       return;
     }
 
+    enhanceEnrollmentProgressView();
     enhanceCiRecommendationsFlow();
     enhanceChairTerminology();
     enhanceChairSchedules();
@@ -2404,6 +2634,12 @@
 
     if (isAdminExperience) {
       applyAdminIdentity();
+    } else if (isCoordinatorRole) {
+      applyCoordinatorIdentity();
+    } else if (isEnrollmentRole) {
+      applyEnrollmentIdentity();
+    } else if (isAssistantRole) {
+      applyAssistantIdentity();
     }
   };
 

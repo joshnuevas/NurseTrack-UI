@@ -15,6 +15,9 @@ const selectedScheduleStudentsList = document.querySelector("#selected-schedule-
 const selectedScheduleStudentCount = document.querySelector("#selected-schedule-student-count");
 const selectedScheduleCaseTba = document.querySelector("#selected-schedule-case-tba");
 const selectedScheduleCaseInputs = Array.from(document.querySelectorAll("[data-selected-case-input]"));
+const selectedScheduleBreakDateInput = document.querySelector("#selected-schedule-break-date");
+const addSelectedScheduleBreakButton = document.querySelector("#add-selected-schedule-break");
+const selectedScheduleBreakList = document.querySelector("#selected-schedule-break-list");
 const studentRosterAddSearch = document.querySelector("#student-roster-add-search");
 const studentRosterAddOptions = document.querySelector("#student-roster-add-options");
 const selectedScheduleNotes = document.querySelector("#selected-schedule-notes");
@@ -60,6 +63,7 @@ const chairDayScheduleData = {
       caseDate: "2026-05-02",
       caseTime: "08:00",
       caseTba: false,
+      breakDates: [],
       ci: "Miguel Santos, RN, MAN",
       students: ["Zander Aligato", "Bianca Mariel Lumbre", "Klarisse Mumar", "Shaina Perez", "Rui Parba", "Relieza Rellon", "Ella Mae Maranga", "Hannah Louise Maturan", "Geralf Mojana", "Treshia Pinca"]
     },
@@ -78,6 +82,7 @@ const chairDayScheduleData = {
       caseDate: "",
       caseTime: "",
       caseTba: true,
+      breakDates: [],
       ci: "Patricia Reyes, RN, MAN",
       students: ["Maria Cruz", "Treasure Abadinas", "Carlo Fernandez", "Jasmine Lim"]
     }
@@ -89,7 +94,7 @@ const chairDayScheduleData = {
       status: "Published",
       group: "BSN 3A - Group 2",
       startDate: "2026-05-08",
-      endDate: "2026-05-08",
+      endDate: "2026-05-10",
       hospital: "CCMC",
       area: "Emergency Room",
       dutyType: "Regular",
@@ -98,6 +103,7 @@ const chairDayScheduleData = {
       caseDate: "2026-05-02",
       caseTime: "08:00",
       caseTba: false,
+      breakDates: ["2026-05-09"],
       ci: "Patricia Reyes, RN, MAN",
       students: ["Maria Cruz", "Treasure Abadinas", "Carlo Fernandez", "Josh Anton Nuevas", "Jasmine Lim", "Kaye Amor", "Bea Arocha", "Grace Alolor", "Mae Arquiza", "Ivanka Arreglo", "Klier Ator", "Mejgan Cabual"]
     },
@@ -116,6 +122,7 @@ const chairDayScheduleData = {
       caseDate: "",
       caseTime: "",
       caseTba: true,
+      breakDates: [],
       ci: "Rivelyn Altamira",
       students: ["Lady Dacayana", "Zyrelle Dianon", "Vera Doroon", "Shennen Dungcoy", "Mary Cielo Fernandez", "Jenelou Francis"]
     }
@@ -136,6 +143,7 @@ const chairDayScheduleData = {
       caseDate: "2026-05-02",
       caseTime: "09:00",
       caseTba: false,
+      breakDates: [],
       ci: "Elena Dela Cruz, RN, MN, DSCN",
       students: ["Jane Rea Basalo", "Bea Mae Batarilan", "Yelrich Bejoc", "Crystal Dela Calzada", "Nicole Dela Calzada", "Clark Leonor", "Chloe Relova", "Michelle Teano", "Oishi Valcorza"]
     }
@@ -380,6 +388,7 @@ function updateScheduleDetailsEditState() {
   }
 
   syncSelectedCasePresentationInputs();
+  syncSelectedBreakControls();
 
   if (selectedScheduleCancelButton) {
     selectedScheduleCancelButton.disabled = !canEdit;
@@ -528,16 +537,148 @@ function setSelectedScheduleValue(field, value) {
   field.value = value || "";
 }
 
+function parseSelectedScheduleDate(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) {
+    return null;
+  }
+
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function formatSelectedBreakDate(value) {
+  const date = parseSelectedScheduleDate(value);
+
+  if (!date) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+}
+
+function getSelectedBreakDates(schedule = selectedScheduleActive) {
+  return Array.from(new Set(schedule?.breakDates || []))
+    .filter((date) => Boolean(parseSelectedScheduleDate(date)))
+    .sort();
+}
+
+function setSelectedBreakDates(dates) {
+  if (!selectedScheduleActive) {
+    return;
+  }
+
+  selectedScheduleActive.breakDates = Array.from(new Set((dates || [])
+    .filter((date) => Boolean(parseSelectedScheduleDate(date)))))
+    .sort();
+}
+
+function selectedBreakDateInRange(date) {
+  const start = selectedScheduleActive?.startDate || "";
+  const end = selectedScheduleActive?.endDate || "";
+  return Boolean(date && start && end && start <= end && date >= start && date <= end);
+}
+
 function formatSelectedScheduleDateRange(schedule) {
   if (!schedule) {
     return "Not selected";
   }
 
+  const breakDates = getSelectedBreakDates(schedule);
+  const breakSummary = breakDates.length
+    ? ` (${breakDates.length} break date${breakDates.length === 1 ? "" : "s"})`
+    : "";
+
   if (schedule.startDate === schedule.endDate) {
-    return schedule.startDate;
+    return `${schedule.startDate}${breakSummary}`;
   }
 
-  return `${schedule.startDate} to ${schedule.endDate}`;
+  return `${schedule.startDate} to ${schedule.endDate}${breakSummary}`;
+}
+
+function renderSelectedBreakDates() {
+  if (!selectedScheduleBreakList) {
+    return;
+  }
+
+  const breakDates = getSelectedBreakDates();
+  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode);
+
+  if (!breakDates.length) {
+    selectedScheduleBreakList.innerHTML = `<span class="schedule-break-empty">No breaks added</span>`;
+    return;
+  }
+
+  selectedScheduleBreakList.innerHTML = breakDates.map((date) => `
+    <button class="schedule-break-chip" type="button" data-remove-selected-break="${date}"${canEdit ? "" : " disabled"}>
+      <span>${formatSelectedBreakDate(date)}</span>
+      <span aria-hidden="true">x</span>
+    </button>
+  `).join("");
+}
+
+function syncSelectedBreakControls(options = {}) {
+  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode);
+  const start = selectedScheduleActive?.startDate || "";
+  const end = selectedScheduleActive?.endDate || "";
+  const hasValidRange = Boolean(parseSelectedScheduleDate(start) && parseSelectedScheduleDate(end) && start <= end);
+
+  if (selectedScheduleBreakDateInput) {
+    selectedScheduleBreakDateInput.min = start || "";
+    selectedScheduleBreakDateInput.max = end || "";
+    selectedScheduleBreakDateInput.disabled = !canEdit || !hasValidRange;
+  }
+
+  if (addSelectedScheduleBreakButton) {
+    addSelectedScheduleBreakButton.disabled = !canEdit || !hasValidRange;
+  }
+
+  if (options.prune && hasValidRange) {
+    const previousCount = getSelectedBreakDates().length;
+    setSelectedBreakDates(getSelectedBreakDates().filter(selectedBreakDateInRange));
+    const currentCount = getSelectedBreakDates().length;
+
+    if (previousCount !== currentCount) {
+      setSelectedScheduleMessage("Break dates outside the selected date range were removed.", true, "details");
+    }
+  }
+
+  renderSelectedBreakDates();
+}
+
+function addSelectedBreakDate() {
+  if (!selectedScheduleActive) {
+    return;
+  }
+
+  const date = selectedScheduleBreakDateInput?.value || "";
+
+  if (!selectedBreakDateInRange(date)) {
+    setSelectedScheduleMessage("Break date must be inside the selected start and end dates.", false, "details");
+    return;
+  }
+
+  const breakDates = getSelectedBreakDates();
+
+  if (breakDates.includes(date)) {
+    setSelectedScheduleMessage(`${formatSelectedBreakDate(date)} is already marked as a break.`, false, "details");
+    return;
+  }
+
+  setSelectedBreakDates([...breakDates, date]);
+
+  if (selectedScheduleBreakDateInput) {
+    selectedScheduleBreakDateInput.value = "";
+  }
+
+  syncSelectedScheduleSummary();
+  syncSelectedBreakControls();
+  renderSelectedDayList();
+  setSelectedScheduleMessage(`${formatSelectedBreakDate(date)} added as a break date.`, true, "details");
 }
 
 function syncSelectedCasePresentationInputs() {
@@ -661,6 +802,7 @@ function renderSelectedDayList() {
       <strong>${schedule.title}</strong>
       <span>${schedule.group}</span>
       <small>${schedule.area} - ${schedule.shiftStart} to ${schedule.shiftEnd}</small>
+      ${getSelectedBreakDates(schedule).length ? `<small class="schedule-break-summary">Breaks: ${getSelectedBreakDates(schedule).map(formatSelectedBreakDate).join(", ")}</small>` : ""}
     </button>
   `).join("");
 
@@ -760,6 +902,7 @@ function syncSelectedScheduleSummary() {
     selectedScheduleActive.caseDate = selectedScheduleActive.caseTba ? "" : (selectedScheduleFields.caseDate?.value || "");
     selectedScheduleActive.caseTime = selectedScheduleActive.caseTba ? "" : (selectedScheduleFields.caseTime?.value || "");
     selectedScheduleActive.ci = selectedScheduleFields.ci?.value || selectedScheduleActive.ci;
+    syncSelectedBreakControls({ prune: true });
   }
 
   if (selectedScheduleHeading) {
@@ -810,6 +953,7 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
     if (selectedScheduleSummary.students) selectedScheduleSummary.students.textContent = "0 assigned";
     if (selectedScheduleSummary.shift) selectedScheduleSummary.shift.textContent = "No shift";
     if (studentRosterAddOptions) studentRosterAddOptions.hidden = true;
+    syncSelectedBreakControls();
     updateScheduleDetailsEditState();
     clearScheduleDetailsMessage();
     clearRosterMessage();
@@ -838,6 +982,7 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
   }
 
   syncSelectedCasePresentationInputs();
+  syncSelectedBreakControls({ prune: true });
   syncSelectedScheduleSummary();
   renderSelectedStudents(schedule);
   renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
@@ -853,20 +998,40 @@ Object.values(selectedScheduleFields).forEach((field) => {
   field?.addEventListener("input", () => {
     if (selectedScheduleEditMode) {
       syncSelectedScheduleSummary();
+      renderSelectedDayList();
     }
   });
 
   field?.addEventListener("change", () => {
     if (selectedScheduleEditMode) {
       syncSelectedScheduleSummary();
+      renderSelectedDayList();
     }
   });
+});
+
+addSelectedScheduleBreakButton?.addEventListener("click", addSelectedBreakDate);
+
+selectedScheduleBreakList?.addEventListener("click", (event) => {
+  const removeButton = event.target.closest("[data-remove-selected-break]");
+
+  if (!removeButton || !selectedScheduleEditMode) {
+    return;
+  }
+
+  const date = removeButton.dataset.removeSelectedBreak;
+  setSelectedBreakDates(getSelectedBreakDates().filter((item) => item !== date));
+  syncSelectedScheduleSummary();
+  syncSelectedBreakControls();
+  renderSelectedDayList();
+  setSelectedScheduleMessage(`${formatSelectedBreakDate(date)} removed from break dates.`, true, "details");
 });
 
 selectedScheduleCaseTba?.addEventListener("change", () => {
   if (selectedScheduleEditMode) {
     syncSelectedCasePresentationInputs();
     syncSelectedScheduleSummary();
+    renderSelectedDayList();
   }
 });
 

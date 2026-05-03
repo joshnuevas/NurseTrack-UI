@@ -366,6 +366,7 @@
 
                     <div class="clearance-detail-actions">
                       <button class="primary-button" id="approve-clearance" type="button">Approve Clearance</button>
+                      <button class="ghost-button danger-button" id="edit-clearance-approval" type="button" hidden>Cancel Approval</button>
                       <span class="form-message clearance-approval-note" role="status" aria-live="polite">
                         This will mark the student as cleared for this semester.
                       </span>
@@ -377,6 +378,21 @@
           </section>
         </main>
       </div>
+    </div>
+
+    <div class="modal-backdrop" id="clearance-confirm-modal" hidden>
+      <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="clearance-confirm-title" aria-describedby="clearance-confirm-copy">
+        <div class="modal-heading">
+          <div>
+            <h2 id="clearance-confirm-title">Approve clearance?</h2>
+          </div>
+        </div>
+        <p class="modal-copy" id="clearance-confirm-copy">This will mark the selected student as cleared for this semester.</p>
+        <div class="modal-actions">
+          <button class="ghost-button" type="button" id="cancel-clearance-confirm">Cancel</button>
+          <button class="primary-button" type="button" id="confirm-clearance-approval">Approve Clearance</button>
+        </div>
+      </section>
     </div>
 
     <script src="../scripts/clinical-instructor-data.js"></script>

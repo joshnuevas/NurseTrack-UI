@@ -53,7 +53,9 @@ function generateReport() {
     return;
   }
 
-  setMessage(`${reportType.value} generated for Maria Cruz as ${formatFilter.value}.`, "is-success");
+  const reportTypeLabel = reportType?.value || "General report";
+  const formatLabel = formatFilter?.value || "PDF";
+  setMessage(`${reportTypeLabel} generated for Maria Cruz as ${formatLabel}.`, "is-success");
 }
 
 function resetReport() {

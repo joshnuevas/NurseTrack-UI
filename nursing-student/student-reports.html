@@ -36,24 +36,26 @@
         font-weight: 800;
       }
 
-      .student-report-form .button-row {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
+      .student-report-form .report-actions {
+        display: grid;
+        grid-template-columns: minmax(120px, 0.75fr) minmax(190px, 1.25fr);
         gap: 14px;
-        margin-top: 1.25rem;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        width: min(100%, 560px);
+        margin: 1.25rem 0 0 auto;
       }
 
-      .student-report-form .button-row .ghost-button,
-      .student-report-form .button-row .primary-button {
+      .student-report-form .report-actions .ghost-button,
+      .student-report-form .report-actions .primary-button {
+        width: 100%;
         min-height: 52px;
         padding: 0 28px;
         border-radius: 10px;
         white-space: nowrap;
       }
 
-      .student-report-form .button-row .primary-button {
+      .student-report-form .report-actions .primary-button {
         min-width: 210px;
       }
 
@@ -64,15 +66,14 @@
         cursor: default;
       }
 
-      @media (max-width: 680px) {
-        .student-report-form .button-row {
-          flex-direction: column;
-          align-items: stretch;
+      @media (max-width: 520px) {
+        .student-report-form .report-actions {
+          grid-template-columns: 1fr;
+          width: 100%;
         }
 
-        .student-report-form .button-row .ghost-button,
-        .student-report-form .button-row .primary-button {
-          width: 100%;
+        .student-report-form .report-actions .primary-button {
+          min-width: 0;
         }
       }
     </style>

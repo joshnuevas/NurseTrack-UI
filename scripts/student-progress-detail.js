@@ -8,7 +8,6 @@ const weeklyDutyList = document.querySelector("#weekly-duty-list");
 const weeklyDutyDays = document.querySelector("#weekly-duty-days");
 const weeklyDutyHours = document.querySelector("#weekly-duty-hours");
 const weeklyDutyOvertime = document.querySelector("#weekly-duty-overtime");
-const weeklyDutyOvertimeBadge = document.querySelector("#weekly-duty-overtime-badge");
 const weeklyDutyOverviewTitle = document.querySelector("#weekly-duty-overview-title");
 const weeklyDutyOverviewCopy = document.querySelector("#weekly-duty-overview-copy");
 const weeklyDutyMessage = document.querySelector("#weekly-duty-message");
@@ -226,11 +225,6 @@ function renderWeeklyDuty(studentKey, student) {
 
   if (weeklyDutyOvertime) {
     weeklyDutyOvertime.textContent = formatHours(totalOvertime);
-  }
-
-  if (weeklyDutyOvertimeBadge) {
-    weeklyDutyOvertimeBadge.textContent = `${formatHours(totalOvertime)} OT`;
-    weeklyDutyOvertimeBadge.className = `status-badge ${totalOvertime > 0 ? "status-rejected" : "status-verified"}`;
   }
 
   if (weeklyDutyOverviewTitle) {

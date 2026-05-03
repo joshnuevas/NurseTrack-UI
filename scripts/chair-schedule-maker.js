@@ -629,7 +629,7 @@ function createManualScheduleRow() {
       </label>
       <label class="checkbox-line">
         <input type="checkbox" data-case-presentation-tba checked>
-        No case presentation
+              No Case Presentation
       </label>
       <label class="form-label">Supervising CI
         <select>
