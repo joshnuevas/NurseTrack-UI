@@ -287,18 +287,17 @@ function renderManualAttendanceCard(submission, options = {}) {
   const detailHref = `manual-attendance-review.html?ci=${encodeURIComponent(ciSlug)}&record=${encodeURIComponent(submission.id)}`;
 
   return `
-    <article class="manual-attendance-review-card" data-manual-attendance-submission="${submission.id}">
-      <div class="manual-attendance-review-compact">
-        <span class="avatar small-avatar">${escapeHtml((submission.submittedBy || "CI").split(" ").map((part) => part[0]).join("").slice(0, 2) || "CI")}</span>
-        <div>
-          <p class="section-kicker">${escapeHtml(submission.site)} - ${escapeHtml(submission.area)}</p>
-          <h3>${formatManualDate(submission.dutyDate)} Attendance</h3>
-          <small>${formatManualShift(submission.shiftStart, submission.shiftEnd)} - ${submission.students.length} student${submission.students.length === 1 ? "" : "s"} - Encoded ${escapeHtml(submission.submittedAt)}</small>
-        </div>
-        <span class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</span>
-        <a class="ghost-button compact-button button-link" href="${detailHref}">View Details</a>
-      </div>
-    </article>
+    <a class="manual-attendance-history-item manual-attendance-review-link is-editable" href="${detailHref}" data-manual-attendance-submission="${submission.id}">
+      <span class="avatar small-avatar">${escapeHtml((submission.submittedBy || "CI").split(" ").map((part) => part[0]).join("").slice(0, 2) || "CI")}</span>
+      <span>
+        <strong>${formatManualDate(submission.dutyDate)} Attendance</strong>
+        <small>${escapeHtml(submission.site)} - ${escapeHtml(submission.area)} - ${formatManualShift(submission.shiftStart, submission.shiftEnd)}</small>
+        <small>Encoded ${escapeHtml(submission.submittedAt)}</small>
+      </span>
+      <span class="manual-attendance-history-actions">
+        <mark class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</mark>
+      </span>
+    </a>
   `;
 }
 
@@ -327,7 +326,7 @@ function renderManualAttendanceStudentResults() {
   const matches = manualAttendanceStudents
     .filter((student) => !selectedIds.has(student.id))
     .filter((student) => {
-      const searchable = `${student.name} ${student.studentId} ${student.section} ${student.area} ${student.site}`.toLowerCase();
+      const searchable = `${student.name} ${student.studentId} ${student.section} ${student.site}`.toLowerCase();
       return !query || searchable.includes(query);
     })
     .slice(0, 6);
@@ -337,7 +336,7 @@ function renderManualAttendanceStudentResults() {
       <span class="avatar small-avatar">${student.initials}</span>
       <span>
         <strong>${escapeHtml(student.name)}</strong>
-        <small>${escapeHtml(student.section)} - ${escapeHtml(student.studentId)} - ${escapeHtml(student.area)}</small>
+        <small>${escapeHtml(student.section)} - ${escapeHtml(student.studentId)}</small>
       </span>
       <mark class="status-badge status-pending">Add</mark>
     </button>
@@ -367,7 +366,7 @@ function renderManualAttendanceSelectedStudents() {
         <span class="avatar small-avatar">${student.initials}</span>
         <span>
           <strong>${escapeHtml(student.name)}</strong>
-          <small>${escapeHtml(student.section)} - ${escapeHtml(student.studentId)} - ${escapeHtml(student.area)}</small>
+          <small>${escapeHtml(student.section)} - ${escapeHtml(student.studentId)}</small>
         </span>
         <button class="icon-button" type="button" data-manual-remove-student="${student.id}" aria-label="Remove ${escapeHtml(student.name)}">&times;</button>
       </div>
@@ -582,7 +581,6 @@ function renderManualAttendanceCiHistory() {
       </span>
       <span class="manual-attendance-history-actions">
         <mark class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</mark>
-        <small>${isEditable ? "Edit Record" : "Locked"}</small>
       </span>
     </button>
   `;
@@ -604,7 +602,6 @@ function renderManualAttendanceEntry() {
           <div>
             <h2>Encode Attendance</h2>
           </div>
-          <span class="status-badge status-pending" id="manual-attendance-selected-count">0 selected</span>
         </div>
 
         <div class="manual-attendance-duty-grid">
@@ -659,10 +656,11 @@ function renderManualAttendanceEntry() {
           <div>
             <h2>Add Students</h2>
           </div>
+          <span class="status-badge status-pending" id="manual-attendance-selected-count">0 selected</span>
         </div>
 
         <label class="form-label">Search student
-          <input id="manual-attendance-student-search" type="search" placeholder="Search name, ID, section, duty area, or site">
+          <input id="manual-attendance-student-search" type="search" placeholder="Search name, ID, section, or site">
         </label>
 
         <div class="manual-attendance-student-results" id="manual-attendance-student-results"></div>
@@ -954,7 +952,6 @@ function renderManualAttendanceRecordDetail(ciSlug, recordId) {
             <p class="section-kicker">Manual Backup</p>
             <h2>Record Not Found</h2>
           </div>
-          <a class="ghost-button button-link" href="manual-attendance-review.html?ci=${encodeURIComponent(ci.slug)}">Back to Records</a>
         </div>
         <div class="empty-state">This manual attendance record could not be found.</div>
       </section>
@@ -976,28 +973,25 @@ function renderManualAttendanceRecordDetail(ciSlug, recordId) {
       <article class="workspace-panel student-progress-search-panel manual-attendance-ci-profile">
         <div class="panel-heading">
           <div>
-            <p class="section-kicker">${escapeHtml(ci.name)}</p>
             <h2>${formatManualDate(submission.dutyDate)} Attendance</h2>
           </div>
-          <a class="ghost-button button-link" href="manual-attendance-review.html?ci=${encodeURIComponent(ci.slug)}">Back to Records</a>
         </div>
 
         <div class="student-validation-card no-margin">
           <div class="avatar">${escapeHtml(ci.initials)}</div>
           <div>
             <strong>${escapeHtml(submission.site)} - ${escapeHtml(submission.area)}</strong>
-            <p>${formatManualShift(submission.shiftStart, submission.shiftEnd)} - ${submission.students.length} student${submission.students.length === 1 ? "" : "s"} - Encoded ${escapeHtml(submission.submittedAt)}</p>
+            <p>Encoded ${escapeHtml(submission.submittedAt)}</p>
           </div>
           <span class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</span>
         </div>
       </article>
 
-      <section class="workspace-panel manual-attendance-review-panel">
+      <section class="workspace-panel manual-attendance-review-panel manual-attendance-record-panel">
         <div class="panel-heading">
           <div>
             <h2>Record Details</h2>
           </div>
-          <span class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</span>
         </div>
 
         <div class="manual-attendance-review-summary">
@@ -1065,13 +1059,11 @@ function renderManualAttendanceCiDetail(ciSlug) {
 
   workspace.innerHTML = `
     <section class="manual-attendance-review-detail" data-manual-attendance-review>
-      <article class="workspace-panel student-progress-search-panel manual-attendance-ci-profile">
+      <article class="workspace-panel manual-attendance-review-panel manual-attendance-ci-profile">
         <div class="panel-heading">
           <div>
-            <p class="section-kicker">Manual Backup</p>
-            <h2>${escapeHtml(ci.name)}</h2>
+            <h2>Manual Backup</h2>
           </div>
-          <a class="ghost-button button-link" href="manual-attendance-review.html">Back to CI List</a>
         </div>
 
         <div class="student-validation-card no-margin">
@@ -1091,7 +1083,7 @@ function renderManualAttendanceCiDetail(ciSlug) {
           <span class="status-badge status-pending" id="manual-attendance-review-count">${pendingCount} pending</span>
         </div>
 
-        <div id="manual-attendance-review-list" class="manual-attendance-review-list"></div>
+        <div id="manual-attendance-review-list" class="manual-attendance-review-list manual-attendance-history-list"></div>
         <div id="manual-attendance-review-empty" class="empty-state" hidden>No manual attendance records are waiting for review.</div>
       </section>
 
@@ -1103,7 +1095,7 @@ function renderManualAttendanceCiDetail(ciSlug) {
           <span class="status-badge status-verified" id="manual-attendance-history-count">${historyCount} records</span>
         </div>
 
-        <div id="manual-attendance-history-list" class="manual-attendance-review-list"></div>
+        <div id="manual-attendance-history-list" class="manual-attendance-review-list manual-attendance-history-list"></div>
         <div id="manual-attendance-history-empty" class="empty-state" hidden>No manual attendance records yet.</div>
       </section>
     </section>

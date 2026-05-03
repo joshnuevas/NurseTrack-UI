@@ -55,7 +55,8 @@ const appeals = [
     status: "new",
     title: "Late arrival due to bus delay",
     reason: "CIT-U shuttle was delayed after traffic rerouting near the hospital entrance.",
-    evidence: "Attached transport advisory and arrival photo timestamp."
+    evidence: "Attached transport advisory and arrival photo timestamp.",
+    evidenceFiles: ["transport-advisory.pdf", "arrival-photo.jpg"]
   },
   {
     id: "appeal-treasure-shift",
@@ -263,6 +264,7 @@ function renderAppealCard(appeal) {
   const meta = getStatusMeta(appeal.status);
   const isLocked = isAppealLocked(appeal);
   const isSelected = selectedAppealIds.has(appeal.id);
+  const evidenceFiles = appeal.evidenceFiles || [];
 
   return `
     <article class="appeal-card ${isSelected ? "is-selected" : ""}" data-appeal-id="${appeal.id}">
@@ -322,11 +324,15 @@ function renderAppealCard(appeal) {
             <p class="section-kicker">Supporting Evidence or Notes</p>
             <p>${appeal.evidence}</p>
           </div>
+          <div class="appeal-detail-note">
+            <p class="section-kicker">Supporting Files</p>
+            <p>${evidenceFiles.length ? evidenceFiles.join(", ") : "No files attached."}</p>
+          </div>
         </div>
 
         <div class="appeal-actions">
-          <button class="primary-button workspace-action" type="button" data-appeal-recommend="${appeal.id}"${isLocked ? " disabled" : ""}>Accept appeal</button>
-          <button class="ghost-button danger-button" type="button" data-appeal-reject="${appeal.id}"${isLocked ? " disabled" : ""}>Reject appeal</button>
+          <button class="primary-button workspace-action" type="button" data-appeal-recommend="${appeal.id}"${isLocked ? " disabled" : ""}>Mark as Accepted</button>
+          <button class="ghost-button danger-button" type="button" data-appeal-reject="${appeal.id}"${isLocked ? " disabled" : ""}>Mark as Rejected</button>
         </div>
       </div>
     </article>

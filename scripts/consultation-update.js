@@ -745,7 +745,6 @@
             <div class="approved-appeal-detail-title">
               <span class="avatar">${appeal.initials}</span>
               <div>
-                <p class="section-kicker">${appeal.type}</p>
                 <h3>${appeal.title}</h3>
               </div>
             </div>
@@ -829,6 +828,7 @@
               site: "CCMC",
               submitted: "Today, 7:48 AM",
               reason: "CIT-U shuttle was delayed after traffic rerouting near the hospital entrance.",
+              files: ["transport-advisory.pdf", "arrival-photo.jpg"],
               recommendation: "CI recommends accepting the appeal because transport evidence and arrival timestamp were attached."
             }
           ],
@@ -841,7 +841,8 @@
               submitted: "April 12, 2026, 8:04 AM",
               status: "accepted",
               reason: "Student submitted a transport delay notice before the duty shift ended.",
-              recommendation: "CI recommended acceptance after verifying the timestamped notice."
+              files: ["delay-notice.pdf"],
+              recommendation: "Acceptance recommended after verifying the timestamped notice."
             }
           ]
         },
@@ -883,7 +884,7 @@
               submitted: "April 18, 2026, 6:30 PM",
               status: "accepted",
               reason: "Student requested validation of an approved shift swap after the roster was updated.",
-              recommendation: "CI recommended acceptance because the swap was endorsed before the shift."
+              recommendation: "Acceptance recommended because the swap was endorsed before the shift."
             },
             {
               type: "Attendance",
@@ -893,7 +894,7 @@
               submitted: "April 10, 2026, 7:15 AM",
               status: "rejected",
               reason: "Student asked to correct a missed first scan without supporting duty area confirmation.",
-              recommendation: "CI recommended rejection because the arrival could not be verified."
+              recommendation: "Rejection recommended because the arrival could not be verified."
             }
           ]
         },
@@ -926,7 +927,7 @@
               submitted: "April 15, 2026, 7:44 AM",
               status: "accepted",
               reason: "Student submitted a city traffic advisory for delayed public transport.",
-              recommendation: "CI recommended acceptance after matching the advisory with the duty time."
+              recommendation: "Acceptance recommended after matching the advisory with the duty time."
             }
           ]
         },
@@ -959,7 +960,7 @@
               submitted: "April 17, 2026, 5:52 PM",
               status: "accepted",
               reason: "Student clarified missing checklist context after CI returned the clinical case.",
-              recommendation: "CI recommended acceptance after the revised checklist was attached."
+              recommendation: "Acceptance recommended after the revised checklist was attached."
             }
           ]
         },
@@ -992,7 +993,7 @@
               submitted: "April 14, 2026, 8:20 AM",
               status: "accepted",
               reason: "Student requested correction after the CI confirmed a scanner sync delay.",
-              recommendation: "CI recommended acceptance because the ward log matched the arrival time."
+              recommendation: "Acceptance recommended because the ward log matched the arrival time."
             }
           ]
         }
@@ -1013,12 +1014,18 @@
         }
       })();
 
-      const decisionFor = (student, index) => (
-        decisionMap[`${student.slug}-${index}`] ||
-        (student.status === "Accepted" ? "accepted" : student.status === "Rejected" ? "rejected" : "")
+      const storedDecisionFor = (id, fallback = "") => (
+        Object.prototype.hasOwnProperty.call(decisionMap, id)
+          ? (decisionMap[id] === "pending" ? "" : decisionMap[id])
+          : fallback
       );
 
-      const decisionLabel = (decision, pendingLabel = "CI Recommended") => (
+      const decisionFor = (student, index) => storedDecisionFor(
+        `${student.slug}-${index}`,
+        student.status === "Accepted" ? "accepted" : student.status === "Rejected" ? "rejected" : ""
+      );
+
+      const decisionLabel = (decision, pendingLabel = "Pending") => (
         decision === "accepted" ? "Accepted" : decision === "rejected" ? "Rejected" : pendingLabel
       );
       const decisionBadge = (decision) => decision === "accepted" ? "status-verified" : decision === "rejected" ? "status-rejected" : "status-pending";
@@ -1056,8 +1063,11 @@
           </div>
         </div>
       `;
-      const renderAppealNotes = (appeal) => `
-        <div class="ci-recommendation-notes">
+      const renderAppealNotes = (appeal) => {
+        const showRecommendationNote = !(isInstructor && !isAdminExperience);
+
+        return `
+          <div class="ci-recommendation-notes">
           <div class="ci-recommendation-box">
             <span>Student Reason</span>
             <p>${appeal.reason}</p>
@@ -1067,11 +1077,18 @@
             <p>${appealEvidence(appeal)}</p>
           </div>
           <div class="ci-recommendation-box">
-            <span>CI Recommendation</span>
-            <p>${appeal.recommendation}</p>
+            <span>Supporting Files</span>
+            <p>${appeal.files?.length ? appeal.files.join(", ") : "No files attached."}</p>
           </div>
+          ${showRecommendationNote ? `
+            <div class="ci-recommendation-box">
+              <span>CI Recommendation</span>
+              <p>${appeal.recommendation}</p>
+            </div>
+          ` : ""}
         </div>
-      `;
+        `;
+      };
 
       if (!one("[data-ci-recommendations-style]")) {
         const style = document.createElement("style");
@@ -1129,7 +1146,7 @@
           }
 
           .student-progress-search-panel .panel-heading .section-kicker {
-            margin-bottom: 0.45rem;
+            margin-bottom: 0.65rem;
           }
 
           .ci-recommendation-carousel {
@@ -1177,7 +1194,7 @@
           }
 
           .ci-recommendation-card {
-            padding: 1rem;
+            padding: 1.35rem;
             border: 1px solid #e2e8f0;
             border-radius: 0.5rem;
             background: #ffffff;
@@ -1193,11 +1210,25 @@
             border-bottom: 1px solid #e2e8f0;
           }
 
+          .ci-recommendation-card-head > div {
+            display: grid;
+            gap: 0.8rem;
+          }
+
+          .ci-recommendation-card-head h3 {
+            margin: -0.1rem 0 0;
+            line-height: 1.16;
+          }
+
+          .ci-recommendation-card-head .status-badge {
+            margin-top: 0;
+          }
+
           .ci-recommendation-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 0.45rem 0.85rem;
-            margin-top: 0.45rem;
+            margin-top: 0;
           }
 
           .ci-recommendation-meta small {
@@ -1210,20 +1241,41 @@
           .ci-recommendation-facts,
           .ci-recommendation-notes {
             display: grid;
-            gap: 0.75rem;
             margin-top: 0.9rem;
           }
 
           .ci-recommendation-facts {
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background: #f8fafc;
+          }
+
+          .ci-recommendation-notes {
+            gap: 0.85rem;
           }
 
           .ci-recommendation-box {
-            padding: 0.85rem;
-            border: 1px solid #e5eaf1;
+            padding: 1rem 1.05rem;
+            border: 0;
             border-radius: 0.5rem;
             background: #f8fafc;
             font-family: inherit;
+          }
+
+          .ci-recommendation-facts .ci-recommendation-box {
+            border-right: 1px solid #e2e8f0;
+            border-radius: 0;
+          }
+
+          .ci-recommendation-facts .ci-recommendation-box:last-child {
+            border-right: 0;
+          }
+
+          .ci-recommendation-notes .ci-recommendation-box {
+            border-left: 5px solid #ffcf01;
           }
 
           .ci-recommendation-box span {
@@ -1281,6 +1333,26 @@
 
           .ci-recommendation-history-list-panel {
             margin-top: 1rem;
+          }
+
+          .ci-recommendation-history-group {
+            display: grid;
+            gap: 0.75rem;
+          }
+
+          .ci-recommendation-history-group + .ci-recommendation-history-group {
+            margin-top: 1rem;
+          }
+
+          .ci-recommendation-history-subhead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            color: #475569;
+            font-size: 0.78rem;
+            font-weight: 900;
+            text-transform: uppercase;
           }
 
           .ci-recommendation-history-list {
@@ -1343,6 +1415,12 @@
             color: #415a7a;
           }
 
+          .ci-recommendation-history-item .status-badge {
+            justify-self: end;
+            min-width: 112px;
+            justify-content: center;
+          }
+
           .ci-recommendation-history-detail {
             display: grid;
             gap: 0.75rem;
@@ -1380,10 +1458,17 @@
             padding: 1rem;
           }
 
-            .ci-recommendation-history-item .status-badge {
-              grid-column: 2;
-              justify-self: start;
-            }
+          .ci-recommendation-history-item .status-badge {
+            justify-self: end;
+            min-width: 112px;
+            justify-content: center;
+          }
+
+          .ci-recommendation-history-item .status-badge {
+            grid-column: 2;
+            justify-self: start;
+            min-width: 0;
+          }
 
             .ci-recommendation-carousel {
               grid-template-columns: 1fr;
@@ -1511,14 +1596,18 @@
           appeal,
           index,
           id: `${selectedStudent.slug}-history-${index}`,
-          decision: decisionMap[`${selectedStudent.slug}-history-${index}`] || (appeal.status === "rejected" ? "rejected" : "accepted"),
+          decision: storedDecisionFor(`${selectedStudent.slug}-history-${index}`, appeal.status === "rejected" ? "rejected" : "accepted"),
           source: "history"
         })),
         ...selectedStudent.appeals
           .map((appeal, index) => ({ appeal, index, id: `${selectedStudent.slug}-${index}`, decision: decisionFor(selectedStudent, index), source: "current" }))
       ];
+      const indexedHistoryItems = selectedHistoryItems.map((item, historyIndex) => ({ ...item, historyIndex }));
+      const pendingHistoryItems = indexedHistoryItems.filter((item) => !["accepted", "rejected"].includes(item.decision));
+      const decidedHistoryItems = indexedHistoryItems.filter((item) => ["accepted", "rejected"].includes(item.decision));
       const selectedHistoryItem = Number.isInteger(selectedHistoryIndex) ? selectedHistoryItems[selectedHistoryIndex] : null;
       const canDecideRecommendations = !isAssistantRole || assistantCiRecommendationsEnabled;
+      const canEditHistoryDecision = (isInstructor || isAdminExperience || isChair) && canDecideRecommendations;
 
       if (selectedHistoryItem) {
         main.innerHTML = `
@@ -1528,13 +1617,11 @@
                 <p class="section-kicker">${selectedStudent.section} - ${selectedStudent.id}</p>
                 <h2>${possessiveName(selectedStudent.name)} Appeal History</h2>
               </div>
-              <mark class="status-badge ${decisionBadge(selectedHistoryItem.decision)}">${decisionLabel(selectedHistoryItem.decision, "Pending")}</mark>
             </div>
 
             <article class="ci-recommendation-card">
               <div class="ci-recommendation-card-head">
                 <div>
-                  <p class="section-kicker">${selectedHistoryItem.appeal.type}</p>
                   <h3>${selectedHistoryItem.appeal.title}</h3>
                   ${renderAppealMeta(selectedHistoryItem.appeal)}
                 </div>
@@ -1544,38 +1631,21 @@
               ${renderAppealFacts(selectedStudent, selectedHistoryItem.appeal)}
               ${renderAppealNotes(selectedHistoryItem.appeal)}
 
-              ${(isAdminExperience || isChair) && canDecideRecommendations ? `
+              ${canEditHistoryDecision ? `
                 <div class="ci-recommendation-actions">
-                  <button class="ghost-button" type="button" data-ci-history-edit>${selectedHistoryItem.decision ? "Edit Decision" : "Review Decision"}</button>
-                  <button class="ghost-button" type="button" data-ci-history-cancel hidden>Cancel</button>
-                  <button class="ghost-button danger-button" type="button" data-ci-history-decision="rejected" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Rejected</button>
-                  <button class="primary-button workspace-action" type="button" data-ci-history-decision="accepted" data-ci-history-id="${selectedHistoryItem.id}" hidden>Mark as Accepted</button>
+                  ${selectedHistoryItem.decision !== "accepted" ? `<button class="primary-button workspace-action" type="button" data-ci-history-decision="accepted" data-ci-history-id="${selectedHistoryItem.id}">Mark as Accepted</button>` : ""}
+                  ${selectedHistoryItem.decision !== "rejected" ? `<button class="ghost-button danger-button" type="button" data-ci-history-decision="rejected" data-ci-history-id="${selectedHistoryItem.id}">Mark as Rejected</button>` : ""}
                 </div>
               ` : ""}
             </article>
           </section>
         `;
 
-        one("[data-ci-history-edit]")?.addEventListener("click", (event) => {
-          event.currentTarget.hidden = true;
-          one("[data-ci-history-cancel]")?.removeAttribute("hidden");
-          all("[data-ci-history-decision]").forEach((button) => {
-            button.hidden = false;
-          });
-        });
-
-        one("[data-ci-history-cancel]")?.addEventListener("click", (event) => {
-          event.currentTarget.hidden = true;
-          one("[data-ci-history-edit]")?.removeAttribute("hidden");
-          all("[data-ci-history-decision]").forEach((button) => {
-            button.hidden = true;
-          });
-        });
-
         all("[data-ci-history-decision]").forEach((button) => {
           button.addEventListener("click", () => {
             const id = button.dataset.ciHistoryId;
             const decision = button.dataset.ciHistoryDecision;
+            const displayDecision = decision === "pending" ? "" : decision;
             decisionMap[id] = decision;
 
             try {
@@ -1585,9 +1655,11 @@
             }
 
             all(".student-progress-search-panel .status-badge, .ci-recommendation-card .status-badge").forEach((item) => {
-              item.className = `status-badge ${decisionBadge(decision)}`;
-              item.textContent = decisionLabel(decision);
+              item.className = `status-badge ${decisionBadge(displayDecision)}`;
+              item.textContent = decisionLabel(displayDecision, "Pending");
             });
+
+            window.location.reload();
           });
         });
         return;
@@ -1614,7 +1686,6 @@
                 <article class="ci-recommendation-card" data-ci-appeal-card="${selectedStudent.slug}-${index}">
                   <div class="ci-recommendation-card-head">
                     <div>
-                      <p class="section-kicker">${appeal.type}</p>
                       <h3>${appeal.title}</h3>
                       ${renderAppealMeta(appeal)}
                     </div>
@@ -1626,8 +1697,8 @@
 
                   ${canDecideRecommendations ? `
                     <div class="ci-recommendation-actions">
-                      <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Reject Recommendation</button>
-                      <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Accept CI Recommendation</button>
+                      <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Mark as Rejected</button>
+                      <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Mark as Accepted</button>
                     </div>
                   ` : `<div class="form-message">Assistant can view CI recommendations but cannot accept or reject them.</div>`}
                 </article>
@@ -1648,19 +1719,49 @@
           </div>
 
           ${selectedHistoryItems.length ? `
-            <div class="ci-recommendation-history-list">
-              ${selectedHistoryItems.map((item, historyIndex) => `
-                <a class="ci-recommendation-history-item" href="student-appeals.html?student=${selectedStudent.slug}&history=${historyIndex}">
-                  <span class="avatar small-avatar">${selectedStudent.initials}</span>
-                  <span>
-                    <strong>${item.appeal.title}</strong>
-                    <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
-                    <small>Submitted ${item.appeal.submitted}</small>
-                  </span>
-                  <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>
-                </a>
-              `).join("")}
-            </div>
+            ${pendingHistoryItems.length ? `
+              <div class="ci-recommendation-history-group">
+                <div class="ci-recommendation-history-subhead">
+                  <span>Pending</span>
+                  <span>${pendingHistoryItems.length} record${pendingHistoryItems.length === 1 ? "" : "s"}</span>
+                </div>
+                <div class="ci-recommendation-history-list">
+                  ${pendingHistoryItems.map((item) => `
+                    <a class="ci-recommendation-history-item" href="student-appeals.html?student=${selectedStudent.slug}&history=${item.historyIndex}">
+                      <span class="avatar small-avatar">${selectedStudent.initials}</span>
+                      <span>
+                        <strong>${item.appeal.title}</strong>
+                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
+                        <small>Submitted ${item.appeal.submitted}</small>
+                      </span>
+                      <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>
+                    </a>
+                  `).join("")}
+                </div>
+              </div>
+            ` : ""}
+
+            ${decidedHistoryItems.length ? `
+              <div class="ci-recommendation-history-group">
+                <div class="ci-recommendation-history-subhead">
+                  <span>Accepted / Returned</span>
+                  <span>${decidedHistoryItems.length} record${decidedHistoryItems.length === 1 ? "" : "s"}</span>
+                </div>
+                <div class="ci-recommendation-history-list">
+                  ${decidedHistoryItems.map((item) => `
+                    <a class="ci-recommendation-history-item" href="student-appeals.html?student=${selectedStudent.slug}&history=${item.historyIndex}">
+                      <span class="avatar small-avatar">${selectedStudent.initials}</span>
+                      <span>
+                        <strong>${item.appeal.title}</strong>
+                        <small>${item.appeal.type} - ${item.appeal.dutyDate} - ${item.appeal.site} - ${appealArea(selectedStudent, item.appeal)}</small>
+                        <small>Submitted ${item.appeal.submitted}</small>
+                      </span>
+                      <mark class="status-badge ${decisionBadge(item.decision)}" data-ci-history-badge-id="${item.id}">${decisionLabel(item.decision, "Pending")}</mark>
+                    </a>
+                  `).join("")}
+                </div>
+              </div>
+            ` : ""}
           ` : `<div class="empty-state">No appeal records for this student yet.</div>`}
         </section>
       `;

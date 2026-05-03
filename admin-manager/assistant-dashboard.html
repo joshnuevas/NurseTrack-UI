@@ -46,6 +46,7 @@
             </div>
           </div>
           <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
             <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
               <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
@@ -59,40 +60,63 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <h2>Good Evening, Assistant Garcia.</h2>
-              <p>Support the Chair by creating schedules while viewing attendance, progress, clearance, cases, recommendations, overtime, and reports.</p>
+              <h2>Good Evening, Garcia.</h2>
+              <p>Support the Chair with schedule preparation and view the review pages that need follow-up.</p>
             </div>
-            <a class="primary-button workspace-action button-link" href="admin-schedules.html">Open schedules</a>
+            <a class="primary-button workspace-action button-link" href="schedule-maker.html">Open schedule maker</a>
           </section>
 
           <section class="dashboard-stats" aria-label="Assistant dashboard summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Schedules</span>
+                <span class="card-icon icon-only" aria-label="Schedule work">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <path d="M3 10h18"></path>
+                    <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                  </svg>
+                </span>
                 <span class="status-badge status-verified">Editable</span>
               </div>
               <h3>Schedule Work</h3>
-              <p>Create and update Chair schedule drafts.</p>
+              <p>5 Chair schedule drafts are ready for setup or adjustment.</p>
+              <div class="progress-track"><span style="width: 72%"></span></div>
               <strong class="stat-value">5</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Approvals</span>
-                <span class="status-badge status-pending">View only</span>
+                <span class="card-icon icon-only" aria-label="Review permissions">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"></path>
+                    <path d="M9 12l2 2 4-5"></path>
+                  </svg>
+                </span>
+                <span class="status-badge status-pending">View access</span>
               </div>
-              <h3>Chair Decisions</h3>
-              <p>Attendance and clearance approvals stay with the Chair or Admin.</p>
-              <strong class="stat-value">9</strong>
+              <h3>Review Permissions</h3>
+              <p>4 review pages stay view-only until Admin turns on edit access.</p>
+              <div class="progress-track"><span style="width: 44%"></span></div>
+              <strong class="stat-value">4</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Reports</span>
+                <span class="card-icon icon-only" aria-label="Reports">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 19V5"></path>
+                    <path d="M4 19h16"></path>
+                    <path d="M8 16v-5"></path>
+                    <path d="M12 16V8"></path>
+                    <path d="M16 16v-3"></path>
+                  </svg>
+                </span>
                 <span class="status-badge status-verified">Ready</span>
               </div>
               <h3>Reports</h3>
-              <p>Generate operational reports when needed.</p>
+              <p>4 report templates are available for Chair support work.</p>
+              <div class="progress-track"><span style="width: 68%"></span></div>
               <strong class="stat-value">4</strong>
             </article>
           </section>

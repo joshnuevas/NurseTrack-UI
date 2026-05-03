@@ -254,6 +254,18 @@
         background: #fff5f5;
       }
 
+      .admin-location-table .user-row.is-inactive {
+        opacity: 0.62;
+      }
+
+      .location-inactive-badge {
+        display: block;
+        margin-top: 0.35rem;
+        color: #b42318;
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
       @media (max-width: 1100px) {
         #hospital-list .user-row {
           grid-template-columns: minmax(220px, 1.25fr) minmax(100px, 0.55fr) minmax(220px, 1.1fr) 110px;
@@ -584,7 +596,7 @@
         </form>
 
         <div class="admin-location-edit-actions">
-          <button class="ghost-button danger-modal-button" type="button" id="open-delete-location">Delete</button>
+          <button class="ghost-button danger-modal-button" type="button" id="open-delete-location">Deactivate</button>
 
           <div class="admin-location-edit-actions-main">
             <button class="ghost-button" type="button" id="cancel-edit-location">Cancel</button>
@@ -615,17 +627,17 @@
       <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="delete-location-title">
         <div class="modal-heading">
           <div>
-            <h2 id="delete-location-title">Delete This Record?</h2>
+            <h2 id="delete-location-title">Deactivate This Hospital?</h2>
           </div>
         </div>
 
         <p class="modal-copy" id="delete-location-copy">
-          Are you sure you want to delete this record? This action cannot be undone.
+          This keeps the hospital record visible but marks it inactive for future use.
         </p>
 
         <div class="admin-location-delete-actions">
           <button class="ghost-button" type="button" id="cancel-delete-location">Cancel</button>
-          <button class="primary-button workspace-action" type="button" id="confirm-delete-location">Delete Record</button>
+          <button class="primary-button workspace-action" type="button" id="confirm-delete-location">Deactivate Hospital</button>
         </div>
       </section>
     </div>
@@ -635,6 +647,7 @@
       const dutyAreaForm = document.querySelector("#duty-area-form");
       const hospitalMessage = document.querySelector("#hospital-message");
       const dutyAreaMessage = document.querySelector("#duty-area-message");
+      const hospitalListBadge = document.querySelector("#hospital-list-badge");
       const locationModal = document.querySelector("#add-location-modal");
       const locationModalTitle = document.querySelector("#add-location-title");
       const locationModalCopy = document.querySelector("#add-location-copy");
@@ -680,6 +693,13 @@
         if (state) {
           element.classList.add(state);
         }
+      }
+
+      function updateHospitalActiveCount() {
+        if (!hospitalListBadge) return;
+
+        const activeHospitals = document.querySelectorAll('[data-location-type="hospital"]:not(.is-inactive)').length;
+        hospitalListBadge.textContent = `${activeHospitals} active`;
       }
 
       function openModal(modal) {
@@ -729,19 +749,19 @@
         if (activeEditType === "hospital") {
           const hospitalName = row.querySelector("[data-hospital-name] strong")?.textContent.trim() || "";
           const hospitalCode = row.querySelector("[data-hospital-code]")?.textContent.trim() || "";
-          const hospitalDuty = row.querySelector("[data-hospital-duty]")?.textContent.trim() || "";
 
           editLocationTitle.textContent = "Edit Hospital";
-          editLocationSubtitle.textContent = "Rename the hospital, update the short code, or adjust its assigned duty areas.";
+          editLocationSubtitle.textContent = "Rename the hospital or update the short code.";
           editLocationNameLabel.textContent = "Hospital Name";
           editLocationCodeLabel.textContent = "Short Code";
-          editLocationExtraLabel.textContent = "Duty Areas";
-          editLocationExtraWrapper.hidden = false;
-          editLocationExtra.required = true;
+          editLocationExtraWrapper.hidden = true;
+          editLocationExtra.required = false;
+          editLocationExtra.value = "";
+          openDeleteLocation.hidden = false;
+          openDeleteLocation.textContent = "Deactivate";
 
           editLocationName.value = hospitalName;
           editLocationCode.value = hospitalCode;
-          editLocationExtra.value = hospitalDuty;
         }
 
         if (activeEditType === "duty") {
@@ -755,6 +775,7 @@
           editLocationExtraWrapper.hidden = true;
           editLocationExtra.required = false;
           editLocationExtra.value = "";
+          openDeleteLocation.hidden = true;
 
           editLocationName.value = dutyName;
           editLocationCode.value = dutyHospital;
@@ -793,11 +814,9 @@
         if (activeEditType === "hospital") {
           const nameStrong = activeEditRow.querySelector("[data-hospital-name] strong");
           const codeCell = activeEditRow.querySelector("[data-hospital-code]");
-          const dutyCell = activeEditRow.querySelector("[data-hospital-duty]");
 
           if (nameStrong) nameStrong.textContent = pendingEditValues.name;
           if (codeCell) codeCell.textContent = pendingEditValues.code;
-          if (dutyCell) dutyCell.textContent = pendingEditValues.extra;
 
           showLocationMessage(hospitalMessage, "Hospital record updated successfully.", "is-success");
         }
@@ -819,14 +838,11 @@
       }
 
       function openDeleteConfirmModal() {
-        if (!activeEditRow) return;
+        if (!activeEditRow || activeEditType !== "hospital") return;
 
-        const recordName =
-          activeEditType === "hospital"
-            ? activeEditRow.querySelector("[data-hospital-name] strong")?.textContent.trim()
-            : activeEditRow.querySelector("[data-duty-name] strong")?.textContent.trim();
+        const recordName = activeEditRow.querySelector("[data-hospital-name] strong")?.textContent.trim();
 
-        deleteLocationCopy.textContent = `Are you sure you want to delete ${recordName || "this record"}? This action cannot be undone.`;
+        deleteLocationCopy.textContent = `Deactivate ${recordName || "this hospital"}? The record stays in the hospital list, but it will be marked inactive.`;
 
         hideModal(editLocationModal);
         openModal(deleteLocationModal);
@@ -913,14 +929,18 @@
         }
 
         if (activeEditType === "hospital") {
-          showLocationMessage(hospitalMessage, "Hospital record deleted.", "is-success");
+          const hospitalNameCell = activeEditRow.querySelector("[data-hospital-name]");
+          activeEditRow.classList.add("is-inactive");
+          activeEditRow.dataset.locationStatus = "inactive";
+
+          if (hospitalNameCell && !hospitalNameCell.querySelector(".location-inactive-badge")) {
+            hospitalNameCell.insertAdjacentHTML("beforeend", `<small class="location-inactive-badge">Inactive</small>`);
+          }
+
+          showLocationMessage(hospitalMessage, "Hospital deactivated.", "is-success");
+          updateHospitalActiveCount();
         }
 
-        if (activeEditType === "duty") {
-          showLocationMessage(dutyAreaMessage, "Duty area record deleted.", "is-success");
-        }
-
-        activeEditRow.remove();
         closeAllModals();
         activeEditRow = null;
         activeEditType = "";

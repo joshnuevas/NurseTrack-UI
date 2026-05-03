@@ -7280,7 +7280,7 @@ h2 {
 }
 
 .manual-schedule-workspace .student-roster-panel .selected-roster-message {
-  margin-bottom: 12px;
+  margin: 12px 0 0;
 }
 
 .student-roster-actions {
@@ -9131,11 +9131,22 @@ h2 {
 
 .manual-attendance-actions {
   justify-content: flex-end;
-  margin-top: 24px;
+  margin-top: 30px;
+}
+
+.manual-attendance-actions .workspace-action {
+  min-height: 64px;
+  padding: 0 30px;
+  font-size: 1rem;
+}
+
+.manual-attendance-actions .ghost-button {
+  min-height: 52px;
+  padding: 0.85rem 1.25rem;
 }
 
 .manual-attendance-panel #manual-attendance-message {
-  margin-top: 22px;
+  margin-top: 26px;
 }
 
 .manual-attendance-student-results,
@@ -9170,9 +9181,9 @@ h2 {
 .manual-attendance-student-option {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
-  padding: 13px;
+  padding: 16px;
   color: inherit;
   cursor: pointer;
   text-align: left;
@@ -9206,6 +9217,11 @@ h2 {
   font-size: 0.78rem;
   font-weight: 800;
   line-height: 1.45;
+}
+
+.manual-attendance-student-option small,
+.manual-attendance-selected-card small {
+  margin-top: 6px;
 }
 
 .manual-attendance-selected-card,
@@ -9254,8 +9270,20 @@ h2 {
 .manual-attendance-review-panel {
   margin-top: 0;
   display: grid;
-  gap: 24px;
+  gap: 20px;
   padding: 32px;
+}
+
+.manual-attendance-review-panel .panel-heading {
+  margin-bottom: 0;
+}
+
+.manual-attendance-record-panel {
+  gap: 16px;
+}
+
+.manual-attendance-record-panel .panel-heading {
+  margin-bottom: 0;
 }
 
 .manual-attendance-review-detail {
@@ -9469,8 +9497,10 @@ h2 {
   grid-column: auto;
 }
 
-.manual-attendance-review-summary .manual-attendance-note-tile {
-  grid-column: 1 / -1;
+.manual-attendance-review-summary > .manual-attendance-note-tile {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+  min-height: 96px;
 }
 
 .manual-attendance-review-summary div {
@@ -9550,7 +9580,7 @@ h2 {
 .manual-attendance-student-table-row span {
   color: var(--text);
   font-size: 0.88rem;
-  font-weight: 850;
+  font-weight: 500;
 }
 
 .manual-attendance-student-table-row span:first-child {
@@ -9559,9 +9589,22 @@ h2 {
   gap: 12px;
 }
 
+.manual-attendance-student-table-head span {
+  font-weight: 900;
+}
+
+.manual-attendance-student-table-row .avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .manual-attendance-student-table-row strong {
   color: var(--text);
   font-size: 0.95rem;
+  font-weight: 850;
 }
 
 .manual-attendance-review-actions {
@@ -9609,6 +9652,10 @@ h2 {
   cursor: pointer;
 }
 
+.manual-attendance-review-link {
+  text-decoration: none;
+}
+
 .manual-attendance-history-item.is-editable:hover,
 .manual-attendance-history-item.is-editable:focus-visible {
   background: #fffdf2;
@@ -9645,11 +9692,17 @@ h2 {
   display: grid;
   justify-items: end;
   gap: 10px;
-  min-width: 120px;
+  min-width: 150px;
+}
+
+.manual-attendance-history-actions .status-badge {
+  min-width: 118px;
+  justify-content: center;
 }
 
 .manual-attendance-history-actions small {
   min-height: 28px;
+  min-width: 118px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

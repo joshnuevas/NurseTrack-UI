@@ -9,6 +9,7 @@ const selectedScheduleMessage = document.querySelector("#selected-schedule-messa
 const selectedScheduleDetailsMessage = document.querySelector("#selected-schedule-details-message");
 const selectedScheduleForm = document.querySelector("#selected-schedule-form");
 const selectedScheduleEditButton = document.querySelector("#edit-selected-schedule");
+const selectedScheduleDeleteButton = document.querySelector("#delete-selected-schedule");
 const selectedScheduleCancelButton = document.querySelector("#cancel-selected-schedule");
 const selectedScheduleSaveButton = document.querySelector("#save-selected-schedule");
 const selectedScheduleStudentsList = document.querySelector("#selected-schedule-students-list");
@@ -246,9 +247,9 @@ function setAssignedStudentsDirty(isDirty) {
   }
 }
 
-function markAssignedStudentsDirty(message = "You have unsaved assigned student changes.", isSuccess = true) {
+function markAssignedStudentsDirty() {
   setAssignedStudentsDirty(true);
-  setSelectedScheduleMessage(message, isSuccess, "roster");
+  clearRosterMessage();
 }
 
 function restoreSelectedRosterFromSnapshot() {
@@ -271,7 +272,7 @@ function saveAssignedStudents() {
 
   selectedRosterSnapshot = cloneStudentList(selectedScheduleActive);
   setAssignedStudentsDirty(false);
-  setSelectedScheduleMessage("Assigned students saved successfully.", true, "roster");
+  clearRosterMessage();
 }
 
 function cancelAssignedStudentsChanges() {
@@ -281,7 +282,7 @@ function cancelAssignedStudentsChanges() {
 
   restoreSelectedRosterFromSnapshot();
   setAssignedStudentsDirty(false);
-  setSelectedScheduleMessage("Assigned student changes were cancelled.", true, "roster");
+  clearRosterMessage();
 }
 
 function restoreSelectedScheduleFromSnapshot() {
@@ -402,6 +403,10 @@ function updateScheduleDetailsEditState() {
     selectedScheduleEditButton.disabled = !hasSchedule || canEdit;
   }
 
+  if (selectedScheduleDeleteButton) {
+    selectedScheduleDeleteButton.disabled = !hasSchedule;
+  }
+
   if (selectedScheduleForm) {
     selectedScheduleForm.classList.toggle("is-readonly", !canEdit);
   }
@@ -417,7 +422,7 @@ function enableSelectedScheduleEditMode() {
   selectedScheduleSnapshot = cloneSelectedSchedule(selectedScheduleActive);
   selectedScheduleEditMode = true;
   updateScheduleDetailsEditState();
-  setSelectedScheduleMessage("Edit mode enabled for schedule details.", true, "details");
+  clearScheduleDetailsMessage();
 }
 
 function cancelSelectedScheduleEditMode() {
@@ -425,13 +430,34 @@ function cancelSelectedScheduleEditMode() {
   selectedScheduleEditMode = false;
   selectedScheduleSnapshot = null;
   populateSelectedSchedule(selectedScheduleActive, false);
-  setSelectedScheduleMessage("Editing cancelled. Schedule details were restored.", true, "details");
+  clearScheduleDetailsMessage();
 }
 
 function disableSelectedScheduleEditMode() {
   selectedScheduleEditMode = false;
   selectedScheduleSnapshot = null;
   updateScheduleDetailsEditState();
+}
+
+function deleteSelectedSchedule() {
+  if (!selectedScheduleActive) {
+    return;
+  }
+
+  const deletedIndex = selectedDaySchedules.findIndex((schedule) => schedule.id === selectedScheduleActive.id);
+
+  if (deletedIndex === -1) {
+    return;
+  }
+
+  selectedDaySchedules.splice(deletedIndex, 1);
+  selectedScheduleEditMode = false;
+  selectedScheduleSnapshot = null;
+  selectedRosterSnapshot = [];
+  setAssignedStudentsDirty(false);
+
+  const nextSchedule = selectedDaySchedules[deletedIndex] || selectedDaySchedules[deletedIndex - 1] || null;
+  populateSelectedSchedule(nextSchedule);
 }
 
 function closeSelectedStudentMoveDialog() {
@@ -490,7 +516,7 @@ function applySelectedStudentMove() {
   renderSelectedDayList();
   renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
   clearScheduleDetailsMessage();
-  markAssignedStudentsDirty(`${student} moved to ${target}. Save assigned students to keep this change.`);
+  markAssignedStudentsDirty();
 
   pendingStudentMove = null;
   selectedStudentMoveDialog.hidden = true;
@@ -514,7 +540,7 @@ function applySelectedStudentRemove() {
   renderSelectedDayList();
   renderStudentRosterAddOptions(studentRosterAddSearch?.value || "");
   clearScheduleDetailsMessage();
-  markAssignedStudentsDirty(`${student} removed from this schedule. Save assigned students to keep this change.`, false);
+  markAssignedStudentsDirty();
 
   pendingStudentRemove = null;
   selectedStudentRemoveDialog.hidden = true;
@@ -777,7 +803,7 @@ function addStudentToSelectedRoster(student) {
   renderStudentRosterAddOptions();
   renderSelectedDayList();
   clearScheduleDetailsMessage();
-  markAssignedStudentsDirty(`${normalizedStudent} added to this schedule. Save assigned students to keep this change.`);
+  markAssignedStudentsDirty();
 }
 
 function renderSelectedDayList() {
@@ -1056,8 +1082,10 @@ selectedScheduleForm?.addEventListener("submit", (event) => {
   syncSelectedScheduleSummary();
   renderSelectedDayList();
   disableSelectedScheduleEditMode();
-  setSelectedScheduleMessage("Schedule details saved.", true, "details");
+  clearScheduleDetailsMessage();
 });
+
+selectedScheduleDeleteButton?.addEventListener("click", deleteSelectedSchedule);
 
 studentRosterAddSearch?.addEventListener("focus", () => {
   renderStudentRosterAddOptions(studentRosterAddSearch.value);

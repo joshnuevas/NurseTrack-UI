@@ -3,13 +3,14 @@ const manualScheduleStatus = document.querySelector("#manual-schedule-status");
 const manualScheduleMessage = document.querySelector("#manual-schedule-message");
 const manualStudentSearch = document.querySelector("#manual-student-search");
 const manualSectionFilter = document.querySelector("#manual-section-filter");
-const manualStudentItems = Array.from(document.querySelectorAll("#manual-student-list .assign-student"));
-const manualStudentChecks = Array.from(document.querySelectorAll("[data-manual-student-check]"));
+const manualStudentList = document.querySelector("#manual-student-list");
+const manualStudentItems = Array.from(document.querySelectorAll("#manual-student-list .manual-schedule-student-option"));
 const manualNoStudentsMessage = document.querySelector("#manual-no-students-message");
 const manualAddStudentsButton = document.querySelector("#manual-add-students");
 const manualClearSelectionButton = document.querySelector("#manual-clear-selection");
 const manualAssignedStudents = document.querySelector("#manual-assigned-students");
 const manualStudentCount = document.querySelector("#manual-student-count");
+const manualPickerCount = document.querySelector("#manual-picker-count");
 const manualCaseTba = document.querySelector("#manual-case-tba");
 const manualCaseInputs = Array.from(document.querySelectorAll("[data-manual-case-input]"));
 const manualBreakDateInput = document.querySelector("#manual-break-date");
@@ -299,7 +300,7 @@ function filterManualStudents() {
   let visibleCount = 0;
 
   manualStudentItems.forEach((item) => {
-    const student = item.querySelector("[data-manual-student-check]")?.value || "";
+    const student = item.dataset.manualAddStudent || "";
     const isAssigned = manualSelectedStudents.includes(student);
     const matchesSearch = !query || item.dataset.student.toLowerCase().includes(query);
     const matchesSection = item.dataset.section === section;
@@ -311,44 +312,45 @@ function filterManualStudents() {
       visibleCount += 1;
     }
 
-    if (shouldHide) {
-      const check = item.querySelector("[data-manual-student-check]");
-
-      if (check) {
-        check.checked = false;
-      }
-    }
   });
 
   if (manualNoStudentsMessage) {
     manualNoStudentsMessage.hidden = visibleCount > 0;
   }
+
+  if (manualPickerCount) {
+    manualPickerCount.textContent = `${manualSelectedStudents.length} selected`;
+  }
 }
 
 function clearManualStudentSelection() {
-  manualStudentChecks.forEach((check) => {
-    check.checked = false;
-  });
+  manualSelectedStudents = [];
+  renderManualAssignedStudents();
+  setManualStatus("Draft edited", "status-pending");
+  setManualMessage("Student selection cleared.", false);
 }
 
 manualStudentSearch?.addEventListener("input", filterManualStudents);
 manualSectionFilter?.addEventListener("change", filterManualStudents);
 manualClearSelectionButton?.addEventListener("click", clearManualStudentSelection);
 
-manualAddStudentsButton?.addEventListener("click", () => {
-  const selectedChecks = manualStudentChecks.filter((check) => check.checked && !check.closest(".assign-student")?.hidden);
-  const newStudents = selectedChecks.map((check) => check.value).filter((student) => !manualSelectedStudents.includes(student));
+manualStudentList?.addEventListener("click", (event) => {
+  const addButton = event.target.closest("[data-manual-add-student]");
 
-  if (newStudents.length === 0) {
-    setManualMessage("Select at least one new student to add.", false);
+  if (!addButton || addButton.hidden) {
     return;
   }
 
-  manualSelectedStudents = [...manualSelectedStudents, ...newStudents];
-  clearManualStudentSelection();
+  const student = addButton.dataset.manualAddStudent;
+
+  if (!student || manualSelectedStudents.includes(student)) {
+    return;
+  }
+
+  manualSelectedStudents = [...manualSelectedStudents, student];
   renderManualAssignedStudents();
   setManualStatus("Draft edited", "status-pending");
-  setManualMessage(`${newStudents.length} student${newStudents.length === 1 ? "" : "s"} added to the manual schedule.`);
+  setManualMessage(`${student} added to the manual schedule.`);
 });
 
 Object.values(manualFields).forEach((field) => {

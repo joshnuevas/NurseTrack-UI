@@ -18,7 +18,7 @@ let currentVisibleAppeals = [];
 
 const statusMeta = {
   recommended: {
-    label: "CI recommended",
+    label: "Pending",
     badgeClass: "status-pending"
   },
   "chair-approved": {

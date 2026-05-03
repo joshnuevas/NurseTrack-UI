@@ -14,7 +14,8 @@
       .assistant-access-layout {
         display: grid;
         gap: 1rem;
-        max-width: 960px;
+        width: 100%;
+        max-width: none;
       }
 
       .assistant-access-toggle-card {
@@ -44,6 +45,7 @@
 
       .assistant-access-toggle-list {
         display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.75rem;
       }
 
@@ -107,6 +109,10 @@
       }
 
       @media (max-width: 760px) {
+        .assistant-access-toggle-list {
+          grid-template-columns: 1fr;
+        }
+
         .assistant-access-toggle-card {
           grid-template-columns: 1fr;
         }

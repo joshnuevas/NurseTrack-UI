@@ -78,6 +78,10 @@
       return "manual-attendance-review.html";
     }
 
+    if (query.has("appeal") && key === "nursing-student/student-appeals.html") {
+      return "student-appeals.html";
+    }
+
     const destinations = {
       "admin-manager/case-validation.html": "clinical-case-selection.html",
       "admin-manager/student-progress-detail.html": "chair-student-progress.html",
@@ -94,6 +98,10 @@
 
   const mappedDestination = mappedBackDestination();
   const parentLink = activeParentLink();
+
+  if (!mappedDestination && !parentLink) {
+    return;
+  }
 
   const style = document.createElement("style");
   style.textContent = `

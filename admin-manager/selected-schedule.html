@@ -213,6 +213,16 @@
         white-space: nowrap;
       }
 
+      .selected-schedule-button-row .danger-action {
+        border-color: rgba(198, 40, 40, 0.34);
+        color: #b42318;
+      }
+
+      .selected-schedule-button-row .danger-action:hover:not(:disabled) {
+        border-color: rgba(198, 40, 40, 0.55);
+        background: #fff1f0;
+      }
+
       .student-roster-panel {
         padding: 1.6rem 1.75rem 1.75rem;
         background:
@@ -533,6 +543,7 @@
 
                 <div class="schedule-maker-actions selected-schedule-actions">
                   <div class="selected-schedule-button-row">
+                    <button class="ghost-button danger-action" id="delete-selected-schedule" type="button">Delete Schedule</button>
                     <button class="ghost-button" id="cancel-selected-schedule" type="button">Cancel</button>
                     <button class="primary-button workspace-action" id="save-selected-schedule" type="submit">Save Selected Schedule</button>
                   </div>

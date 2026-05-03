@@ -195,78 +195,70 @@
             <article class="workspace-panel manual-student-picker-panel">
               <div class="panel-heading">
                 <div>
-                  <h3>Select Students to Add</h3>
+                  <h3>Add Students</h3>
                 </div>
-                <div class="manual-student-filters">
-                  <label class="form-label compact-search" for="manual-section-filter">
-                    Section
-                    <select id="manual-section-filter">
-                      <option value="BSN 3A">BSN 3A</option>
-                      <option value="BSN 3B">BSN 3B</option>
-                    </select>
-                  </label>
-
-                  <label class="form-label compact-search" for="manual-student-search">
-                    Search
-                    <input id="manual-student-search" type="search" placeholder="Search student">
-                  </label>
-                </div>
+                <span class="status-badge status-pending" id="manual-picker-count">0 selected</span>
               </div>
 
-              <div class="assign-list" id="manual-student-list">
-                <label class="assign-student" data-student="Maria Cruz BSN 3A" data-section="BSN 3A">
-                  <input type="checkbox" data-manual-student-check value="Maria Cruz">
-                  <div class="avatar small-avatar">MC</div>
-                  <div>
+              <select id="manual-section-filter" hidden>
+                <option value="BSN 3A">BSN 3A</option>
+                <option value="BSN 3B">BSN 3B</option>
+              </select>
+
+              <label class="form-label" for="manual-student-search">
+                Search student
+                <input id="manual-student-search" type="search" placeholder="Search name, ID, section, or site">
+              </label>
+
+              <div class="manual-attendance-student-results manual-schedule-student-list" id="manual-student-list">
+                <button class="manual-attendance-student-option manual-schedule-student-option" type="button" data-manual-add-student="Maria Cruz" data-student="Maria Cruz BSN 3A 21-1845-103 CCMC" data-section="BSN 3A">
+                  <span class="avatar small-avatar">MC</span>
+                  <span>
                     <strong>Maria Cruz</strong>
-                    <p>BSN 3A - School ID 21-1845-103</p>
-                  </div>
-                </label>
+                    <small>BSN 3A - 21-1845-103</small>
+                  </span>
+                  <mark class="status-badge status-pending">Add</mark>
+                </button>
 
-                <label class="assign-student" data-student="Treasure Abadinas BSN 3A" data-section="BSN 3A">
-                  <input type="checkbox" data-manual-student-check value="Treasure Abadinas">
-                  <div class="avatar small-avatar">TA</div>
-                  <div>
+                <button class="manual-attendance-student-option manual-schedule-student-option" type="button" data-manual-add-student="Treasure Abadinas" data-student="Treasure Abadinas BSN 3A 22-1845-103 CCMC" data-section="BSN 3A">
+                  <span class="avatar small-avatar">TA</span>
+                  <span>
                     <strong>Treasure Abadinas</strong>
-                    <p>BSN 3A - School ID 22-1845-103</p>
-                  </div>
-                </label>
+                    <small>BSN 3A - 22-1845-103</small>
+                  </span>
+                  <mark class="status-badge status-pending">Add</mark>
+                </button>
 
-                <label class="assign-student" data-student="Josh Anton Nuevas BSN 3A" data-section="BSN 3A">
-                  <input type="checkbox" data-manual-student-check value="Josh Anton Nuevas">
-                  <div class="avatar small-avatar">JA</div>
-                  <div>
+                <button class="manual-attendance-student-option manual-schedule-student-option" type="button" data-manual-add-student="Josh Anton Nuevas" data-student="Josh Anton Nuevas BSN 3A 21-5589-201 CCMC" data-section="BSN 3A">
+                  <span class="avatar small-avatar">JA</span>
+                  <span>
                     <strong>Josh Anton Nuevas</strong>
-                    <p>BSN 3A - School ID 21-5589-201</p>
-                  </div>
-                </label>
+                    <small>BSN 3A - 21-5589-201</small>
+                  </span>
+                  <mark class="status-badge status-pending">Add</mark>
+                </button>
 
-                <label class="assign-student" data-student="Zander Aligato BSN 3B" data-section="BSN 3B">
-                  <input type="checkbox" data-manual-student-check value="Zander Aligato">
-                  <div class="avatar small-avatar">ZA</div>
-                  <div>
+                <button class="manual-attendance-student-option manual-schedule-student-option" type="button" data-manual-add-student="Zander Aligato" data-student="Zander Aligato BSN 3B 21-7740-118 CCMC" data-section="BSN 3B">
+                  <span class="avatar small-avatar">ZA</span>
+                  <span>
                     <strong>Zander Aligato</strong>
-                    <p>BSN 3B - School ID 21-7740-118</p>
-                  </div>
-                </label>
+                    <small>BSN 3B - 21-7740-118</small>
+                  </span>
+                  <mark class="status-badge status-pending">Add</mark>
+                </button>
 
-                <label class="assign-student" data-student="Bianca Mariel Lumbre BSN 3B" data-section="BSN 3B">
-                  <input type="checkbox" data-manual-student-check value="Bianca Mariel Lumbre">
-                  <div class="avatar small-avatar">BL</div>
-                  <div>
+                <button class="manual-attendance-student-option manual-schedule-student-option" type="button" data-manual-add-student="Bianca Mariel Lumbre" data-student="Bianca Mariel Lumbre BSN 3B 23-1023-441 CCMC" data-section="BSN 3B">
+                  <span class="avatar small-avatar">BL</span>
+                  <span>
                     <strong>Bianca Mariel Lumbre</strong>
-                    <p>BSN 3B - School ID 23-1023-441</p>
-                  </div>
-                </label>
+                    <small>BSN 3B - 23-1023-441</small>
+                  </span>
+                  <mark class="status-badge status-pending">Add</mark>
+                </button>
 
                 <div class="manual-empty-picker" id="manual-no-students-message" hidden>
                   No more students to add.
                 </div>
-              </div>
-
-              <div class="button-row manual-student-actions">
-                <button class="ghost-button" type="button" id="manual-clear-selection">Clear selection</button>
-                <button class="primary-button workspace-action" type="button" id="manual-add-students">Add Selected Students</button>
               </div>
             </article>
 
@@ -281,12 +273,12 @@
               <div class="student-roster-table" id="manual-assigned-students"></div>
 
               <div class="student-roster-actions">
-                <div id="manual-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the schedule.</div>
-
                 <div class="selected-schedule-button-row">
                   <a class="ghost-button button-link" href="schedule-maker.html">Cancel</a>
                   <button class="primary-button workspace-action" form="manual-schedule-form" type="submit">Save Manual Schedule</button>
                 </div>
+
+                <div id="manual-schedule-message" class="form-message selected-roster-message" role="status" aria-live="polite">Fill the schedule details, select students, then save the schedule.</div>
               </div>
             </article>
           </section>

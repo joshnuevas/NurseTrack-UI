@@ -46,6 +46,7 @@
             </div>
           </div>
           <div class="topbar-actions">
+            <span class="sync-pill">Updated now</span>
             <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
               <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
@@ -59,8 +60,8 @@
         <main class="workspace dashboard-workspace">
           <section class="workspace-hero dashboard-hero">
             <div>
-              <h2>Good Evening, Coordinator Lim.</h2>
-              <p>Monitor schedules, live attendance, student progress, clinical cases, overtime, and reports from a view-only coordination workspace.</p>
+              <h2>Good Evening, Lim.</h2>
+              <p>Monitor published schedules, live attendance, student progress, clinical cases, overtime, and reports without editing Chair-controlled records.</p>
             </div>
             <a class="primary-button workspace-action button-link" href="../clinical-instructor/schedule-management.html">Open schedules</a>
           </section>
@@ -68,31 +69,55 @@
           <section class="dashboard-stats" aria-label="Coordinator dashboard summary">
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Schedules</span>
-                <span class="status-badge status-verified">View only</span>
+                <span class="card-icon icon-only" aria-label="Published schedules">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 2v4"></path>
+                    <path d="M16 2v4"></path>
+                    <path d="M3 10h18"></path>
+                    <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                  </svg>
+                </span>
+                <span class="status-badge status-verified">Published</span>
               </div>
               <h3>Published Schedules</h3>
-              <p>Chair-published duties available for monitoring.</p>
+              <p>8 published duty schedules are available for view-only coordination.</p>
+              <div class="progress-track"><span style="width: 72%"></span></div>
               <strong class="stat-value">8</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Attendance</span>
+                <span class="card-icon icon-only" aria-label="Live attendance">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3a7 7 0 0 0-7 7v4"></path>
+                    <path d="M19 14v-4a7 7 0 0 0-7-7"></path>
+                    <path d="M5 14h4v7H5z"></path>
+                    <path d="M15 14h4v7h-4z"></path>
+                  </svg>
+                </span>
                 <span class="status-badge status-pending">Live</span>
               </div>
               <h3>Live Attendance</h3>
-              <p>Active scans and current duty attendance.</p>
+              <p>42 students are visible across active duty attendance sessions.</p>
+              <div class="progress-track"><span style="width: 64%"></span></div>
               <strong class="stat-value">42</strong>
             </article>
 
             <article class="workspace-card stat-card">
               <div class="workspace-card-header">
-                <span class="card-icon">Cases</span>
-                <span class="status-badge status-pending">Review</span>
+                <span class="card-icon icon-only" aria-label="Clinical case monitoring">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M8 4h8"></path>
+                    <path d="M7 8h10"></path>
+                    <path d="M7 12h7"></path>
+                    <path d="M6 3h12v18H6z"></path>
+                  </svg>
+                </span>
+                <span class="status-badge status-pending">Monitor</span>
               </div>
               <h3>Clinical Cases</h3>
-              <p>Case submissions are visible without edit permissions.</p>
+              <p>12 case submissions are visible for tracking across sections.</p>
+              <div class="progress-track"><span style="width: 58%"></span></div>
               <strong class="stat-value">12</strong>
             </article>
           </section>
