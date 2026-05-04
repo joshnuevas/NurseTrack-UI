@@ -7188,7 +7188,7 @@ h2 {
 .selected-schedule-button-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   gap: 16px;
   padding: 8px 0 14px;
@@ -7317,6 +7317,10 @@ h2 {
 
 .manual-schedule-workspace .student-roster-panel .selected-roster-message {
   margin: 12px 0 0;
+}
+
+.manual-schedule-workspace .student-roster-panel .selected-roster-message:empty {
+  display: none;
 }
 
 .student-roster-actions {
@@ -9679,9 +9683,14 @@ h2 {
   border-bottom: 1px solid #e2e8f0;
   background: #ffffff;
   color: inherit;
-  cursor: default;
+  cursor: pointer;
   font: inherit;
   text-align: left;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .manual-attendance-history-item.is-editable {
@@ -9692,13 +9701,19 @@ h2 {
   text-decoration: none;
 }
 
-.manual-attendance-history-item.is-editable:hover,
-.manual-attendance-history-item.is-editable:focus-visible {
-  background: #fffdf2;
-}
-
 .manual-attendance-history-item.is-locked {
   background: #fbfcfe;
+}
+
+.manual-attendance-history-item:hover,
+.manual-attendance-history-item:focus-visible,
+.manual-attendance-history-item.is-editable:hover,
+.manual-attendance-history-item.is-editable:focus-visible,
+.manual-attendance-history-item.is-locked:hover,
+.manual-attendance-history-item.is-locked:focus-visible {
+  border-color: rgba(138, 37, 44, 0.18);
+  background: #fffdf2;
+  outline: none;
 }
 
 .manual-attendance-history-item:last-child {
@@ -9725,19 +9740,19 @@ h2 {
 }
 
 .manual-attendance-history-actions {
-  min-width: 150px;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-left: 24px;
+  margin-left: 32px;
 }
 
 .manual-attendance-history-actions .status-badge {
-  min-width: 112px;
-  min-height: 32px;
-  padding: 0 14px;
+  min-width: 0;
+  min-height: 28px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   justify-content: center;
 }
 

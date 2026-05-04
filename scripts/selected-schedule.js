@@ -9,7 +9,7 @@ const selectedScheduleMessage = document.querySelector("#selected-schedule-messa
 const selectedScheduleDetailsMessage = document.querySelector("#selected-schedule-details-message");
 const selectedScheduleForm = document.querySelector("#selected-schedule-form");
 const selectedScheduleEditButton = document.querySelector("#edit-selected-schedule");
-const selectedScheduleDeleteButton = document.querySelector("#delete-selected-schedule");
+const selectedScheduleStatusToggleButton = document.querySelector("#toggle-selected-schedule-status");
 const selectedScheduleCancelButton = document.querySelector("#cancel-selected-schedule");
 const selectedScheduleSaveButton = document.querySelector("#save-selected-schedule");
 const selectedScheduleStudentsList = document.querySelector("#selected-schedule-students-list");
@@ -203,7 +203,7 @@ let selectedRosterSnapshot = [];
 let assignedStudentsDirty = false;
 let pendingStudentMove = null;
 let pendingStudentRemove = null;
-let selectedScheduleDeleteDialog = null;
+let selectedScheduleStatusDialog = null;
 
 function cloneSelectedSchedule(schedule) {
   return schedule ? JSON.parse(JSON.stringify(schedule)) : null;
@@ -236,19 +236,34 @@ function clearRosterMessage() {
   setMessageBox(selectedScheduleMessage, "");
 }
 
+function statusBadgeClass(status) {
+  if (status === "Published") return "status-verified";
+  if (status === "Cancelled") return "status-rejected";
+  return "status-pending";
+}
+
+function isSelectedScheduleCancelled(schedule = selectedScheduleActive) {
+  return schedule?.status === "Cancelled";
+}
+
 function setAssignedStudentsDirty(isDirty) {
   assignedStudentsDirty = isDirty;
 
   if (saveAssignedStudentsButton) {
-    saveAssignedStudentsButton.disabled = !assignedStudentsDirty;
+    saveAssignedStudentsButton.disabled = !assignedStudentsDirty || isSelectedScheduleCancelled();
   }
 
   if (cancelAssignedStudentsButton) {
-    cancelAssignedStudentsButton.disabled = !assignedStudentsDirty;
+    cancelAssignedStudentsButton.disabled = !assignedStudentsDirty || isSelectedScheduleCancelled();
   }
 }
 
 function markAssignedStudentsDirty() {
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before changing assigned students.", false, "roster");
+    return;
+  }
+
   setAssignedStudentsDirty(true);
   clearRosterMessage();
 }
@@ -267,7 +282,7 @@ function restoreSelectedRosterFromSnapshot() {
 }
 
 function saveAssignedStudents() {
-  if (!assignedStudentsDirty) {
+  if (!assignedStudentsDirty || isSelectedScheduleCancelled()) {
     return;
   }
 
@@ -371,9 +386,24 @@ function updateSelectedStudentCount() {
   }
 }
 
+function updateSelectedScheduleStatusAction() {
+  if (!selectedScheduleStatusToggleButton) {
+    return;
+  }
+
+  const hasSchedule = Boolean(selectedScheduleActive);
+  const cancelled = isSelectedScheduleCancelled();
+
+  selectedScheduleStatusToggleButton.disabled = !hasSchedule || selectedScheduleEditMode;
+  selectedScheduleStatusToggleButton.textContent = cancelled ? "Reactivate Schedule" : "Cancel Schedule";
+  selectedScheduleStatusToggleButton.classList.toggle("is-cancel-action", !cancelled);
+  selectedScheduleStatusToggleButton.classList.toggle("is-reactivate-action", cancelled);
+}
+
 function updateScheduleDetailsEditState() {
   const hasSchedule = Boolean(selectedScheduleActive);
-  const canEdit = hasSchedule && selectedScheduleEditMode;
+  const cancelled = isSelectedScheduleCancelled();
+  const canEdit = hasSchedule && selectedScheduleEditMode && !cancelled;
 
   Object.values(selectedScheduleFields).forEach((field) => {
     if (field) {
@@ -401,21 +431,26 @@ function updateScheduleDetailsEditState() {
   }
 
   if (selectedScheduleEditButton) {
-    selectedScheduleEditButton.disabled = !hasSchedule || canEdit;
-  }
-
-  if (selectedScheduleDeleteButton) {
-    selectedScheduleDeleteButton.disabled = !hasSchedule;
+    selectedScheduleEditButton.disabled = !hasSchedule || canEdit || cancelled;
   }
 
   if (selectedScheduleForm) {
     selectedScheduleForm.classList.toggle("is-readonly", !canEdit);
+    selectedScheduleForm.classList.toggle("is-cancelled", cancelled);
   }
+
+  updateSelectedScheduleStatusAction();
+  setAssignedStudentsDirty(assignedStudentsDirty);
 }
 
 function enableSelectedScheduleEditMode() {
   if (!selectedScheduleActive) {
     setSelectedScheduleMessage("Select a schedule before editing.", false, "details");
+    return;
+  }
+
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before editing its details.", false, "details");
     return;
   }
 
@@ -440,43 +475,36 @@ function disableSelectedScheduleEditMode() {
   updateScheduleDetailsEditState();
 }
 
-function deleteSelectedSchedule() {
+function toggleSelectedScheduleStatus() {
   if (!selectedScheduleActive) {
     return;
   }
 
-  const deletedIndex = selectedDaySchedules.findIndex((schedule) => schedule.id === selectedScheduleActive.id);
-
-  if (deletedIndex === -1) {
-    return;
-  }
-
-  selectedDaySchedules.splice(deletedIndex, 1);
+  selectedScheduleActive.status = isSelectedScheduleCancelled() ? "Published" : "Cancelled";
   selectedScheduleEditMode = false;
   selectedScheduleSnapshot = null;
-  selectedRosterSnapshot = [];
   setAssignedStudentsDirty(false);
-
-  const nextSchedule = selectedDaySchedules[deletedIndex] || selectedDaySchedules[deletedIndex - 1] || null;
-  populateSelectedSchedule(nextSchedule);
+  syncSelectedScheduleSummary();
+  renderSelectedDayList();
+  updateScheduleDetailsEditState();
 }
 
-function createSelectedScheduleDeleteDialog() {
+function createSelectedScheduleStatusDialog() {
   const dialog = document.createElement("div");
   dialog.className = "modal-backdrop";
   dialog.hidden = true;
   dialog.innerHTML = `
-    <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="selected-delete-title">
+    <section class="modal-card confirm-modal" role="dialog" aria-modal="true" aria-labelledby="selected-status-title">
       <div class="modal-heading">
         <div>
-          <h2 id="selected-delete-title">Delete this schedule?</h2>
+          <h2 id="selected-status-title">Update schedule status?</h2>
         </div>
-        <button class="icon-button modal-close" type="button" data-close-selected-delete aria-label="Close modal"></button>
+        <button class="icon-button modal-close" type="button" data-close-selected-status aria-label="Close modal"></button>
       </div>
-      <p class="modal-copy" data-selected-delete-copy>Are you sure you want to delete this schedule?</p>
+      <p class="modal-copy" data-selected-status-copy>Are you sure you want to update this schedule?</p>
       <div class="modal-actions">
-        <button class="ghost-button" type="button" data-close-selected-delete>Cancel</button>
-        <button class="primary-button workspace-action" type="button" data-confirm-selected-delete>Delete Schedule</button>
+        <button class="ghost-button" type="button" data-close-selected-status>Cancel</button>
+        <button class="primary-button workspace-action" type="button" data-confirm-selected-status>Confirm</button>
       </div>
     </section>
   `;
@@ -485,35 +513,50 @@ function createSelectedScheduleDeleteDialog() {
   return dialog;
 }
 
-function openSelectedScheduleDeleteDialog() {
+function openSelectedScheduleStatusDialog() {
   if (!selectedScheduleActive) {
     return;
   }
 
-  if (!selectedScheduleDeleteDialog) {
-    selectedScheduleDeleteDialog = createSelectedScheduleDeleteDialog();
+  if (!selectedScheduleStatusDialog) {
+    selectedScheduleStatusDialog = createSelectedScheduleStatusDialog();
   }
 
-  const copy = selectedScheduleDeleteDialog.querySelector("[data-selected-delete-copy]");
+  const willReactivate = isSelectedScheduleCancelled();
+  const title = selectedScheduleStatusDialog.querySelector("#selected-status-title");
+  const copy = selectedScheduleStatusDialog.querySelector("[data-selected-status-copy]");
+  const confirm = selectedScheduleStatusDialog.querySelector("[data-confirm-selected-status]");
+
+  if (title) {
+    title.textContent = willReactivate ? "Reactivate this schedule?" : "Cancel this schedule?";
+  }
+
   if (copy) {
-    copy.textContent = `Are you sure you want to delete ${selectedScheduleActive.title}? This removes it from the day schedule list.`;
+    copy.textContent = willReactivate
+      ? `Reactivate ${selectedScheduleActive.title}? This will allow the schedule to be edited and used again.`
+      : `Cancel ${selectedScheduleActive.title}? This keeps the record in the list but marks it as cancelled.`;
   }
 
-  selectedScheduleDeleteDialog.hidden = false;
+  if (confirm) {
+    confirm.textContent = willReactivate ? "Reactivate Schedule" : "Cancel Schedule";
+    confirm.classList.toggle("danger-confirm-button", !willReactivate);
+  }
+
+  selectedScheduleStatusDialog.hidden = false;
   document.body.classList.add("modal-open");
 }
 
-function closeSelectedScheduleDeleteDialog() {
-  if (selectedScheduleDeleteDialog) {
-    selectedScheduleDeleteDialog.hidden = true;
+function closeSelectedScheduleStatusDialog() {
+  if (selectedScheduleStatusDialog) {
+    selectedScheduleStatusDialog.hidden = true;
   }
 
   document.body.classList.remove("modal-open");
 }
 
-function confirmSelectedScheduleDelete() {
-  deleteSelectedSchedule();
-  closeSelectedScheduleDeleteDialog();
+function confirmSelectedScheduleStatusUpdate() {
+  toggleSelectedScheduleStatus();
+  closeSelectedScheduleStatusDialog();
 }
 
 function closeSelectedStudentMoveDialog() {
@@ -534,6 +577,11 @@ function closeSelectedStudentRemoveDialog() {
 }
 
 function openSelectedStudentMoveDialog(move) {
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before moving students.", false, "roster");
+    return;
+  }
+
   pendingStudentMove = move;
 
   if (selectedStudentMoveCopy) {
@@ -545,6 +593,11 @@ function openSelectedStudentMoveDialog(move) {
 }
 
 function openSelectedStudentRemoveDialog(remove) {
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before removing students.", false, "roster");
+    return;
+  }
+
   pendingStudentRemove = remove;
 
   if (selectedStudentRemoveCopy) {
@@ -560,7 +613,7 @@ function applySelectedStudentMove() {
     return;
   }
 
-  const { student, target } = pendingStudentMove;
+  const { student } = pendingStudentMove;
 
   if (selectedScheduleActive) {
     selectedScheduleActive.students = selectedScheduleActive.students.filter((name) => name !== student);
@@ -688,7 +741,7 @@ function renderSelectedBreakDates() {
   }
 
   const breakDates = getSelectedBreakDates();
-  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode);
+  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode && !isSelectedScheduleCancelled());
 
   if (!breakDates.length) {
     selectedScheduleBreakList.innerHTML = `<span class="schedule-break-empty">No breaks added</span>`;
@@ -704,7 +757,7 @@ function renderSelectedBreakDates() {
 }
 
 function syncSelectedBreakControls(options = {}) {
-  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode);
+  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode && !isSelectedScheduleCancelled());
   const start = selectedScheduleActive?.startDate || "";
   const end = selectedScheduleActive?.endDate || "";
   const hasValidRange = Boolean(parseSelectedScheduleDate(start) && parseSelectedScheduleDate(end) && start <= end);
@@ -733,7 +786,8 @@ function syncSelectedBreakControls(options = {}) {
 }
 
 function addSelectedBreakDate() {
-  if (!selectedScheduleActive) {
+  if (!selectedScheduleActive || isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before adding break dates.", false, "details");
     return;
   }
 
@@ -765,7 +819,7 @@ function addSelectedBreakDate() {
 
 function syncSelectedCasePresentationInputs() {
   const isTba = Boolean(selectedScheduleCaseTba?.checked);
-  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode);
+  const canEdit = Boolean(selectedScheduleActive && selectedScheduleEditMode && !isSelectedScheduleCancelled());
 
   selectedScheduleCaseInputs.forEach((input) => {
     input.disabled = !canEdit || isTba;
@@ -785,7 +839,7 @@ function renderStudentRosterAddOptions(query = "") {
 
   const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
 
-  if (!terms.length) {
+  if (!terms.length || isSelectedScheduleCancelled()) {
     studentRosterAddOptions.hidden = true;
     return;
   }
@@ -800,6 +854,7 @@ function renderStudentRosterAddOptions(query = "") {
 
   if (!availableStudents.length) {
     studentRosterAddOptions.innerHTML = `<div class="custom-dropdown-empty">No students found</div>`;
+    studentRosterAddOptions.hidden = false;
     return;
   }
 
@@ -819,11 +874,18 @@ function renderStudentRosterAddOptions(query = "") {
 
     studentRosterAddOptions.appendChild(item);
   });
+
+  studentRosterAddOptions.hidden = false;
 }
 
 function addStudentToSelectedRoster(student) {
   if (!selectedScheduleActive) {
     setSelectedScheduleMessage("Select a schedule before adding a student.", false, "roster");
+    return;
+  }
+
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before adding students.", false, "roster");
     return;
   }
 
@@ -888,14 +950,21 @@ function renderSelectedDayList() {
     return;
   }
 
-  selectedDayList.innerHTML = selectedDaySchedules.map((schedule) => `
-    <button class="day-schedule-card ${schedule.id === selectedScheduleActive?.id ? "is-selected" : ""}" type="button" data-day-schedule-id="${schedule.id}">
-      <strong>${schedule.title}</strong>
-      <span>${schedule.group}</span>
-      <small>${schedule.area} - ${schedule.shiftStart} to ${schedule.shiftEnd}</small>
-      ${getSelectedBreakDates(schedule).length ? `<small class="schedule-break-summary">Breaks: ${getSelectedBreakDates(schedule).map(formatSelectedBreakDate).join(", ")}</small>` : ""}
-    </button>
-  `).join("");
+  selectedDayList.innerHTML = selectedDaySchedules.map((schedule) => {
+    const cancelled = schedule.status === "Cancelled";
+
+    return `
+      <button class="day-schedule-card ${schedule.id === selectedScheduleActive?.id ? "is-selected" : ""} ${cancelled ? "is-cancelled" : ""}" type="button" data-day-schedule-id="${schedule.id}">
+        <div class="day-schedule-card-meta">
+          <strong>${schedule.title}</strong>
+          <mark class="status-badge ${statusBadgeClass(schedule.status)}">${schedule.status || "Draft"}</mark>
+        </div>
+        <span>${schedule.group}</span>
+        <small>${schedule.area} - ${schedule.shiftStart} to ${schedule.shiftEnd}</small>
+        ${getSelectedBreakDates(schedule).length ? `<small class="schedule-break-summary">Breaks: ${getSelectedBreakDates(schedule).map(formatSelectedBreakDate).join(", ")}</small>` : ""}
+      </button>
+    `;
+  }).join("");
 
   selectedDayList.querySelectorAll("[data-day-schedule-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -915,6 +984,7 @@ function renderSelectedStudents(schedule) {
   }
 
   const students = schedule?.students || [];
+  const cancelled = isSelectedScheduleCancelled(schedule);
   const moveTargetOptions = ["BSN 3A - Group 1", "BSN 3A - Group 2", "BSN 3A - Make-up Duty", "BSN 3B - Group 1", "BSN 4A - Group 1"]
     .filter((group) => group !== schedule?.group);
 
@@ -938,12 +1008,12 @@ function renderSelectedStudents(schedule) {
             <strong>${student}</strong>
           </div>
           <label class="form-label compact-roster-select">
-            <select data-student-move-target aria-label="Move ${student} to">
+            <select data-student-move-target aria-label="Move ${student} to"${cancelled ? " disabled" : ""}>
               ${moveTargetOptions.map((group) => `<option>${group}</option>`).join("")}
             </select>
           </label>
           <div class="roster-action-buttons">
-            <button class="ghost-button danger-action" type="button" data-remove-selected-student>Remove</button>
+            <button class="ghost-button danger-action" type="button" data-remove-selected-student${cancelled ? " disabled" : ""}>Remove</button>
           </div>
         </div>
       `;
@@ -979,7 +1049,7 @@ function syncSelectedScheduleSummary() {
     return;
   }
 
-  if (selectedScheduleEditMode) {
+  if (selectedScheduleEditMode && !isSelectedScheduleCancelled()) {
     selectedScheduleActive.title = selectedScheduleFields.title?.value || selectedScheduleActive.title;
     selectedScheduleActive.group = selectedScheduleFields.group?.value || selectedScheduleActive.group;
     selectedScheduleActive.startDate = selectedScheduleFields.startDate?.value || selectedScheduleActive.startDate;
@@ -1002,7 +1072,7 @@ function syncSelectedScheduleSummary() {
 
   if (selectedScheduleStatus) {
     selectedScheduleStatus.textContent = selectedScheduleActive.status || "Draft";
-    selectedScheduleStatus.className = `status-badge ${selectedScheduleActive.status === "Published" ? "status-verified" : "status-pending"}`;
+    selectedScheduleStatus.className = `status-badge ${statusBadgeClass(selectedScheduleActive.status)}`;
   }
 
   if (selectedScheduleSummary.date) {
@@ -1020,6 +1090,8 @@ function syncSelectedScheduleSummary() {
   if (selectedScheduleSummary.shift) {
     selectedScheduleSummary.shift.textContent = `${selectedScheduleActive.shiftStart} to ${selectedScheduleActive.shiftEnd}`;
   }
+
+  updateSelectedScheduleStatusAction();
 }
 
 function populateSelectedSchedule(schedule, resetEditMode = true) {
@@ -1036,7 +1108,10 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
 
   if (!schedule) {
     if (selectedScheduleHeading) selectedScheduleHeading.textContent = "Select a schedule";
-    if (selectedScheduleStatus) selectedScheduleStatus.textContent = "Draft";
+    if (selectedScheduleStatus) {
+      selectedScheduleStatus.textContent = "Draft";
+      selectedScheduleStatus.className = "status-badge status-pending";
+    }
     if (selectedScheduleStudentsList) selectedScheduleStudentsList.innerHTML = "";
     if (selectedScheduleStudentCount) selectedScheduleStudentCount.textContent = "0 students";
     if (selectedScheduleSummary.date) selectedScheduleSummary.date.textContent = "Not selected";
@@ -1087,14 +1162,14 @@ function populateSelectedSchedule(schedule, resetEditMode = true) {
 
 Object.values(selectedScheduleFields).forEach((field) => {
   field?.addEventListener("input", () => {
-    if (selectedScheduleEditMode) {
+    if (selectedScheduleEditMode && !isSelectedScheduleCancelled()) {
       syncSelectedScheduleSummary();
       renderSelectedDayList();
     }
   });
 
   field?.addEventListener("change", () => {
-    if (selectedScheduleEditMode) {
+    if (selectedScheduleEditMode && !isSelectedScheduleCancelled()) {
       syncSelectedScheduleSummary();
       renderSelectedDayList();
     }
@@ -1106,7 +1181,7 @@ addSelectedScheduleBreakButton?.addEventListener("click", addSelectedBreakDate);
 selectedScheduleBreakList?.addEventListener("click", (event) => {
   const removeButton = event.target.closest("[data-remove-selected-break]");
 
-  if (!removeButton || !selectedScheduleEditMode) {
+  if (!removeButton || !selectedScheduleEditMode || isSelectedScheduleCancelled()) {
     return;
   }
 
@@ -1119,7 +1194,7 @@ selectedScheduleBreakList?.addEventListener("click", (event) => {
 });
 
 selectedScheduleCaseTba?.addEventListener("change", () => {
-  if (selectedScheduleEditMode) {
+  if (selectedScheduleEditMode && !isSelectedScheduleCancelled()) {
     syncSelectedCasePresentationInputs();
     syncSelectedScheduleSummary();
     renderSelectedDayList();
@@ -1144,19 +1219,24 @@ selectedScheduleForm?.addEventListener("submit", (event) => {
     return;
   }
 
+  if (isSelectedScheduleCancelled()) {
+    setSelectedScheduleMessage("Reactivate this schedule before saving changes.", false, "details");
+    return;
+  }
+
   syncSelectedScheduleSummary();
   renderSelectedDayList();
   disableSelectedScheduleEditMode();
   clearScheduleDetailsMessage();
 });
 
-selectedScheduleDeleteButton?.addEventListener("click", openSelectedScheduleDeleteDialog);
+selectedScheduleStatusToggleButton?.addEventListener("click", openSelectedScheduleStatusDialog);
 
 studentRosterAddSearch?.addEventListener("focus", () => {
   renderStudentRosterAddOptions(studentRosterAddSearch.value);
 
   if (studentRosterAddOptions) {
-    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim();
+    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim() || isSelectedScheduleCancelled();
   }
 });
 
@@ -1164,7 +1244,7 @@ studentRosterAddSearch?.addEventListener("input", () => {
   renderStudentRosterAddOptions(studentRosterAddSearch.value);
 
   if (studentRosterAddOptions) {
-    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim();
+    studentRosterAddOptions.hidden = !studentRosterAddSearch.value.trim() || isSelectedScheduleCancelled();
   }
 });
 
@@ -1212,21 +1292,25 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !selectedStudentRemoveDialog.hidden) {
     closeSelectedStudentRemoveDialog();
   }
+
+  if (event.key === "Escape" && selectedScheduleStatusDialog && !selectedScheduleStatusDialog.hidden) {
+    closeSelectedScheduleStatusDialog();
+  }
 });
 
 document.addEventListener("click", (event) => {
-  if (selectedScheduleDeleteDialog && event.target.closest("[data-close-selected-delete]")) {
-    closeSelectedScheduleDeleteDialog();
+  if (selectedScheduleStatusDialog && event.target.closest("[data-close-selected-status]")) {
+    closeSelectedScheduleStatusDialog();
     return;
   }
 
-  if (selectedScheduleDeleteDialog && event.target.closest("[data-confirm-selected-delete]")) {
-    confirmSelectedScheduleDelete();
+  if (selectedScheduleStatusDialog && event.target.closest("[data-confirm-selected-status]")) {
+    confirmSelectedScheduleStatusUpdate();
     return;
   }
 
-  if (selectedScheduleDeleteDialog && event.target === selectedScheduleDeleteDialog) {
-    closeSelectedScheduleDeleteDialog();
+  if (selectedScheduleStatusDialog && event.target === selectedScheduleStatusDialog) {
+    closeSelectedScheduleStatusDialog();
     return;
   }
 

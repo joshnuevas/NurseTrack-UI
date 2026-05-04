@@ -18,6 +18,7 @@ const MANUAL_ATTENDANCE_KEY = "nursetrack-manual-attendance-submissions";
 const ASSISTANT_MANUAL_BACKUP_ACCESS_KEY = "nursetrack-assistant-manual-backup-access";
 const signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
 const assistantManualBackupAccessEnabled = window.localStorage?.getItem(ASSISTANT_MANUAL_BACKUP_ACCESS_KEY) === "true";
+const isSupportManualBackupRole = signedRole === "assistant" || signedRole === "coordinator";
 
 const manualAttendanceStudents = [
   { id: "maria-cruz", name: "Maria Cruz", initials: "MC", studentId: "12-3456-789", section: "BSN 3A", area: "Emergency Room", site: "CCMC" },
@@ -594,11 +595,100 @@ function renderManualAttendanceCiHistory() {
   }).join("");
 }
 
+function renderManualAttendanceCiRecordDetail(recordId) {
+  const workspace = document.querySelector("main.workspace");
+  const submission = getManualAttendanceSubmissions()
+    .find((item) => item.id === recordId && getManualAttendanceCiSlug(item) === "patricia-reyes");
+
+  if (!workspace) {
+    return;
+  }
+
+  if (!submission) {
+    workspace.innerHTML = `
+      <section class="workspace-panel manual-attendance-review-panel" data-manual-attendance-entry>
+        <div class="panel-heading">
+          <div>
+            <h2>Record Not Found</h2>
+          </div>
+        </div>
+        <div class="empty-state">This manual attendance record could not be found.</div>
+      </section>
+    `;
+    return;
+  }
+
+  workspace.innerHTML = `
+    <section class="manual-attendance-review-detail" data-manual-attendance-entry>
+      <article class="workspace-panel student-progress-search-panel manual-attendance-ci-profile">
+        <div class="panel-heading">
+          <div>
+            <h2>${formatManualDate(submission.dutyDate)} Attendance</h2>
+          </div>
+        </div>
+
+        <div class="student-validation-card no-margin">
+          <div class="avatar">PR</div>
+          <div>
+            <strong>${escapeHtml(submission.site)} - ${escapeHtml(submission.area)}</strong>
+            <p>Encoded ${escapeHtml(submission.submittedAt)}</p>
+          </div>
+          <span class="status-badge ${manualAttendanceBadgeClass(submission.status)}">${manualAttendanceStatusLabel(submission.status)}</span>
+        </div>
+      </article>
+
+      <section class="workspace-panel manual-attendance-review-panel manual-attendance-record-panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Record Details</h2>
+          </div>
+        </div>
+
+        <div class="manual-attendance-review-summary">
+          <div><span>Duty Date</span><strong>${formatManualDate(submission.dutyDate)}</strong></div>
+          <div><span>Shift Time</span><strong>${formatManualShift(submission.shiftStart, submission.shiftEnd)}</strong></div>
+          <div><span>Encoded By</span><strong>${escapeHtml(submission.submittedBy)}</strong></div>
+          <div><span>Review Status</span><strong>${manualAttendanceRecordNote(submission)}</strong></div>
+          <div class="manual-attendance-note-tile"><span>Instructor Note</span><strong>${escapeHtml(submission.notes || "No note added.")}</strong></div>
+        </div>
+
+        <div class="manual-attendance-student-table" role="table" aria-label="Manual attendance student records">
+          <div class="manual-attendance-student-table-row manual-attendance-student-table-head" role="row">
+            <span role="columnheader">Student</span>
+            <span role="columnheader">Section / ID</span>
+            <span role="columnheader">Status</span>
+            <span role="columnheader">Check-in</span>
+            <span role="columnheader">Check-out</span>
+          </div>
+          ${submission.students.map((student) => `
+            <div class="manual-attendance-student-table-row" role="row">
+              <span role="cell">
+                <span class="avatar small-avatar">${escapeHtml(student.initials)}</span>
+                <strong>${escapeHtml(student.name)}</strong>
+              </span>
+              <span role="cell">${escapeHtml(student.section)} - ${escapeHtml(student.studentId)}</span>
+              <span role="cell">${escapeHtml(student.status)}</span>
+              <span role="cell">${formatManualTime(student.checkIn)}</span>
+              <span role="cell">${formatManualTime(student.checkOut)}</span>
+            </div>
+          `).join("")}
+        </div>
+      </section>
+    </section>
+  `;
+}
+
 function renderManualAttendanceEntry() {
   const workspace = document.querySelector("main.workspace");
   const editRecordId = getSelectedManualAttendanceRecordId();
+  const isReviewOnly = new URLSearchParams(window.location.search).get("view") === "1";
 
   if (!isCiManualAttendancePage || !workspace || document.querySelector("[data-manual-attendance-entry]")) {
+    return;
+  }
+
+  if (editRecordId && isReviewOnly) {
+    renderManualAttendanceCiRecordDetail(editRecordId);
     return;
   }
 
@@ -727,9 +817,15 @@ function renderManualAttendanceEntry() {
   if (!editRecordId) {
     document.querySelector("#manual-attendance-ci-history-list")?.addEventListener("click", (event) => {
       const editButton = event.target.closest("[data-manual-edit-record]");
+      const lockedButton = event.target.closest("[data-manual-locked-record]");
 
       if (editButton) {
         window.location.href = `manual-attendance.html?record=${encodeURIComponent(editButton.dataset.manualEditRecord)}`;
+        return;
+      }
+
+      if (lockedButton) {
+        window.location.href = `manual-attendance.html?record=${encodeURIComponent(lockedButton.dataset.manualLockedRecord)}&view=1`;
       }
     });
   }
@@ -939,7 +1035,7 @@ function renderManualAttendanceRecordDetail(ciSlug, recordId) {
   const workspace = document.querySelector("main.workspace");
   const ci = manualAttendanceCis.find((item) => item.slug === ciSlug) || manualAttendanceCis[0];
   const submission = getManualAttendanceSubmissions().find((item) => item.id === recordId && getManualAttendanceCiSlug(item) === ci.slug);
-  const canDecide = signedRole !== "assistant" || assistantManualBackupAccessEnabled;
+  const canDecide = !isSupportManualBackupRole || assistantManualBackupAccessEnabled;
 
   if (!workspace) {
     return;
@@ -1031,7 +1127,7 @@ function renderManualAttendanceRecordDetail(ciSlug, recordId) {
           </div>
         ` : `
           <div class="form-message manual-attendance-review-note">
-            ${canDecide ? "This record is already in its final displayed state." : "Assistant can view manual attendance records, but approval controls are disabled."}
+            ${canDecide ? "This record is already in its final displayed state." : "This role can view manual attendance records, but approval controls are disabled."}
           </div>
         `}
       </section>

@@ -180,6 +180,66 @@
         white-space: nowrap;
       }
 
+      .ci-recommendation-history-item .status-badge,
+      .approved-appeal-item .status-badge,
+      .appeal-card .status-badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: auto !important;
+        min-width: 5.9rem !important;
+        max-width: max-content !important;
+        min-height: 2.1rem !important;
+        height: 2.1rem !important;
+        padding: 0.42rem 0.9rem !important;
+        border-radius: 999px !important;
+        font-size: 0.84rem !important;
+        font-weight: 800 !important;
+        line-height: 1 !important;
+        letter-spacing: 0 !important;
+        white-space: nowrap !important;
+      }
+
+      .ci-recommendation-history-item .status-badge.status-verified,
+      .approved-appeal-item .status-badge.status-verified,
+      .appeal-card .status-badge.status-verified {
+        background: #e8f7ee !important;
+        color: #078033 !important;
+      }
+
+      .ci-recommendation-history-item .status-badge.status-rejected,
+      .approved-appeal-item .status-badge.status-rejected,
+      .appeal-card .status-badge.status-rejected {
+        background: #fdecec !important;
+        color: #d11f1f !important;
+      }
+
+      .ci-recommendation-history-item {
+        grid-template-columns: 44px minmax(0, 1fr) auto !important;
+        align-items: center !important;
+        gap: 1.25rem !important;
+      }
+
+      .ci-recommendation-history-item .status-badge {
+        justify-self: end !important;
+      }
+
+      .ci-recommendation-history-list .avatar,
+      .ci-recommendation-history-item .avatar,
+      .approved-appeal-item .avatar,
+      .appeal-student-cell .avatar,
+      .appeal-student-cell .small-avatar,
+      .sidebar-account .avatar {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        line-height: 1 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        flex-shrink: 0 !important;
+      }
+
       @media (max-width: 768px) {
         .appeal-filters {
           grid-template-columns: 1fr !important;
@@ -210,6 +270,15 @@
 
         #appeal-selected-count {
           text-align: left;
+        }
+
+        .ci-recommendation-history-item {
+          grid-template-columns: 44px minmax(0, 1fr) !important;
+        }
+
+        .ci-recommendation-history-item .status-badge {
+          grid-column: 2 !important;
+          justify-self: start !important;
         }
       }
     </style>

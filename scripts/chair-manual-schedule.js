@@ -356,7 +356,7 @@ manualStudentList?.addEventListener("click", (event) => {
 
   renderManualAssignedStudents();
   setManualStatus("Draft edited", "status-pending");
-  setManualMessage(`${student} added to the manual schedule.`);
+  setManualMessage("");
 });
 
 Object.values(manualFields).forEach((field) => {

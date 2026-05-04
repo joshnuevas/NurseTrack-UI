@@ -249,7 +249,8 @@
 
       .student-appeal-history-item .status-badge {
         justify-self: end;
-        min-width: 112px;
+        min-width: 0;
+        padding: 6px 12px;
         justify-content: center;
       }
 
@@ -350,6 +351,21 @@
         color: #4c5d7d;
         font-size: 0.86rem;
         font-weight: 800;
+      }
+
+      .student-appeal-detail-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.8rem;
+        padding-top: 0.5rem;
+      }
+
+      .student-appeal-detail-actions .ghost-button {
+        width: auto;
+        min-width: 150px;
+        min-height: 46px;
+        padding: 0 22px;
+        border-radius: 10px;
       }
 
       @media (max-width: 720px) {

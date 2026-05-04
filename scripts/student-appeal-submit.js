@@ -18,6 +18,12 @@ const typeLabels = {
   case: "Clinical case"
 };
 
+const typeValues = {
+  Attendance: "attendance",
+  Schedule: "schedule",
+  "Clinical case": "case"
+};
+
 const studentAppealRecords = {
   pending: {
     title: "Late arrival due to bus delay",
@@ -49,12 +55,25 @@ const studentAppealRecords = {
   }
 };
 
+const pendingAppealStorageKey = "nursetrackStudentPendingAppeal";
+
+try {
+  const savedPendingAppeal = JSON.parse(window.sessionStorage.getItem(pendingAppealStorageKey) || "null");
+
+  if (savedPendingAppeal) {
+    Object.assign(studentAppealRecords.pending, savedPendingAppeal);
+  }
+} catch {
+  // Session storage is optional for this static wireframe.
+}
+
 function setMessage(text, state) {
   if (!appealMessage) {
     return;
   }
 
   appealMessage.textContent = text;
+  appealMessage.hidden = !text;
   appealMessage.classList.remove("is-error", "is-success");
 
   if (state) {
@@ -146,6 +165,24 @@ function buildAppealCard(formData) {
   `;
 }
 
+function buildHistoryItem(recordKey) {
+  const record = studentAppealRecords[recordKey];
+  const fileCount = record.files?.length || 0;
+  const statusName = record.status === "Accepted" ? "Accepted" : "Pending";
+
+  return `
+    <a class="student-appeal-history-item" href="student-appeals.html?appeal=${recordKey}" data-status="${recordKey === "accepted" ? "accepted" : "submitted"}">
+      <span class="avatar small-avatar">MC</span>
+      <span class="student-appeal-history-copy">
+        <strong>${escapeHtml(record.title)}</strong>
+        <small>${escapeHtml(record.type)} - ${escapeHtml(record.dutyDate)} - ${escapeHtml(record.site)}</small>
+        <small>Submitted ${escapeHtml(record.submitted)}${fileCount ? ` - ${fileCount} file${fileCount === 1 ? "" : "s"} attached` : ""}</small>
+      </span>
+      <span class="status-badge ${record.badgeClass}">${statusName}</span>
+    </a>
+  `;
+}
+
 function updateAppealFileSummary() {
   if (!appealFileSummary || !appealFilesInput) {
     return;
@@ -220,6 +257,12 @@ function renderStudentAppealDetail() {
             <p>${record.files.map(escapeHtml).join(", ")}</p>
           </div>
         </div>
+
+        ${selectedAppeal === "pending" ? `
+          <div class="student-appeal-detail-actions">
+            <a class="ghost-button button-link" href="student-appeals.html?edit=pending">Edit Appeal</a>
+          </div>
+        ` : ""}
       </article>
     </section>
   `;
@@ -250,15 +293,7 @@ function renderInitialAppealHistory() {
       </div>
 
       <div class="student-appeal-history-list" id="student-appeal-list" aria-live="polite">
-        <a class="student-appeal-history-item" href="student-appeals.html?appeal=pending" data-status="submitted">
-          <span class="avatar small-avatar">MC</span>
-          <span class="student-appeal-history-copy">
-            <strong>Late arrival due to bus delay</strong>
-            <small>Attendance - April 29, 2026 - CCMC</small>
-            <small>Submitted today, 7:48 AM - 2 files attached</small>
-          </span>
-          <span class="status-badge status-pending">Pending</span>
-        </a>
+        ${buildHistoryItem("pending")}
       </div>
     </div>
 
@@ -269,21 +304,51 @@ function renderInitialAppealHistory() {
       </div>
 
       <div class="student-appeal-history-list">
-        <a class="student-appeal-history-item" href="student-appeals.html?appeal=accepted" data-status="accepted">
-          <span class="avatar small-avatar">MC</span>
-          <span class="student-appeal-history-copy">
-            <strong>Excused tardiness request</strong>
-            <small>Attendance - April 12, 2026 - CCMC</small>
-            <small>Submitted April 12, 2026, 8:04 AM - 1 file attached</small>
-          </span>
-          <span class="status-badge status-verified">Accepted</span>
-        </a>
+        ${buildHistoryItem("accepted")}
       </div>
     </div>
   `;
 
   appealList = document.querySelector("#student-appeal-list");
   appealListCount = document.querySelector("#student-appeal-list-count");
+}
+
+function loadPendingAppealForEdit() {
+  const editKey = new URLSearchParams(window.location.search).get("edit");
+
+  if (editKey !== "pending" || !appealForm) {
+    return false;
+  }
+
+  const record = studentAppealRecords.pending;
+  const summaryPanel = document.querySelector(".student-appeal-summary-panel");
+  const cancelButton = appealForm.querySelector(".button-row .ghost-button");
+
+  summaryPanel?.remove();
+
+  appealForm.dataset.editing = "pending";
+  appealForm.querySelector(".panel-heading .status-badge").textContent = "Editing";
+  appealForm.querySelector(".panel-heading .status-badge").className = "status-badge status-pending";
+  appealForm.querySelector("button[type='submit']").textContent = "Update Appeal";
+
+  if (cancelButton) {
+    cancelButton.type = "button";
+    cancelButton.textContent = "Cancel";
+    cancelButton.addEventListener("click", () => {
+      window.location.href = "student-appeals.html?appeal=pending";
+    });
+  }
+
+  document.querySelector("#appeal-type").value = typeValues[record.type] || "attendance";
+  document.querySelector("#appeal-duty-date").value = "2026-04-29";
+  document.querySelector("#appeal-site").value = record.site;
+  document.querySelector("#appeal-area").value = record.area;
+  document.querySelector("#appeal-ci").value = record.assignedCi;
+  document.querySelector("#appeal-title").value = record.title;
+  document.querySelector("#appeal-reason").value = record.reason;
+  document.querySelector("#appeal-evidence").value = record.evidence;
+  setMessage("");
+  return true;
 }
 
 function hasRequiredFields(formData) {
@@ -309,6 +374,26 @@ appealForm?.addEventListener("submit", (event) => {
     return;
   }
 
+  if (appealForm.dataset.editing === "pending") {
+    studentAppealRecords.pending.title = String(formData.get("title") || "").trim();
+    studentAppealRecords.pending.type = typeLabels[formData.get("appealType")] || "Attendance";
+    studentAppealRecords.pending.dutyDate = formatDate(String(formData.get("dutyDate") || ""));
+    studentAppealRecords.pending.site = String(formData.get("site") || "").trim();
+    studentAppealRecords.pending.area = String(formData.get("area") || "").trim();
+    studentAppealRecords.pending.assignedCi = String(formData.get("recommendedByCi") || "").trim();
+    studentAppealRecords.pending.reason = String(formData.get("reason") || "").trim();
+    studentAppealRecords.pending.evidence = String(formData.get("evidence") || "").trim();
+
+    try {
+      window.sessionStorage.setItem(pendingAppealStorageKey, JSON.stringify(studentAppealRecords.pending));
+    } catch {
+      // Keep the in-memory update even when session storage is blocked.
+    }
+
+    window.location.href = "student-appeals.html?appeal=pending";
+    return;
+  }
+
   appealList?.insertAdjacentHTML("afterbegin", buildAppealCard(formData));
   appealForm.reset();
   setMessage("Appeal submitted. It is now awaiting CI recommendation.", "is-success");
@@ -325,7 +410,12 @@ appealForm?.addEventListener("reset", () => {
 appealFilesInput?.addEventListener("change", updateAppealFileSummary);
 
 if (!renderStudentAppealDetail()) {
-  renderInitialAppealHistory();
+  const isEditingPendingAppeal = loadPendingAppealForEdit();
+
+  if (!isEditingPendingAppeal) {
+    renderInitialAppealHistory();
+    updateSummary();
+  }
+
   updateAppealFileSummary();
-  updateSummary();
 }

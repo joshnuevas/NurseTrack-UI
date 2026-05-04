@@ -47,6 +47,7 @@
       { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
       { label: "Manual Backup", href: "manual-attendance-review.html", pages: ["manual-attendance-review.html"] },
       { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html", "student-progress-detail.html"] },
+      { label: "Extension Days", href: "extension-days.html", pages: ["extension-days.html"] },
       { label: "Clearance", href: "student-clearance.html", pages: ["student-clearance.html", "student-clearance-detail.html"] },
       { label: "Clinical Cases View", href: "clinical-cases-view.html", pages: ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"] },
       { label: "CI Recommendations", href: "student-appeals.html", pages: ["student-appeals.html"] },
@@ -61,29 +62,33 @@
     const chairClearancePages = ["student-clearance.html", "student-clearance-detail.html"];
     const chairClinicalCasePages = ["clinical-cases-view.html", "clinical-case-selection.html", "case-validation.html"];
     const chairRecommendationPages = ["student-appeals.html"];
+    const chairExtensionPages = ["extension-days.html", "extension-day-detail.html"];
     const chairOvertimePages = ["overtime-details.html", "overtime-rendered.html"];
     const chairReportPages = ["generate-report.html", "case-report.html", "duty-report.html", "export-page.html"];
     const coordinatorDashboardPages = ["coordinator-dashboard.html"];
+    const coordinatorAboutPages = ["coordinator-about.html"];
     const coordinatorSchedulePages = ["schedule-management.html", "assigned-roster.html"];
     const coordinatorChairPages = [
       "coordinator-dashboard.html",
-      "live-attendance-tracker.html",
-      "chair-student-progress.html",
-      "student-progress-detail.html",
-      "clinical-cases-view.html",
-      "clinical-case-selection.html",
-      "case-validation.html",
-      "overtime-details.html",
-      "overtime-rendered.html",
-      "generate-report.html",
-      "case-report.html",
-      "duty-report.html",
-      "export-page.html"
+      ...coordinatorAboutPages,
+      ...chairSchedulePages,
+      ...chairLiveAttendancePages,
+      ...chairStudentProgressPages,
+      ...chairExtensionPages,
+      ...chairOvertimePages,
+      ...chairReportPages,
+      ...chairManualAttendancePages,
+      ...chairClearancePages,
+      ...chairClinicalCasePages,
+      ...chairRecommendationPages
     ];
     const enrollmentPages = ["chair-student-progress.html", "student-progress-detail.html"];
+    const enrollmentAboutPages = ["enrollment-about.html"];
     const assistantDashboardPages = ["assistant-dashboard.html"];
+    const assistantAboutPages = ["assistant-about.html"];
     const assistantChairPages = [
       "assistant-dashboard.html",
+      ...assistantAboutPages,
       ...chairSchedulePages,
       ...chairLiveAttendancePages,
       ...chairStudentProgressPages,
@@ -92,7 +97,8 @@
       ...chairManualAttendancePages,
       ...chairClearancePages,
       ...chairClinicalCasePages,
-      ...chairRecommendationPages
+      ...chairRecommendationPages,
+      ...chairExtensionPages
     ];
     const instructorSchedulePages = ["schedule-management.html", "assigned-roster.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html"];
     const instructorLiveAttendancePages = ["live-attendance-tracker.html"];
@@ -100,6 +106,7 @@
     const instructorClinicalCasePages = ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "review-submissions.html", "validation-history.html"];
     const instructorStudentProgressPages = ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"];
     const instructorRecommendationPages = ["student-appeals.html"];
+    const instructorExtensionPages = ["extension-days.html", "extension-day-detail.html"];
     const instructorReportPages = ["instructor-reports.html"];
 
     const adminNavItems = [
@@ -112,6 +119,7 @@
       { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorLiveAttendancePages }] },
       { label: "Manual Backup", folder: "admin-manager", href: "manual-attendance-review.html", pages: chairManualAttendancePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorManualAttendancePages }] },
       { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorStudentProgressPages }] },
+      { label: "Extension Days", folder: "admin-manager", href: "extension-days.html", pages: chairExtensionPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorExtensionPages }] },
       { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
       { label: "Clinical Cases", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages, activeAreas: [{ folder: "clinical-instructor", pages: instructorClinicalCasePages }] },
       { label: "CI Recommendations", folder: "admin-manager", href: "student-appeals.html", pages: chairRecommendationPages, activeAreas: [{ folder: "clinical-instructor", pages: instructorRecommendationPages }] },
@@ -122,10 +130,14 @@
 
     const coordinatorNavItems = [
       { label: "Dashboard", folder: "admin-manager", href: "coordinator-dashboard.html", pages: coordinatorDashboardPages },
-      { label: "Schedules", folder: "clinical-instructor", href: "schedule-management.html", pages: coordinatorSchedulePages },
+      { label: "Schedules", folder: "admin-manager", href: "admin-schedules.html", pages: chairSchedulePages },
       { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages },
       { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages },
-      { label: "Clinical Cases", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages },
+      { label: "Extension Days", folder: "admin-manager", href: "extension-days.html", pages: chairExtensionPages },
+      { label: "Manual Backup", folder: "admin-manager", href: "manual-attendance-review.html", pages: chairManualAttendancePages },
+      { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
+      { label: "Clinical Cases View", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages },
+      { label: "CI Recommendations", folder: "admin-manager", href: "student-appeals.html", pages: chairRecommendationPages },
       { label: "Overtime Details", folder: "admin-manager", href: "overtime-details.html", pages: chairOvertimePages },
       { label: "Reports", folder: "admin-manager", href: "generate-report.html", pages: chairReportPages }
     ];
@@ -139,6 +151,7 @@
       { label: "Schedules", folder: "admin-manager", href: "admin-schedules.html", pages: chairSchedulePages },
       { label: "Live Attendance", folder: "admin-manager", href: "live-attendance-tracker.html", pages: chairLiveAttendancePages },
       { label: "Student Progress", folder: "admin-manager", href: "chair-student-progress.html", pages: chairStudentProgressPages },
+      { label: "Extension Days", folder: "admin-manager", href: "extension-days.html", pages: chairExtensionPages },
       { label: "Manual Backup", folder: "admin-manager", href: "manual-attendance-review.html", pages: chairManualAttendancePages },
       { label: "Clearance", folder: "admin-manager", href: "student-clearance.html", pages: chairClearancePages },
       { label: "Clinical Cases View", folder: "admin-manager", href: "clinical-cases-view.html", pages: chairClinicalCasePages },
@@ -152,6 +165,7 @@
       ...chairLiveAttendancePages,
       ...chairManualAttendancePages,
       ...chairStudentProgressPages,
+      ...chairExtensionPages,
       ...chairClearancePages,
       ...chairClinicalCasePages,
       ...chairRecommendationPages,
@@ -165,11 +179,12 @@
       ...instructorClinicalCasePages,
       ...instructorStudentProgressPages,
       ...instructorRecommendationPages,
+      ...instructorExtensionPages,
       ...instructorReportPages
     ]);
     const coordinatorAllowedChairPages = new Set(coordinatorChairPages);
-    const coordinatorAllowedInstructorPages = new Set(coordinatorSchedulePages);
-    const enrollmentAllowedChairPages = new Set(enrollmentPages);
+    const coordinatorAllowedInstructorPages = new Set([]);
+    const enrollmentAllowedChairPages = new Set([...enrollmentPages, ...enrollmentAboutPages, ...chairExtensionPages]);
     const assistantAllowedChairPages = new Set(assistantChairPages);
 
     const isAllowedOperationalRoute = () => {
@@ -199,6 +214,7 @@
       { label: "Manual Backup", href: "manual-attendance.html", pages: ["manual-attendance.html"] },
       { label: "Clinical Cases Review", href: "select-validation-user.html", pages: ["select-validation-user.html", "clinical-case-selection.html", "case-validation.html", "validation-history.html"] },
       { label: "Student Progress", href: "instructor-student-view.html", pages: ["instructor-student-view.html", "student-progress-detail.html", "pending-requirements.html"] },
+      { label: "Extension Days", href: "extension-days.html", pages: instructorExtensionPages },
       { label: "Student Appeals", href: "student-appeals.html", pages: ["student-appeals.html"] },
       { label: "Reports", href: "instructor-reports.html", pages: ["instructor-reports.html"] }
     ];
@@ -329,8 +345,9 @@
     };
 
     const enforceRoleOwnership = () => {
-      const routeRole = page === "coordinator-dashboard.html" ? "coordinator" :
-        page === "assistant-dashboard.html" ? "assistant" :
+      const routeRole = [...coordinatorDashboardPages, ...coordinatorAboutPages].includes(page) ? "coordinator" :
+        [...assistantDashboardPages, ...assistantAboutPages].includes(page) ? "assistant" :
+          enrollmentAboutPages.includes(page) ? "enrollment" :
           isAdmin ? "admin" : isChair && legacyAdminPages.has(page) ? "admin" : isChair ? "chair" : isInstructor ? "instructor" : isStudent ? "student" : "";
 
       if (!signedRole || !routeRole || signedRole === routeRole || isAllowedOperationalRoute()) {
@@ -469,29 +486,13 @@
 
       setText(".topbar-title h1", "Student Progress");
 
-      all("[data-student-progress-card]").forEach((card) => {
-        if (card.querySelector("[data-enrollment-clearance-note]")) {
-          return;
-        }
-
-        const copy = card.querySelector("span:nth-child(2)");
-        copy?.insertAdjacentHTML("beforeend", `<small data-enrollment-clearance-note>Cleared by Chair</small>`);
-      });
-
-      const detailPanel = one(".student-progress-detail, .student-progress-detail-card, .progress-detail-panel, main.workspace");
-      if (page === "student-progress-detail.html" && detailPanel && !one("[data-enrollment-clearance-panel]")) {
-        detailPanel.insertAdjacentHTML("afterbegin", `
-          <section class="workspace-panel" data-enrollment-clearance-panel>
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">Enrollment Clearance</p>
-                <h2>Cleared by Chair</h2>
-              </div>
-              <span class="status-badge status-verified">Cleared</span>
-            </div>
-            <div class="form-message is-success">This student is cleared by the Chair for enrollment team review.</div>
-          </section>
-        `);
+      if (page === "student-progress-detail.html" && !one("[data-enrollment-clearance-note]")) {
+        const progressStatus = one("#progress-status");
+        const isCleared = progressStatus && ["On track", "Completed"].includes(progressStatus.textContent.trim());
+        progressStatus?.insertAdjacentHTML(
+          "afterend",
+          `<span class="status-badge ${isCleared ? "status-verified" : "status-rejected"}" data-enrollment-clearance-note>${isCleared ? "Cleared" : "Not cleared"}</span>`
+        );
       }
     };
 
@@ -1606,7 +1607,8 @@
       const pendingHistoryItems = indexedHistoryItems.filter((item) => !["accepted", "rejected"].includes(item.decision));
       const decidedHistoryItems = indexedHistoryItems.filter((item) => ["accepted", "rejected"].includes(item.decision));
       const selectedHistoryItem = Number.isInteger(selectedHistoryIndex) ? selectedHistoryItems[selectedHistoryIndex] : null;
-      const canDecideRecommendations = !isAssistantRole || assistantCiRecommendationsEnabled;
+      const isSupportReviewRole = isAssistantRole || isCoordinatorRole;
+      const canDecideRecommendations = !isSupportReviewRole || assistantCiRecommendationsEnabled;
       const canEditHistoryDecision = (isInstructor || isAdminExperience || isChair) && canDecideRecommendations;
 
       if (selectedHistoryItem) {
@@ -1700,7 +1702,7 @@
                       <button class="ghost-button danger-button" type="button" data-ci-decision="rejected" data-ci-decision-id="${selectedStudent.slug}-${index}">Mark as Rejected</button>
                       <button class="primary-button workspace-action" type="button" data-ci-decision="accepted" data-ci-decision-id="${selectedStudent.slug}-${index}">Mark as Accepted</button>
                     </div>
-                  ` : `<div class="form-message">Assistant can view CI recommendations but cannot accept or reject them.</div>`}
+                  ` : `<div class="form-message">This role can view CI recommendations but cannot accept or reject them.</div>`}
                 </article>
               `;
                 }).join("")}
@@ -1723,7 +1725,6 @@
               <div class="ci-recommendation-history-group">
                 <div class="ci-recommendation-history-subhead">
                   <span>Pending</span>
-                  <span>${pendingHistoryItems.length} record${pendingHistoryItems.length === 1 ? "" : "s"}</span>
                 </div>
                 <div class="ci-recommendation-history-list">
                   ${pendingHistoryItems.map((item) => `
@@ -1745,7 +1746,6 @@
               <div class="ci-recommendation-history-group">
                 <div class="ci-recommendation-history-subhead">
                   <span>Accepted / Returned</span>
-                  <span>${decidedHistoryItems.length} record${decidedHistoryItems.length === 1 ? "" : "s"}</span>
                 </div>
                 <div class="ci-recommendation-history-list">
                   ${decidedHistoryItems.map((item) => `
@@ -1966,7 +1966,15 @@
         return;
       }
 
-      const href = isAdminExperience ? hrefFor("admin", "about.html") : "about.html";
+      const roleChip = one(".role-chip")?.textContent.trim().toLowerCase() || "";
+      const brandRole = signedRole || (roleChip.includes("coordinator") ? "coordinator" :
+        roleChip.includes("enrollment") ? "enrollment" :
+          roleChip === "assistant" ? "assistant" : "");
+      const href = isAdminExperience ? hrefFor("admin", "about.html") :
+        brandRole === "coordinator" ? hrefFor("admin-manager", "coordinator-about.html") :
+          brandRole === "enrollment" ? hrefFor("admin-manager", "enrollment-about.html") :
+            brandRole === "assistant" ? hrefFor("admin-manager", "assistant-about.html") :
+              "about.html";
 
       if (brand.tagName.toLowerCase() === "a") {
         brand.setAttribute("href", href);

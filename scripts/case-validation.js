@@ -23,7 +23,8 @@ const signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
 const isAdminCaseValidation = isChairCaseValidation && signedRole === "admin";
 const ASSISTANT_CLINICAL_CASES_ACCESS_KEY = "nursetrack-assistant-clinical-cases-access";
 const assistantClinicalCasesAccessEnabled = window.localStorage?.getItem(ASSISTANT_CLINICAL_CASES_ACCESS_KEY) === "true";
-const isReadOnlyCaseValidation = isChairCaseValidation && (signedRole === "coordinator" || (signedRole === "assistant" && !assistantClinicalCasesAccessEnabled));
+const isSupportCaseRole = signedRole === "assistant" || signedRole === "coordinator";
+const isReadOnlyCaseValidation = isChairCaseValidation && isSupportCaseRole && !assistantClinicalCasesAccessEnabled;
 const reviewerRoleLabel = isAdminCaseValidation ? "Admin" : isChairCaseValidation ? "Chair" : "Instructor";
 const reviewerRoleLower = reviewerRoleLabel.toLowerCase();
 

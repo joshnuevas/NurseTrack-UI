@@ -73,6 +73,15 @@
         background: linear-gradient(180deg, #8a252c, #ffcf01);
       }
 
+      .day-schedule-card.is-cancelled {
+        background: #f8fafc;
+        opacity: 0.82;
+      }
+
+      .day-schedule-card.is-cancelled::before {
+        background: linear-gradient(180deg, #94a3b8, #cbd5e1);
+      }
+
       .day-schedule-card strong {
         display: block;
         color: #111827;
@@ -103,6 +112,14 @@
         border-color: rgba(138, 37, 44, 0.32);
         box-shadow: 0 14px 28px rgba(138, 37, 44, 0.12);
         transform: translateY(-2px);
+      }
+
+      .day-schedule-card-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        flex-wrap: wrap;
       }
 
       .empty-state {
@@ -196,11 +213,17 @@
         cursor: not-allowed;
       }
 
+      .selected-schedule-form.is-cancelled input,
+      .selected-schedule-form.is-cancelled select,
+      .selected-schedule-form.is-cancelled textarea {
+        background-color: #f1f5f9;
+      }
+
       .selected-schedule-button-row,
       .student-roster-button-row {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        justify-content: flex-end;
         gap: 12px;
         flex-wrap: wrap;
       }
@@ -213,15 +236,28 @@
         white-space: nowrap;
       }
 
-      .selected-schedule-button-row .danger-action {
+      .selected-schedule-button-row .schedule-status-action {
         margin-right: auto;
+      }
+
+      .selected-schedule-button-row .schedule-status-action.is-cancel-action {
         border-color: rgba(198, 40, 40, 0.34);
         color: #b42318;
       }
 
-      .selected-schedule-button-row .danger-action:hover:not(:disabled) {
+      .selected-schedule-button-row .schedule-status-action.is-cancel-action:hover:not(:disabled) {
         border-color: rgba(198, 40, 40, 0.55);
         background: #fff1f0;
+      }
+
+      .selected-schedule-button-row .schedule-status-action.is-reactivate-action {
+        border-color: rgba(21, 127, 59, 0.34);
+        color: #157f3b;
+      }
+
+      .selected-schedule-button-row .schedule-status-action.is-reactivate-action:hover:not(:disabled) {
+        border-color: rgba(21, 127, 59, 0.55);
+        background: #ecfdf3;
       }
 
       .student-roster-panel {
@@ -322,6 +358,103 @@
         background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(248, 250, 252, 0.85));
       }
 
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 1.25rem;
+        background: rgba(15, 23, 42, 0.48);
+        backdrop-filter: blur(4px);
+      }
+
+      .modal-backdrop[hidden] {
+        display: none !important;
+      }
+
+      .modal-card.confirm-modal {
+        width: min(540px, 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 1rem;
+        background: #ffffff;
+        box-shadow: 0 28px 70px rgba(15, 23, 42, 0.24);
+        padding: 1.55rem;
+      }
+
+      .modal-card.confirm-modal .modal-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 48px;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .modal-card.confirm-modal .modal-heading h2 {
+        margin: 0;
+        color: #111827;
+        font-size: 1.45rem;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+      }
+
+      .modal-card.confirm-modal .modal-close {
+        width: 48px;
+        min-width: 48px;
+        height: 48px;
+        padding: 0;
+        border-radius: 0.75rem;
+        position: relative;
+      }
+
+      .modal-card.confirm-modal .modal-close::before,
+      .modal-card.confirm-modal .modal-close::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .modal-card.confirm-modal .modal-close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .modal-card.confirm-modal .modal-close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .modal-card.confirm-modal .modal-copy {
+        margin: 0;
+        color: #4c5d7d;
+        font-size: 0.98rem;
+        font-weight: 800;
+        line-height: 1.55;
+      }
+
+      .modal-card.confirm-modal .modal-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.85rem;
+        margin-top: 1.35rem;
+      }
+
+      .modal-card.confirm-modal .modal-actions .ghost-button,
+      .modal-card.confirm-modal .modal-actions .primary-button {
+        width: 100%;
+        min-height: 52px;
+        border-radius: 0.75rem;
+        font-size: 0.92rem;
+        font-weight: 850;
+      }
+
+      .modal-card.confirm-modal .modal-actions .primary-button {
+        box-shadow: 0 14px 28px rgba(138, 37, 44, 0.18);
+      }
+
       @media (max-width: 720px) {
         .selected-schedule-panel {
           padding: 1rem 1.15rem 1.3rem;
@@ -341,10 +474,10 @@
 
         .selected-schedule-button-row,
         .student-roster-button-row {
-          justify-content: flex-start;
+          justify-content: flex-end;
         }
 
-        .selected-schedule-button-row .danger-action {
+        .selected-schedule-button-row .schedule-status-action {
           margin-right: 0;
         }
 
@@ -352,6 +485,24 @@
         .student-roster-button-row .primary-button {
           width: 100%;
           min-width: 0;
+        }
+
+        .modal-card.confirm-modal {
+          padding: 1.25rem;
+        }
+
+        .modal-card.confirm-modal .modal-heading {
+          grid-template-columns: minmax(0, 1fr) 44px;
+        }
+
+        .modal-card.confirm-modal .modal-close {
+          width: 44px;
+          min-width: 44px;
+          height: 44px;
+        }
+
+        .modal-card.confirm-modal .modal-actions {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -548,7 +699,7 @@
 
                 <div class="schedule-maker-actions selected-schedule-actions">
                   <div class="selected-schedule-button-row">
-                    <button class="ghost-button danger-action" id="delete-selected-schedule" type="button">Delete Schedule</button>
+                    <button class="ghost-button schedule-status-action is-cancel-action" id="toggle-selected-schedule-status" type="button">Cancel Schedule</button>
                     <button class="ghost-button" id="cancel-selected-schedule" type="button">Cancel</button>
                     <button class="primary-button workspace-action" id="save-selected-schedule" type="submit">Save Selected Schedule</button>
                   </div>

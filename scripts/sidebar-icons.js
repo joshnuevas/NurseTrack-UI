@@ -30,6 +30,14 @@
       <circle cx="12" cy="12" r="9"></circle>
       <path d="M12 7v5l3 2"></path>
     `,
+    "extension days": `
+      <rect x="4" y="5" width="16" height="16" rx="2"></rect>
+      <path d="M8 3v4"></path>
+      <path d="M16 3v4"></path>
+      <path d="M4 10h16"></path>
+      <path d="M12 14v5"></path>
+      <path d="M9.5 16.5h5"></path>
+    `,
     help: `
       <circle cx="12" cy="12" r="9"></circle>
       <path d="M9.7 9a2.4 2.4 0 0 1 4.6.9c0 1.6-1.5 2.2-2.1 3"></path>

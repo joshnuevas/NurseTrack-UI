@@ -28,7 +28,8 @@ const detailMessage = document.querySelector("#clearance-detail-message");
 const signedRole = window.sessionStorage?.getItem("nursetrackRole") || "";
 const ASSISTANT_CLEARANCE_ACCESS_KEY = "nursetrack-assistant-clearance-access";
 const assistantClearanceAccessEnabled = window.localStorage?.getItem(ASSISTANT_CLEARANCE_ACCESS_KEY) === "true";
-const isClearanceReadOnly = signedRole === "assistant" && !assistantClearanceAccessEnabled;
+const isSupportClearanceRole = signedRole === "assistant" || signedRole === "coordinator";
+const isClearanceReadOnly = isSupportClearanceRole && !assistantClearanceAccessEnabled;
 
 const detail = {
   avatar: document.querySelector("#clearance-detail-avatar"),
@@ -550,7 +551,7 @@ function selectStudent(studentKey) {
   }
 
   if (isClearanceReadOnly) {
-    setDetailMessage("Assistant can view clearance status but cannot approve or cancel approval.");
+    setDetailMessage("This role can view clearance status but cannot approve or cancel approval.");
   } else if (record.approved) {
     setDetailMessage(`${student.name} is approved and can print clearance.`, "success");
   } else if (record.submitted) {
@@ -605,7 +606,7 @@ accessToggle?.addEventListener("click", () => {
 
 function approveSelectedClearance() {
   if (isClearanceReadOnly) {
-    setDetailMessage("Assistant can view clearance status but cannot approve clearance.", "error");
+    setDetailMessage("This role can view clearance status but cannot approve clearance.", "error");
     return;
   }
 
@@ -637,7 +638,7 @@ function approveSelectedClearance() {
 
 approveButton?.addEventListener("click", () => {
   if (isClearanceReadOnly) {
-    setDetailMessage("Assistant can view clearance status but cannot approve clearance.", "error");
+    setDetailMessage("This role can view clearance status but cannot approve clearance.", "error");
     return;
   }
 
@@ -655,7 +656,7 @@ approveButton?.addEventListener("click", () => {
 
 editApprovalButton?.addEventListener("click", () => {
   if (isClearanceReadOnly) {
-    setDetailMessage("Assistant can view clearance status but cannot cancel clearance approval.", "error");
+    setDetailMessage("This role can view clearance status but cannot cancel clearance approval.", "error");
     return;
   }
 

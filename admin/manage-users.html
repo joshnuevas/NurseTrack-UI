@@ -15,87 +15,140 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: 1.5rem;
+        place-items: center;
+        background: rgba(15, 23, 42, 0.46);
+        backdrop-filter: blur(3px);
       }
 
       .user-action-modal-card,
       .edit-user-modal-card,
       .status-modal-card {
-        width: min(620px, 100%);
-        max-width: 620px;
-        padding: 2rem;
-        border-radius: 18px;
-        overflow: visible;
+        width: min(560px, calc(100vw - 32px));
+        max-width: 560px;
+        max-height: min(88vh, 760px);
+        padding: 0;
+        border-radius: 8px;
+        overflow: hidden;
         box-sizing: border-box;
+        box-shadow: 0 26px 68px rgba(15, 23, 42, 0.24);
+      }
+
+      .user-action-modal-card .modal-heading,
+      .edit-user-modal-card .modal-heading,
+      .status-modal-card .modal-heading {
+        display: grid;
+        align-items: center;
+        gap: 0.85rem;
+        min-height: 76px;
+        margin: 0;
+        padding: 1.25rem 1.35rem;
+        border-bottom: 1px solid #e5eaf1;
       }
 
       .user-action-modal-card .modal-heading {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 48px;
-        align-items: start;
-        gap: 1rem;
-        margin-bottom: 1.25rem;
+        grid-template-columns: minmax(0, 1fr) 44px;
       }
 
       .edit-user-modal-card .modal-heading,
       .status-modal-card .modal-heading {
-        display: grid;
-        grid-template-columns: 48px minmax(0, 1fr) 48px;
-        align-items: start;
-        gap: 1rem;
-        margin-bottom: 1.35rem;
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
       }
 
       .user-action-modal-card .modal-heading h2,
       .edit-user-modal-card .modal-heading h2,
       .status-modal-card .modal-heading h2 {
-        margin: 0.25rem 0 0;
+        margin: 0.2rem 0 0;
         color: #111827;
-        font-size: 1.5rem;
+        font-size: 1.28rem;
         line-height: 1.15;
-      }
-
-      .user-action-modal-card .modal-copy {
-        margin: 0 0 1.35rem;
-        color: #4c5d7d;
-        font-size: 0.96rem;
-        font-weight: 700;
-        line-height: 1.55;
+        letter-spacing: 0;
       }
 
       .modal-close,
       .modal-back-button {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        min-height: 48px;
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        min-height: 44px;
         padding: 0;
-        border-radius: 13px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        font-family: "Kumbh Sans", sans-serif;
-        font-size: 1rem;
-        font-weight: 900;
-        text-align: center;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #ffffff;
+        color: transparent;
+        font-size: 0;
+        line-height: 0;
+        text-transform: none;
       }
 
-      .modal-back-button {
-        font-size: 1.25rem;
+      .modal-close:hover,
+      .modal-close:focus-visible,
+      .modal-back-button:hover,
+      .modal-back-button:focus-visible {
+        border-color: rgba(138, 37, 44, 0.4);
+        background: #ffffff;
+        color: transparent;
+      }
+
+      .modal-close::before,
+      .modal-close::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 2px;
+        border-radius: 999px;
+        background: #111827;
+      }
+
+      .modal-close::before {
+        transform: rotate(45deg);
+      }
+
+      .modal-close::after {
+        transform: rotate(-45deg);
+      }
+
+      .modal-back-button::before {
+        content: "";
+        width: 11px;
+        height: 11px;
+        border-left: 2px solid #111827;
+        border-bottom: 2px solid #111827;
+        transform: translateX(2px) rotate(45deg);
+      }
+
+      .user-action-modal-card .modal-copy {
+        margin: 0;
+        padding: 1.15rem 1.35rem 0;
+        color: #4c5d7d;
+        font-size: 0.94rem;
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
+      .status-modal-card > .modal-copy {
+        margin: 0;
+        padding: 1.15rem 1.35rem;
+        color: #4c5d7d;
+        font-size: 0.94rem;
+        font-weight: 800;
+        line-height: 1.5;
       }
 
       .account-action-summary {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: 44px minmax(0, 1fr) auto;
         align-items: center;
-        gap: 1rem;
-        width: 100%;
-        max-width: 100%;
-        margin-bottom: 1.3rem;
-        padding: 1rem 1.1rem;
-        border: 1px solid rgba(255, 207, 1, 0.8);
-        border-radius: 14px;
-        background: #fff6cf;
+        gap: 0.85rem;
+        width: auto;
+        max-width: none;
+        margin: 1rem 1.35rem;
+        padding: 0.9rem;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #f8fafc;
         box-sizing: border-box;
         overflow: hidden;
       }
@@ -116,8 +169,8 @@
         display: block;
         margin-top: 0.25rem;
         max-width: 100%;
-        color: #4c5d7d;
-        font-size: 0.84rem;
+        color: #667085;
+        font-size: 0.82rem;
         font-weight: 800;
         line-height: 1.4;
         overflow-wrap: anywhere;
@@ -130,36 +183,44 @@
 
       .action-menu-grid {
         display: grid;
-        gap: 0.9rem;
-        margin-bottom: 1.35rem;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+        margin: 0;
+        padding: 0 1.35rem 1.15rem;
       }
 
       .action-menu-grid .ghost-button {
         justify-content: flex-start;
         width: 100%;
         min-width: 0;
-        min-height: 56px;
+        min-height: 50px;
         padding: 0 1.15rem;
-        border-radius: 13px;
+        border-radius: 8px;
         font-size: 0.95rem;
         font-weight: 850;
         text-align: left;
         box-sizing: border-box;
+        background: #ffffff;
       }
 
       .action-menu-grid .ghost-button.is-selected {
         border-color: rgba(138, 37, 44, 0.55);
-        background: rgba(138, 37, 44, 0.06);
+        background: #ffffff;
         color: #8a252c;
+        box-shadow: none;
       }
 
       .user-action-modal-card .modal-actions,
       .modal-form-actions,
-      .status-modal-actions {
+      .status-modal-actions,
+      .add-user-modal-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-top: 0.3rem;
+        gap: 0.8rem;
+        margin: 0;
+        padding: 1.1rem 1.35rem 1.35rem;
+        border-top: 1px solid #e5eaf1;
+        background: #f8fafc;
       }
 
       .user-action-modal-card .modal-actions .ghost-button,
@@ -167,11 +228,13 @@
       .modal-form-actions .ghost-button,
       .modal-form-actions .primary-button,
       .status-modal-actions .ghost-button,
-      .status-modal-actions .primary-button {
+      .status-modal-actions .primary-button,
+      .add-user-modal-actions .ghost-button,
+      .add-user-modal-actions .primary-button {
         width: 100%;
         min-width: 0;
-        min-height: 54px;
-        border-radius: 13px;
+        min-height: 48px;
+        border-radius: 8px;
         font-size: 0.95rem;
         font-weight: 850;
         box-sizing: border-box;
@@ -180,33 +243,30 @@
       .edit-user-modal-card .user-form,
       .status-only-form {
         display: grid;
-        gap: 1.15rem;
-      }
-
-      .edit-user-modal-card .form-label,
-      .status-only-form .form-label {
-        margin: 0;
+        gap: 1rem;
+        padding: 1.25rem 1.35rem 0;
       }
 
       .edit-user-modal-card input,
       .edit-user-modal-card select,
       .status-only-form select {
-        min-height: 52px;
+        min-height: 48px;
       }
 
       .edit-user-modal-card .form-message,
       .status-only-form .form-message {
         margin: 0;
-        min-height: 54px;
+        min-height: 48px;
         display: flex;
         align-items: center;
+        border-radius: 8px;
       }
 
       .status-current-card {
-        margin-bottom: 1.15rem;
+        margin: 1.2rem 1.35rem 0;
         padding: 1rem;
         border: 1px solid #dbe3ee;
-        border-radius: 14px;
+        border-radius: 8px;
         background: #f8fafc;
       }
 
@@ -250,8 +310,24 @@
         line-height: 1.15;
       }
 
+      .panel-heading-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .panel-heading-actions .ghost-button {
+        min-height: 38px;
+        padding-inline: 1rem;
+        border-radius: 8px;
+        white-space: nowrap;
+      }
+
       .user-filters {
-        grid-template-columns: minmax(150px, 0.75fr) minmax(150px, 0.75fr) minmax(260px, 1.4fr);
+        display: grid;
+        grid-template-columns: minmax(160px, 0.72fr) minmax(160px, 0.72fr) minmax(160px, 0.72fr) minmax(300px, 1.6fr);
         gap: 0.85rem;
         margin-bottom: 1rem;
         padding: 0.95rem;
@@ -262,6 +338,18 @@
 
       .user-filters .form-label {
         margin: 0;
+      }
+
+      #section-filter-wrapper[hidden] {
+        display: none !important;
+      }
+
+      #user-search-wrapper {
+        grid-column: 4 / -1;
+      }
+
+      .user-filters.is-non-student-role #user-search-wrapper {
+        grid-column: 3 / -1;
       }
 
       .user-table {
@@ -300,199 +388,30 @@
         border-radius: 8px;
       }
 
-      .modal-backdrop {
-        place-items: center;
-        padding: clamp(1rem, 3vw, 2rem);
-        background: rgba(15, 23, 42, 0.46);
-        backdrop-filter: blur(3px);
+      .add-user-modal-card {
+        display: flex;
+        flex-direction: column;
       }
 
-      .user-action-modal-card,
-      .edit-user-modal-card,
-      .status-modal-card {
-        width: min(560px, calc(100vw - 32px));
-        max-width: 560px;
-        max-height: min(88vh, 760px);
-        padding: 0;
-        border-radius: 8px;
-        box-shadow: 0 26px 68px rgba(15, 23, 42, 0.24);
-      }
-
-      .user-action-modal-card .modal-heading,
-      .edit-user-modal-card .modal-heading,
-      .status-modal-card .modal-heading {
-        display: grid;
-        align-items: center;
-        gap: 0.85rem;
-        min-height: 76px;
-        margin: 0;
-        padding: 1.25rem 1.35rem;
-        border-bottom: 1px solid #e5eaf1;
-      }
-
-      .user-action-modal-card .modal-heading {
+      .add-user-modal-card .modal-heading {
         grid-template-columns: minmax(0, 1fr) 44px;
       }
 
-      .edit-user-modal-card .modal-heading,
-      .status-modal-card .modal-heading {
-        grid-template-columns: 44px minmax(0, 1fr) 44px;
-      }
-
-      .user-action-modal-card .modal-heading h2,
-      .edit-user-modal-card .modal-heading h2,
-      .status-modal-card .modal-heading h2 {
-        margin: 0.2rem 0 0;
-        font-size: 1.28rem;
-        letter-spacing: 0;
-      }
-
-      .modal-close,
-      .modal-back-button {
-        position: relative;
+      .add-user-modal-card #add-user-form {
         display: grid;
-        place-items: center;
-        width: 44px;
-        min-width: 44px;
-        height: 44px;
-        min-height: 44px;
-        padding: 0;
-        border: 1px solid #dbe3ee;
-        border-radius: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem 1.1rem;
+        min-height: 0;
+        overflow: auto;
+      }
+
+      .add-user-modal-card #add-user-message,
+      .add-user-modal-card .add-user-modal-actions {
+        grid-column: 1 / -1;
+      }
+
+      .add-user-modal-card .add-user-modal-actions {
         background: #ffffff;
-        color: transparent;
-        font-size: 0;
-        line-height: 0;
-      }
-
-      .modal-close:hover,
-      .modal-close:focus-visible,
-      .modal-back-button:hover,
-      .modal-back-button:focus-visible {
-        border-color: rgba(138, 37, 44, 0.4);
-        background: #fff7d6;
-        color: transparent;
-      }
-
-      .modal-close::before,
-      .modal-close::after {
-        content: "";
-        position: absolute;
-        width: 14px;
-        height: 2px;
-        border-radius: 999px;
-        background: #111827;
-      }
-
-      .modal-close::before {
-        transform: rotate(45deg);
-      }
-
-      .modal-close::after {
-        transform: rotate(-45deg);
-      }
-
-      .modal-back-button::before {
-        content: "";
-        width: 11px;
-        height: 11px;
-        border-left: 2px solid #111827;
-        border-bottom: 2px solid #111827;
-        transform: translateX(2px) rotate(45deg);
-      }
-
-      .user-action-modal-card .modal-copy {
-        margin: 0;
-        padding: 1.15rem 1.35rem 0;
-        color: #4c5d7d;
-        font-size: 0.94rem;
-      }
-
-      .account-action-summary {
-        grid-template-columns: 44px minmax(0, 1fr) auto;
-        gap: 0.85rem;
-        width: auto;
-        max-width: none;
-        margin: 1rem 1.35rem;
-        padding: 0.9rem;
-        border-color: #dbe3ee;
-        border-radius: 8px;
-        background: #f8fafc;
-      }
-
-      .account-action-summary .avatar {
-        width: 44px;
-        height: 44px;
-        font-size: 0.84rem;
-      }
-
-      .account-action-summary small {
-        color: #667085;
-        font-size: 0.82rem;
-      }
-
-      .action-menu-grid {
-        grid-template-columns: 1fr;
-        gap: 0.65rem;
-        margin: 0;
-        padding: 0 1.35rem 1.15rem;
-      }
-
-      .action-menu-grid .ghost-button {
-        min-height: 50px;
-        border-radius: 8px;
-        background: #ffffff;
-      }
-
-      .action-menu-grid .ghost-button.is-selected {
-        border-color: rgba(138, 37, 44, 0.55);
-        background: #fff7d6;
-        box-shadow: inset 4px 0 0 #8a252c;
-      }
-
-      .user-action-modal-card .modal-actions,
-      .modal-form-actions,
-      .status-modal-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
-        margin: 0;
-        padding: 1.1rem 1.35rem 1.35rem;
-        border-top: 1px solid #e5eaf1;
-        background: #f8fafc;
-      }
-
-      .user-action-modal-card .modal-actions .ghost-button,
-      .user-action-modal-card .modal-actions .primary-button,
-      .modal-form-actions .ghost-button,
-      .modal-form-actions .primary-button,
-      .status-modal-actions .ghost-button,
-      .status-modal-actions .primary-button {
-        min-height: 48px;
-        border-radius: 8px;
-      }
-
-      .edit-user-modal-card .user-form,
-      .status-only-form {
-        gap: 1rem;
-        padding: 1.25rem 1.35rem 0;
-      }
-
-      .edit-user-modal-card input,
-      .edit-user-modal-card select,
-      .status-only-form select {
-        min-height: 48px;
-      }
-
-      .edit-user-modal-card .form-message,
-      .status-only-form .form-message {
-        min-height: 48px;
-        border-radius: 8px;
-      }
-
-      .status-current-card {
-        margin: 1.2rem 1.35rem 0;
-        border-radius: 8px;
       }
 
       .user-action-modal-card .modal-close,
@@ -527,19 +446,37 @@
       .status-modal-card .modal-back-button:hover,
       .status-modal-card .modal-back-button:focus-visible {
         border-color: rgba(138, 37, 44, 0.4);
-        background: #fff7d6;
+        background: #ffffff;
         color: transparent;
+      }
+
+      .user-action-modal-card .icon-button.modal-close::before,
+      .user-action-modal-card .icon-button.modal-close::after,
+      .edit-user-modal-card .icon-button.modal-close::before,
+      .edit-user-modal-card .icon-button.modal-close::after,
+      .status-modal-card .icon-button.modal-close::before,
+      .status-modal-card .icon-button.modal-close::after {
+        background: #111827;
+      }
+
+      .user-action-modal-card .icon-button.modal-close:hover::before,
+      .user-action-modal-card .icon-button.modal-close:hover::after,
+      .user-action-modal-card .icon-button.modal-close:focus-visible::before,
+      .user-action-modal-card .icon-button.modal-close:focus-visible::after,
+      .edit-user-modal-card .icon-button.modal-close:hover::before,
+      .edit-user-modal-card .icon-button.modal-close:hover::after,
+      .edit-user-modal-card .icon-button.modal-close:focus-visible::before,
+      .edit-user-modal-card .icon-button.modal-close:focus-visible::after,
+      .status-modal-card .icon-button.modal-close:hover::before,
+      .status-modal-card .icon-button.modal-close:hover::after,
+      .status-modal-card .icon-button.modal-close:focus-visible::before,
+      .status-modal-card .icon-button.modal-close:focus-visible::after {
+        background: #8a252c;
       }
 
       @media (max-width: 680px) {
         .modal-backdrop {
           padding: 1rem;
-        }
-
-        .user-action-modal-card,
-        .edit-user-modal-card,
-        .status-modal-card {
-          padding: 0;
         }
 
         .account-action-summary {
@@ -553,7 +490,12 @@
 
         .user-action-modal-card .modal-actions,
         .modal-form-actions,
-        .status-modal-actions {
+        .status-modal-actions,
+        .add-user-modal-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .add-user-modal-card #add-user-form {
           grid-template-columns: 1fr;
         }
 
@@ -566,9 +508,9 @@
           display: none;
         }
 
-        .edit-user-modal-card .modal-heading,
-        .status-modal-card .modal-heading {
-          grid-template-columns: 44px minmax(0, 1fr) 44px;
+        #user-search-wrapper,
+        .user-filters.is-non-student-role #user-search-wrapper {
+          grid-column: auto;
         }
       }
     </style>
@@ -590,8 +532,12 @@
         <nav class="sidebar-nav">
           <a class="nav-link" href="admin-dashboard.html"><span class="nav-dot"></span>Dashboard</a>
           <a class="nav-link is-active" href="manage-users.html" aria-current="page"><span class="nav-dot"></span>Manage Users</a>
+          <a class="nav-link" href="assistant-access.html"><span class="nav-dot"></span>Assistant Access</a>
+          <a class="nav-link" href="section-import.html"><span class="nav-dot"></span>Section Import</a>
           <a class="nav-link" href="hospital-duty-area.html"><span class="nav-dot"></span>Hospitals / Duty Areas</a>
-          <a class="nav-link" href="audit-logs.html"><span class="nav-dot"></span>Audit Logs</a>
+          <a class="nav-link" href="admin-schedules.html"><span class="nav-dot"></span>Schedules</a>
+          <a class="nav-link" href="admin-live-attendance.html"><span class="nav-dot"></span>Live Attendance</a>
+          <a class="nav-link" href="admin-manual-backup.html"><span class="nav-dot"></span>Manual Backup</a>
         </nav>
 
         <div class="sidebar-account">
@@ -618,7 +564,6 @@
           </div>
 
           <div class="topbar-actions">
-            <span class="sync-pill" id="user-sync-pill">24 active</span>
             <a class="icon-button notification-button button-link" href="admin-notifications.html" aria-label="Notifications" title="Notifications">
               <svg class="notification-bell" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
@@ -636,13 +581,17 @@
                 <div>
                   <h2>User List</h2>
                 </div>
-                <span class="status-badge status-verified" id="visible-user-count">6 visible</span>
+                <div class="panel-heading-actions">
+                  <button class="ghost-button" type="button" id="open-add-user">Add User</button>
+                  <span class="status-badge status-verified" id="visible-user-count">6 visible</span>
+                </div>
               </div>
 
-              <div class="form-grid user-filters">
+              <div class="form-grid user-filters" id="user-filters">
                 <label class="form-label" for="role-filter">
                   Role
                   <select id="role-filter">
+                    <option value="student">Student</option>
                     <option value="instructor">Instructor</option>
                     <option value="chair">Chair</option>
                     <option value="admin">Admin</option>
@@ -657,13 +606,26 @@
                   <select id="status-filter">
                     <option value="all">All status</option>
                     <option value="active">Active</option>
-                    <option value="pending">Pending</option>
-                    <option value="suspended">Suspended</option>
-                    <option value="denied">Denied</option>
+                    <option value="deactivated">Deactivated</option>
                   </select>
                 </label>
 
-                <label class="form-label" for="user-search">
+                <label class="form-label" for="section-filter" id="section-filter-wrapper">
+                  Section
+                  <select id="section-filter">
+                    <option value="all">All sections</option>
+                    <option value="BSN 1A">BSN 1A</option>
+                    <option value="BSN 1B">BSN 1B</option>
+                    <option value="BSN 2A">BSN 2A</option>
+                    <option value="BSN 2B">BSN 2B</option>
+                    <option value="BSN 3A">BSN 3A</option>
+                    <option value="BSN 3B">BSN 3B</option>
+                    <option value="BSN 4A">BSN 4A</option>
+                    <option value="BSN 4B">BSN 4B</option>
+                  </select>
+                </label>
+
+                <label class="form-label" for="user-search" id="user-search-wrapper">
                   Search
                   <input id="user-search" type="search" placeholder="Search name, ID, email">
                 </label>
@@ -678,7 +640,7 @@
                   <span>Action</span>
                 </div>
 
-                <div class="user-row" data-role="student" data-status="active">
+                <div class="user-row" data-role="student" data-status="active" data-section="BSN 3A">
                   <span>
                     <strong>Maria Cruz</strong>
                     <small>maria.cruz@cit.edu</small>
@@ -700,7 +662,7 @@
                   </span>
                 </div>
 
-                <div class="user-row" data-role="student" data-status="pending">
+                <div class="user-row" data-role="student" data-status="active" data-section="BSN 2B">
                   <span>
                     <strong>Juan Dela Cruz</strong>
                     <small>juan.delacruz@cit.edu</small>
@@ -710,7 +672,7 @@
                     <strong>24-0001-001</strong>
                     <small>BSN 2B</small>
                   </span>
-                  <span><mark class="status-badge status-pending">Pending</mark></span>
+                  <span><mark class="status-badge status-verified">Active</mark></span>
                   <span>
                     <button class="icon-button kebab-button user-action" type="button" aria-label="Open account action" title="Actions">
                       <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -831,7 +793,7 @@
                   </span>
                 </div>
 
-                <div class="user-row" data-role="student" data-status="suspended">
+                <div class="user-row" data-role="student" data-status="deactivated" data-section="BSN 4A">
                   <span>
                     <strong>Paolo Lim</strong>
                     <small>paolo.lim@cit.edu</small>
@@ -841,7 +803,7 @@
                     <strong>22-0988-414</strong>
                     <small>BSN 4A</small>
                   </span>
-                  <span><mark class="status-badge status-rejected">Suspended</mark></span>
+                  <span><mark class="status-badge status-rejected">Deactivated</mark></span>
                   <span>
                     <button class="icon-button kebab-button user-action" type="button" aria-label="Open account action" title="Actions">
                       <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -862,6 +824,71 @@
             </article>
           </section>
         </main>
+
+        <div class="modal-backdrop" id="add-user-modal" hidden>
+          <section class="modal-card account-modal edit-user-modal-card add-user-modal-card" role="dialog" aria-modal="true" aria-labelledby="add-user-title">
+            <div class="modal-heading">
+              <div>
+                <p class="section-kicker">Add User</p>
+                <h2 id="add-user-title">Create Account</h2>
+              </div>
+              <button class="icon-button modal-close" type="button" data-close-add-modal aria-label="Close modal"></button>
+            </div>
+
+            <form class="user-form" id="add-user-form" novalidate>
+              <label class="form-label" for="add-name">
+                Full name
+                <input id="add-name" type="text" placeholder="Enter full name" required>
+              </label>
+
+              <label class="form-label" for="add-email">
+                School email
+                <input id="add-email" type="email" placeholder="name@cit.edu" required>
+              </label>
+
+              <label class="form-label" for="add-role">
+                Role
+                <select id="add-role" required>
+                  <option value="student">Nursing Student</option>
+                  <option value="instructor">Clinical Instructor</option>
+                  <option value="admin">Admin</option>
+                  <option value="chair">Chair</option>
+                  <option value="assistant">Assistant</option>
+                  <option value="enrollment">Enrollment Team</option>
+                  <option value="coordinator">Coordinator</option>
+                </select>
+              </label>
+
+              <label class="form-label" for="add-id">
+                ID
+                <input id="add-id" type="text" placeholder="Student ID or staff ID" required>
+              </label>
+
+              <label class="form-label" for="add-section">
+                Section
+                <select id="add-section" required>
+                  <option value="BSN 1A">BSN 1A</option>
+                  <option value="BSN 1B">BSN 1B</option>
+                  <option value="BSN 2A">BSN 2A</option>
+                  <option value="BSN 2B">BSN 2B</option>
+                  <option value="BSN 3A">BSN 3A</option>
+                  <option value="BSN 3B">BSN 3B</option>
+                  <option value="BSN 4A">BSN 4A</option>
+                  <option value="BSN 4B">BSN 4B</option>
+                </select>
+              </label>
+
+              <div id="add-user-message" class="form-message" role="status" aria-live="polite">
+                Add a student, CI, admin, chair, assistant, coordinator, or enrollment team account.
+              </div>
+
+              <div class="add-user-modal-actions">
+                <button class="ghost-button" type="button" data-close-add-modal>Cancel</button>
+                <button class="primary-button workspace-action" type="submit">Add User</button>
+              </div>
+            </form>
+          </section>
+        </div>
 
         <div class="modal-backdrop" id="user-action-modal" hidden>
           <section class="modal-card confirm-modal user-action-modal-card" role="dialog" aria-modal="true" aria-labelledby="user-action-title">
@@ -975,9 +1002,7 @@
                 New status
                 <select id="status-only-select" required>
                   <option value="active">Active</option>
-                  <option value="pending">Pending</option>
-                  <option value="suspended">Suspended</option>
-                  <option value="denied">Denied</option>
+                  <option value="deactivated">Deactivated</option>
                 </select>
               </label>
 
@@ -1020,21 +1045,34 @@
       const sidebarBackdrop = document.querySelector("[data-close-sidebar]");
       const roleFilter = document.querySelector("#role-filter");
       const statusFilter = document.querySelector("#status-filter");
+      const sectionFilterWrapper = document.querySelector("#section-filter-wrapper");
+      const sectionFilter = document.querySelector("#section-filter");
       const userSearch = document.querySelector("#user-search");
-      const userRows = Array.from(document.querySelectorAll("#user-table .user-row:not(.user-row-head)"));
+      const userFilters = document.querySelector("#user-filters");
+      let userRows = Array.from(document.querySelectorAll("#user-table .user-row:not(.user-row-head)"));
+      const userTable = document.querySelector("#user-table");
       const userEmpty = document.querySelector("#user-empty");
       const visibleUserCount = document.querySelector("#visible-user-count");
       const userMessage = document.querySelector("#user-message");
 
+      const addUserModal = document.querySelector("#add-user-modal");
       const userActionModal = document.querySelector("#user-action-modal");
       const editUserModal = document.querySelector("#edit-user-modal");
       const statusUserModal = document.querySelector("#status-user-modal");
       const resetPasswordModal = document.querySelector("#reset-password-modal");
+      const openAddUserButton = document.querySelector("#open-add-user");
       const accountActionSummary = document.querySelector("#account-action-summary");
       const actionButtons = Array.from(document.querySelectorAll("[data-account-action]"));
       const confirmUserAction = document.querySelector("#confirm-user-action");
       const resetPasswordCopy = document.querySelector("#reset-password-copy");
       const confirmResetPassword = document.querySelector("#confirm-reset-password");
+
+      const addUserForm = document.querySelector("#add-user-form");
+      const addName = document.querySelector("#add-name");
+      const addEmail = document.querySelector("#add-email");
+      const addRole = document.querySelector("#add-role");
+      const addId = document.querySelector("#add-id");
+      const addSection = document.querySelector("#add-section");
 
       const editUserForm = document.querySelector("#edit-user-form");
       const editName = document.querySelector("#edit-name");
@@ -1058,6 +1096,7 @@
       }
 
       function closeAllModals() {
+        addUserModal.hidden = true;
         userActionModal.hidden = true;
         editUserModal.hidden = true;
         statusUserModal.hidden = true;
@@ -1066,6 +1105,7 @@
       }
 
       function backToActions() {
+        addUserModal.hidden = true;
         editUserModal.hidden = true;
         statusUserModal.hidden = true;
         resetPasswordModal.hidden = true;
@@ -1100,12 +1140,85 @@
 
       function statusClass(status) {
         if (status === "active") return "status-verified";
-        if (status === "pending") return "status-pending";
         return "status-rejected";
       }
 
       function statusLabel(status) {
-        return status.charAt(0).toUpperCase() + status.slice(1);
+        if (status === "deactivated") return "Deactivated";
+        return "Active";
+      }
+
+      function roleLabel(role) {
+        const labels = {
+          student: "Nursing Student",
+          instructor: "Clinical Instructor",
+          chair: "Chair",
+          admin: "Admin",
+          coordinator: "Coordinator",
+          enrollment: "Enrollment Team",
+          assistant: "Assistant"
+        };
+
+        return labels[role] || "Nursing Student";
+      }
+
+      function getInitials(name) {
+        return name
+          .split(" ")
+          .filter(Boolean)
+          .map((part) => part.charAt(0))
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+      }
+
+      function buildUserActionButton() {
+        const button = document.createElement("button");
+        button.className = "icon-button kebab-button user-action";
+        button.type = "button";
+        button.setAttribute("aria-label", "Open account action");
+        button.title = "Actions";
+        button.innerHTML = `
+          <svg class="kebab-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="5" r="1.8"></circle>
+            <circle cx="12" cy="12" r="1.8"></circle>
+            <circle cx="12" cy="19" r="1.8"></circle>
+          </svg>
+        `;
+        return button;
+      }
+
+      function syncSectionFilterVisibility() {
+        const isStudent = roleFilter.value === "student";
+
+        if (sectionFilterWrapper) {
+          sectionFilterWrapper.hidden = !isStudent;
+        }
+
+        if (userFilters) {
+          userFilters.classList.toggle("is-non-student-role", !isStudent);
+        }
+
+        if (!isStudent && sectionFilter) {
+          sectionFilter.value = "all";
+        }
+      }
+
+      function syncAddSectionVisibility() {
+        const sectionWrapper = addSection?.closest(".form-label");
+        const isStudent = addRole.value === "student";
+
+        if (sectionWrapper) {
+          sectionWrapper.hidden = !isStudent;
+        }
+
+        addSection.required = isStudent;
+
+        if (!isStudent) {
+          addSection.value = "";
+        } else if (!addSection.value && addSection.options.length) {
+          addSection.value = addSection.options[0].value;
+        }
       }
 
       function ensureSectionOption(value) {
@@ -1138,12 +1251,7 @@
 
       function updateSummary(row) {
         const user = getUserData(row);
-        const initials = user.name
-          .split(" ")
-          .map((part) => part.charAt(0))
-          .join("")
-          .slice(0, 2)
-          .toUpperCase();
+        const initials = getInitials(user.name);
 
         const summaryParts = [
           user.id,
@@ -1169,17 +1277,62 @@
         });
       }
 
+      function createUserRow({ name, email, role, id, section }) {
+        const row = document.createElement("div");
+        row.className = "user-row";
+        row.dataset.role = role;
+        row.dataset.status = "active";
+
+        if (role === "student" && section) {
+          row.dataset.section = section;
+        }
+
+        const nameCell = document.createElement("span");
+        const nameStrong = document.createElement("strong");
+        const emailSmall = document.createElement("small");
+        nameStrong.textContent = name;
+        emailSmall.textContent = email;
+        nameCell.append(nameStrong, emailSmall);
+
+        const roleCell = document.createElement("span");
+        roleCell.textContent = roleLabel(role);
+
+        const identityCell = document.createElement("span");
+        const identityStrong = document.createElement("strong");
+        identityStrong.textContent = id;
+        identityCell.appendChild(identityStrong);
+
+        if (role === "student" && section) {
+          const sectionSmall = document.createElement("small");
+          sectionSmall.textContent = section;
+          identityCell.appendChild(sectionSmall);
+        }
+
+        const statusCell = document.createElement("span");
+        statusCell.innerHTML = `<mark class="status-badge status-verified">Active</mark>`;
+
+        const actionCell = document.createElement("span");
+        actionCell.appendChild(buildUserActionButton());
+
+        row.append(nameCell, roleCell, identityCell, statusCell, actionCell);
+        return row;
+      }
+
       function filterUsers() {
+        syncSectionFilterVisibility();
+
         const role = roleFilter.value;
         const status = statusFilter.value;
+        const section = sectionFilter?.value || "all";
         const search = userSearch.value.trim().toLowerCase();
         let count = 0;
 
         userRows.forEach((row) => {
           const matchesRole = search ? true : row.dataset.role === role;
           const matchesStatus = status === "all" || row.dataset.status === status;
+          const matchesSection = role !== "student" || section === "all" || row.dataset.section === section;
           const matchesSearch = !search || row.textContent.toLowerCase().includes(search);
-          const visible = matchesRole && matchesStatus && matchesSearch;
+          const visible = matchesRole && matchesStatus && matchesSection && matchesSearch;
 
           row.hidden = !visible;
 
@@ -1199,9 +1352,11 @@
 
         editName.value = user.name;
         editRole.value = roleTextToValue(user.roleText);
+
         if (editRole.value === "student") {
           ensureSectionOption(user.section);
         }
+
         syncEditSectionVisibility();
 
         closeModal(userActionModal);
@@ -1214,11 +1369,17 @@
         const user = getUserData(selectedUserRow);
 
         statusUserName.textContent = user.name;
-        statusOnlySelect.value = user.status;
+        statusOnlySelect.value = user.status === "deactivated" ? "deactivated" : "active";
 
         closeModal(userActionModal);
         openModal(statusUserModal);
       }
+
+      openAddUserButton?.addEventListener("click", () => {
+        addUserForm.reset();
+        syncAddSectionVisibility();
+        openModal(addUserModal);
+      });
 
       document.addEventListener("click", (event) => {
         const actionButton = event.target.closest(".user-action");
@@ -1243,7 +1404,7 @@
           return;
         }
 
-        if (event.target.matches("[data-close-action-modal], [data-close-edit-modal], [data-close-status-modal], [data-close-reset-modal]")) {
+        if (event.target.closest("[data-close-add-modal], [data-close-action-modal], [data-close-edit-modal], [data-close-status-modal], [data-close-reset-modal]")) {
           closeAllModals();
         }
       });
@@ -1274,6 +1435,37 @@
         userMessage.classList.remove("is-error");
         userMessage.classList.add("is-success");
       });
+
+      addUserForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const name = addName.value.trim();
+        const email = addEmail.value.trim();
+        const role = addRole.value;
+        const id = addId.value.trim();
+        const section = addSection.value.trim();
+
+        if (!name || !email || !id || (role === "student" && !section)) {
+          userMessage.textContent = "Complete the user details before adding the account.";
+          userMessage.classList.add("is-error");
+          userMessage.classList.remove("is-success");
+          return;
+        }
+
+        const row = createUserRow({ name, email, role, id, section });
+        userTable.appendChild(row);
+        userRows = Array.from(document.querySelectorAll("#user-table .user-row:not(.user-row-head)"));
+        userSearch.value = name;
+
+        closeAllModals();
+        filterUsers();
+
+        userMessage.textContent = "User added successfully.";
+        userMessage.classList.remove("is-error");
+        userMessage.classList.add("is-success");
+      });
+
+      addRole.addEventListener("change", syncAddSectionVisibility);
 
       editUserForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -1332,6 +1524,7 @@
 
       roleFilter.addEventListener("change", filterUsers);
       statusFilter.addEventListener("change", filterUsers);
+      sectionFilter?.addEventListener("change", filterUsers);
       userSearch.addEventListener("input", filterUsers);
 
       menuButton?.addEventListener("click", () => {
@@ -1342,7 +1535,7 @@
         document.body.classList.remove("sidebar-open");
       });
 
-      [userActionModal, editUserModal, statusUserModal, resetPasswordModal].forEach((modal) => {
+      [addUserModal, userActionModal, editUserModal, statusUserModal, resetPasswordModal].forEach((modal) => {
         modal.addEventListener("click", (event) => {
           if (event.target === modal) {
             closeAllModals();
@@ -1356,6 +1549,8 @@
         }
       });
 
+      syncAddSectionVisibility();
+      syncSectionFilterVisibility();
       filterUsers();
     </script>
 
