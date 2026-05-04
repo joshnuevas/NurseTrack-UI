@@ -159,7 +159,7 @@
       .extension-history-row {
         width: 100%;
         display: grid;
-        grid-template-columns: 3.75rem minmax(210px, 1.1fr) minmax(190px, 0.9fr) minmax(240px, 1.1fr) auto;
+        grid-template-columns: 3.75rem minmax(210px, 1fr) minmax(190px, 0.82fr) minmax(240px, 1.05fr) minmax(190px, auto);
         gap: 1rem;
         align-items: center;
         padding: 1rem 1.1rem;
@@ -200,6 +200,43 @@
         justify-self: end;
       }
 
+      .extension-history-status {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .extension-history-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .extension-history-actions .ghost-button {
+        min-height: 2.25rem;
+        width: auto;
+        padding: 0.45rem 0.7rem;
+        border-radius: 0.45rem;
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+
+      .extension-cancel-backdrop {
+        background: rgba(16, 24, 40, 0.46);
+        backdrop-filter: blur(5px);
+      }
+
+      .extension-cancel-modal {
+        width: min(520px, 100%);
+        padding: 2rem;
+      }
+
+      .extension-cancel-modal .modal-heading {
+        align-items: center;
+      }
+
       .extension-empty-state {
         margin: 0;
         border: 1px dashed #cbd5e1;
@@ -236,8 +273,10 @@
           justify-items: start;
         }
 
-        .extension-history-row .status-badge {
+        .extension-history-row .status-badge,
+        .extension-history-status {
           justify-self: start;
+          justify-content: flex-start;
         }
 
         .extension-actions {
@@ -384,7 +423,7 @@
                 <p class="form-message full-width" id="extension-message" hidden></p>
 
                 <div class="extension-actions full-width">
-                  <button class="ghost-button" type="button" id="extension-clear">Cancel</button>
+                  <button class="ghost-button" type="button" id="extension-clear">Clear</button>
                   <button class="primary-button workspace-action" type="submit">Add Extension Days</button>
                 </div>
               </form>
@@ -404,6 +443,22 @@
           </section>
         </main>
       </div>
+    </div>
+
+    <div class="modal-backdrop extension-cancel-backdrop" id="extension-cancel-modal" hidden>
+      <section class="modal-card confirm-modal extension-cancel-modal" role="dialog" aria-modal="true" aria-labelledby="extension-cancel-title" aria-describedby="extension-cancel-copy">
+        <div class="modal-heading">
+          <div>
+            <h2 id="extension-cancel-title">Cancel this extension record?</h2>
+          </div>
+          <button class="icon-button modal-close" type="button" data-extension-cancel-close aria-label="Close modal"></button>
+        </div>
+        <p class="modal-copy" id="extension-cancel-copy">Cancel this extension day record? This keeps the record in the history but marks it as canceled.</p>
+        <div class="modal-actions">
+          <button class="ghost-button" type="button" data-extension-cancel-close>Cancel</button>
+          <button class="primary-button workspace-action danger-confirm-button" type="button" id="confirm-extension-cancel">Cancel Record</button>
+        </div>
+      </section>
     </div>
 
     <script src="../scripts/extension-days.js"></script>

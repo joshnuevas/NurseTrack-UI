@@ -7583,6 +7583,14 @@ h2 {
   margin-top: 18px;
 }
 
+#clearance-submitted-cases + #case-selection-message {
+  margin-top: 16px;
+}
+
+#case-selection-message + .clearance-decision-section {
+  margin-top: 30px;
+}
+
 .validation-scope-note.assigned-scope-note {
   margin-bottom: 20px;
 }

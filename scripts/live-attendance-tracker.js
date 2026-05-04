@@ -769,7 +769,6 @@ function renderManualAttendanceEntry() {
     <section class="workspace-panel manual-attendance-history-panel">
       <div class="panel-heading">
         <div>
-          <p class="section-kicker">Record History</p>
           <h2>Manual Attendance Records</h2>
         </div>
         <span class="status-badge status-verified" id="manual-attendance-ci-history-count">0 records</span>

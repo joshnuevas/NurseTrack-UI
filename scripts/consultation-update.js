@@ -43,7 +43,7 @@
 
     const chairNavItems = [
       { label: "Dashboard", href: "admin-dashboard.html", pages: ["admin-dashboard.html"] },
-      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-maker.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
+      { label: "Schedules", href: "admin-schedules.html", pages: ["admin-schedules.html", "schedule-maker.html", "manual-schedule.html", "selected-schedule.html", "create-schedule.html", "edit-schedule.html", "assign-duty.html", "schedule-report.html"] },
       { label: "Live Attendance", href: "live-attendance-tracker.html", pages: ["live-attendance-tracker.html"] },
       { label: "Manual Backup", href: "manual-attendance-review.html", pages: ["manual-attendance-review.html"] },
       { label: "Student Progress", href: "chair-student-progress.html", pages: ["chair-student-progress.html", "student-progress-detail.html"] },

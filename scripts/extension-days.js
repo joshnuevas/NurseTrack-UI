@@ -207,6 +207,13 @@
     const form = document.querySelector("#extension-form");
     const message = document.querySelector("#extension-message");
     const clearButton = document.querySelector("#extension-clear");
+    const submitButton = form?.querySelector("button[type='submit']");
+    const cancelModal = document.querySelector("#extension-cancel-modal");
+    const cancelModalCopy = document.querySelector("#extension-cancel-copy");
+    const confirmCancelButton = document.querySelector("#confirm-extension-cancel");
+    const closeCancelButtons = Array.from(document.querySelectorAll("[data-extension-cancel-close]"));
+    let editingRecordIndex = -1;
+    let pendingCancelRecordIndex = -1;
 
     if (!selectedSummary) return;
 
@@ -242,7 +249,9 @@
     function renderHistory() {
       if (!historyList || !selectedStudent) return;
 
-      const studentRecords = records.filter((record) => record.id === selectedStudent.id);
+      const studentRecords = records
+        .map((record, index) => ({ ...record, recordIndex: index }))
+        .filter((record) => record.id === selectedStudent.id);
 
       if (historyCount) {
         historyCount.textContent = `${studentRecords.length} ${studentRecords.length === 1 ? "record" : "records"}`;
@@ -253,6 +262,8 @@
       }
 
       historyList.hidden = studentRecords.length === 0;
+
+      const canEditHistory = isClinicalInstructorRole();
 
       historyList.innerHTML = studentRecords.map((record) => `
         <div class="extension-history-row">
@@ -273,14 +284,105 @@
             <small>Instructor-assigned extension</small>
           </span>
 
-          <mark class="status-badge ${badgeClass(record.status)}">${record.status}</mark>
+          <div class="extension-history-status">
+            <mark class="status-badge ${badgeClass(record.status)}">${record.status}</mark>
+            ${canEditHistory ? `
+              <span class="extension-history-actions">
+                <button class="ghost-button" type="button" data-extension-edit="${record.recordIndex}">Edit</button>
+                ${record.status !== "Canceled" ? `<button class="ghost-button danger-button" type="button" data-extension-cancel="${record.recordIndex}">Cancel</button>` : ""}
+              </span>
+            ` : ""}
+          </div>
         </div>
       `).join("");
     }
 
+    function openCancelModal(recordIndex) {
+      const record = records[recordIndex];
+
+      if (!record || !cancelModal) return;
+
+      pendingCancelRecordIndex = recordIndex;
+      if (cancelModalCopy) {
+        cancelModalCopy.textContent = `Cancel ${record.student}'s extension day record? This keeps the record in the history but marks it as canceled.`;
+      }
+
+      cancelModal.hidden = false;
+      document.body.classList.add("modal-open");
+    }
+
+    function closeCancelModal() {
+      if (cancelModal) {
+        cancelModal.hidden = true;
+      }
+
+      pendingCancelRecordIndex = -1;
+      document.body.classList.remove("modal-open");
+    }
+
+    function confirmCancelRecord() {
+      const record = records[pendingCancelRecordIndex];
+
+      if (!record) {
+        closeCancelModal();
+        return;
+      }
+
+      record.status = "Canceled";
+      if (editingRecordIndex === pendingCancelRecordIndex) {
+        editingRecordIndex = -1;
+        form?.reset();
+        if (submitButton) submitButton.textContent = "Add Extension Days";
+      }
+
+      renderHistory();
+      showMessage(message, `${record.student}'s extension day record was canceled.`, false);
+      closeCancelModal();
+    }
+
     clearButton?.addEventListener("click", () => {
       form?.reset();
+      editingRecordIndex = -1;
+      if (submitButton) submitButton.textContent = "Add Extension Days";
       showMessage(message, "Extension form cleared. Enter the new extension details when ready.", true);
+    });
+
+    historyList?.addEventListener("click", (event) => {
+      const editButton = event.target.closest("[data-extension-edit]");
+      const cancelButton = event.target.closest("[data-extension-cancel]");
+
+      if (editButton) {
+        const recordIndex = Number(editButton.dataset.extensionEdit);
+        const record = records[recordIndex];
+
+        if (!record || !form) return;
+
+        editingRecordIndex = recordIndex;
+        form.elements["extension-days-count"].value = record.extensionDays || 1;
+        form.elements.basis.value = record.basis || "Instructor assessment";
+        form.elements.reason.value = record.reason || "";
+        if (submitButton) submitButton.textContent = "Update Extension Days";
+        showMessage(message, `Editing ${record.student}'s extension day record.`, true);
+        form.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+
+      if (cancelButton) {
+        const recordIndex = Number(cancelButton.dataset.extensionCancel);
+        openCancelModal(recordIndex);
+      }
+    });
+
+    confirmCancelButton?.addEventListener("click", confirmCancelRecord);
+
+    closeCancelButtons.forEach((button) => {
+      button.addEventListener("click", closeCancelModal);
+    });
+
+    cancelModal?.addEventListener("click", (event) => {
+      if (event.target === cancelModal) {
+        closeCancelModal();
+      }
     });
 
     form?.addEventListener("submit", (event) => {
@@ -299,7 +401,7 @@
       const data = new FormData(form);
       const daysToAdd = Number(data.get("extension-days-count"));
 
-      records.unshift({
+      const recordData = {
         initials: selectedStudent.initials,
         student: selectedStudent.name,
         section: selectedStudent.section,
@@ -308,10 +410,20 @@
         basis: data.get("basis"),
         reason: data.get("reason"),
         status: "Added"
-      });
+      };
+
+      if (editingRecordIndex >= 0 && records[editingRecordIndex]) {
+        records[editingRecordIndex] = recordData;
+      } else {
+        records.unshift(recordData);
+      }
 
       renderHistory();
-      showMessage(message, `${selectedStudent.name} received +${daysToAdd} extension ${daysToAdd === 1 ? "day" : "days"}.`, true);
+      showMessage(message, editingRecordIndex >= 0
+        ? `${selectedStudent.name}'s extension day record was updated.`
+        : `${selectedStudent.name} received +${daysToAdd} extension ${daysToAdd === 1 ? "day" : "days"}.`, true);
+      editingRecordIndex = -1;
+      if (submitButton) submitButton.textContent = "Add Extension Days";
       form.reset();
     });
 
