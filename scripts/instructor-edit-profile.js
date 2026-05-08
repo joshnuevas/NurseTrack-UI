@@ -13,6 +13,7 @@ const completionBar = document.querySelector("#completion-bar");
 const photoInput = document.querySelector("#profile-photo-input");
 const removePhotoButton = document.querySelector("#remove-profile-photo");
 const profileAvatars = Array.from(document.querySelectorAll("[data-profile-avatar]"));
+const previewDepartment = document.querySelector("#department") || document.querySelector("#section");
 
 function renderInitials() {
   profileAvatars.forEach((avatar) => {
@@ -32,7 +33,7 @@ function renderPhoto(src) {
 
 function updatePreview() {
   previewName.textContent = document.querySelector("#full-name").value || "Prof. Reyes";
-  previewSection.textContent = document.querySelector("#department").value || "College of Nursing";
+  previewSection.textContent = previewDepartment?.value || previewSection.textContent || "College of Nursing";
   previewEmail.textContent = document.querySelector("#school-email").value || "reyes@cit.edu";
 
   const requiredFields = Array.from(form.querySelectorAll("[required]"));
@@ -40,22 +41,26 @@ function updatePreview() {
   const completion = Math.round((filledFields / requiredFields.length) * 100);
 
   completionPercent.textContent = `${completion}%`;
-  completionBadge.textContent = `${completion}% complete`;
+  if (completionBadge) {
+    completionBadge.textContent = `${completion}% complete`;
+  }
   completionBar.style.width = `${completion}%`;
-  syncPill.textContent = "Unsaved changes";
+  if (syncPill) {
+    syncPill.textContent = "Unsaved changes";
+  }
 }
 
-menuButton.addEventListener("click", () => {
+menuButton?.addEventListener("click", () => {
   document.body.classList.add("sidebar-open");
 });
 
-sidebarBackdrop.addEventListener("click", () => {
+sidebarBackdrop?.addEventListener("click", () => {
   document.body.classList.remove("sidebar-open");
 });
 
 form.addEventListener("input", updatePreview);
 
-photoInput.addEventListener("change", () => {
+photoInput?.addEventListener("change", () => {
   const file = photoInput.files[0];
 
   if (!file) {
@@ -66,17 +71,23 @@ photoInput.addEventListener("change", () => {
   message.textContent = "Profile picture preview updated.";
   message.classList.remove("is-error");
   message.classList.add("is-success");
-  syncPill.textContent = "Unsaved photo";
+  if (syncPill) {
+    syncPill.textContent = "Unsaved photo";
+  }
 });
 
 if (removePhotoButton) {
   removePhotoButton.addEventListener("click", () => {
-    photoInput.value = "";
+    if (photoInput) {
+      photoInput.value = "";
+    }
     renderInitials();
     message.textContent = "Profile picture removed from preview.";
     message.classList.remove("is-error");
     message.classList.add("is-success");
-    syncPill.textContent = "Unsaved photo";
+    if (syncPill) {
+      syncPill.textContent = "Unsaved photo";
+    }
   });
 }
 
@@ -93,12 +104,16 @@ form.addEventListener("submit", (event) => {
   message.textContent = "Instructor profile updated successfully.";
   message.classList.remove("is-error");
   message.classList.add("is-success");
-  syncPill.textContent = "Updated successfully";
+  if (syncPill) {
+    syncPill.textContent = "Updated successfully";
+  }
 });
 
 resetButton.addEventListener("click", () => {
   form.reset();
-  photoInput.value = "";
+  if (photoInput) {
+    photoInput.value = "";
+  }
   renderInitials();
   updatePreview();
   message.textContent = "Changes reset to saved instructor profile details.";

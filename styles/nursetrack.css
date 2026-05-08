@@ -1227,11 +1227,16 @@ h2 {
   min-width: 0;
 }
 
+.topbar-title > div {
+  min-width: 0;
+}
+
 .topbar-logo {
   width: 38px;
   height: 38px;
   border: 1px solid var(--line);
   padding: 3px;
+  flex: 0 0 auto;
 }
 
 .topbar-title p {
@@ -1333,6 +1338,21 @@ h2 {
 
 .menu-button {
   display: none;
+  width: 42px;
+  min-width: 42px;
+  padding: 0;
+  font-size: 0;
+  line-height: 1;
+  position: relative;
+}
+
+.menu-button::before {
+  content: "";
+  width: 20px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
 }
 
 .workspace {
@@ -11084,5 +11104,796 @@ button.management-row:focus-visible {
   .calendar-month-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 680px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    max-width: 100%;
+  }
+
+  body.sidebar-open {
+    overflow: hidden;
+  }
+
+  .app-shell,
+  .app-main,
+  .workspace,
+  .workspace-hero,
+  .workspace-card,
+  .workspace-panel,
+  .auth-card,
+  .login-shell,
+  .login-info-panel,
+  .login-form-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .workspace {
+    gap: 18px;
+    overflow-x: hidden;
+    padding: 16px;
+  }
+
+  .login-info-panel,
+  .login-form-panel,
+  .auth-card,
+  .brand-stack,
+  .info-copy,
+  .info-highlights,
+  .workspace-hero,
+  .workspace-card,
+  .workspace-panel {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .workspace-hero,
+  .workspace-card,
+  .workspace-panel {
+    padding: 18px;
+    overflow-wrap: break-word;
+  }
+
+  .workspace-hero,
+  .workspace-card,
+  .workspace-panel,
+  .auth-card {
+    width: auto !important;
+    max-width: 100% !important;
+  }
+
+  .workspace > * {
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .workspace-hero h2,
+  .panel-heading h2,
+  .workspace-panel h2,
+  .workspace-card h3,
+  .workspace strong,
+  .workspace small {
+    line-height: 1.28;
+    max-width: 100%;
+    overflow-wrap: break-word;
+  }
+
+  .workspace-hero h2,
+  .panel-heading h2,
+  .workspace-panel h2 {
+    white-space: normal;
+  }
+
+  .workspace p,
+  .workspace li,
+  .workspace label,
+  .workspace input,
+  .workspace select,
+  .workspace textarea {
+    line-height: 1.48;
+    overflow-wrap: break-word;
+  }
+
+  .workspace-hero > *,
+  .workspace-card > *,
+  .workspace-panel > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .student-profile-head,
+  .student-profile-head > :not(.avatar),
+  .hero-action-stack {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .student-profile-head > .avatar {
+    width: 68px;
+    min-width: 68px;
+  }
+
+  .topbar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 0;
+    padding: 12px 16px;
+  }
+
+  .topbar.has-global-back {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+  }
+
+  .topbar.has-global-back .global-back-button {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .menu-button {
+    display: inline-flex !important;
+    grid-column: 1;
+    grid-row: 1;
+    order: 1;
+    flex: 0 0 auto;
+    justify-self: start;
+    min-width: 44px;
+    width: 44px;
+    min-height: 44px;
+    z-index: 1;
+  }
+
+  .topbar.has-global-back .menu-button {
+    position: static;
+    grid-column: 2;
+    justify-self: start;
+    z-index: 2;
+  }
+
+  .topbar.has-global-back .topbar-title {
+    grid-column: 3;
+  }
+
+  .topbar-title {
+    grid-column: 2;
+    grid-row: 1;
+    order: 2;
+    flex: 1 1 auto;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .topbar-title h1 {
+    font-size: 1.06rem;
+    line-height: 1.18;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar-title p {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .topbar-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .topbar-actions {
+    grid-column: 3;
+    grid-row: 1;
+    order: 3;
+    width: auto;
+    min-width: 0;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow: visible;
+    padding: 0;
+    justify-self: end;
+  }
+
+  .topbar.has-global-back .topbar-actions {
+    grid-column: 4;
+  }
+
+  .topbar-actions .icon-button,
+  .topbar-actions .logout-link {
+    flex: 0 0 auto;
+  }
+
+  .topbar-actions > .sync-pill,
+  .topbar-actions > .ghost-button {
+    display: none !important;
+  }
+
+  .topbar-actions .logout-link,
+  .icon-button,
+  .menu-button {
+    min-height: 40px;
+  }
+
+  .topbar-actions .icon-button,
+  .menu-button,
+  .global-back-button {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
+  }
+
+  .topbar-actions .logout-link {
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 9px;
+    font-size: 0.76rem;
+  }
+
+  .sidebar-open .sidebar-backdrop {
+    display: block;
+  }
+
+  .app-sidebar {
+    width: min(304px, 88vw);
+    max-width: 88vw;
+    padding: 18px 16px 22px;
+  }
+
+  .login-shell {
+    grid-template-columns: minmax(0, 1fr) !important;
+    overflow-x: hidden;
+  }
+
+  .login-info-panel,
+  .login-form-panel {
+    min-width: 0 !important;
+    overflow-x: hidden;
+  }
+
+  .info-content,
+  .login-form-panel {
+    padding: 22px 16px !important;
+  }
+
+  .info-content,
+  .info-copy,
+  .info-copy h2,
+  .info-copy p,
+  .info-highlights,
+  .brand-stack,
+  .auth-card,
+  .stacked-form,
+  .form-label,
+  .password-input-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .brand-stack {
+    flex-wrap: wrap;
+  }
+
+  .info-copy h2 {
+    font-size: clamp(1.7rem, 8vw, 2.4rem);
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .info-highlights {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: calc(100vw - 32px) !important;
+  }
+
+  .info-highlights span {
+    width: 100%;
+    justify-content: center;
+    min-width: 0;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .auth-card {
+    max-width: calc(100vw - 32px) !important;
+    margin-inline: auto;
+  }
+
+  .sidebar-brand,
+  .sidebar-account {
+    min-width: 0;
+  }
+
+  .nav-link {
+    min-height: 46px;
+    padding: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .panel-heading,
+  .workspace-card-header,
+  .calendar-month-heading,
+  .student-profile-head,
+  .hero-action-stack,
+  .button-row,
+  .hours-summary,
+  .pending-card-header,
+  .pending-meta,
+  .profile-identity,
+  .profile-hero-actions,
+  .appeal-card-head,
+  .appeal-title-row,
+  .appeal-card-badges,
+  .notification-card-header,
+  .notification-meta,
+  .weekly-duty-overview,
+  .chair-schedule-tools,
+  .chair-schedule-edit-actions,
+  .schedule-roster-title-row,
+  .extension-summary-heading {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+  }
+
+  .panel-heading > *,
+  .workspace-card-header > *,
+  .hero-action-stack > *,
+  .profile-hero-actions > *,
+  .appeal-card-head > *,
+  .appeal-title-row > *,
+  .notification-card-header > *,
+  .extension-summary-heading > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .panel-heading > .status-badge,
+  .workspace-card-header .status-badge,
+  .appeal-card-badges .status-badge {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .workspace-action,
+  .ghost-button,
+  .primary-button,
+  .danger-button,
+  .primary-action,
+  .secondary-action,
+  .appeal-accept-button,
+  .appeal-approve-button,
+  .validation-hero-action,
+  .ci-schedule-return-action,
+  .admin-schedule-maker-button,
+  .admin-schedule-report-button,
+  .submit-clearance-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  .icon-button,
+  .modal-close,
+  .schedule-roster-close,
+  .overtime-month-nav button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+  }
+
+  .form-grid,
+  .role-segment,
+  .history-filters,
+  .validation-lookup-filters,
+  .appeal-filters,
+  .notification-filters,
+  .alert-filters,
+  .user-filters,
+  .audit-log-controls,
+  .admin-archive-filters,
+  .overtime-search-filters,
+  .student-progress-filters,
+  .student-progress-filters-compact,
+  .manual-student-filters,
+  .compliance-filters,
+  .duty-report-filters,
+  .case-report-filters,
+  .schedule-report-filters,
+  .validation-history-filters,
+  .case-period-filter,
+  .decision-options,
+  .report-options,
+  .export-format-grid,
+  .workflow-grid,
+  .chair-control-grid,
+  .case-counter-grid,
+  .report-scope-grid,
+  .attendance-rule-grid,
+  .schedule-lock-grid,
+  .group-editor-grid,
+  .admin-import-grid,
+  .readiness-grid,
+  .schedule-maker-summary,
+  .appeal-summary-grid,
+  .appeal-fact-grid,
+  .profile-info-grid,
+  .manual-attendance-duty-grid,
+  .manual-attendance-time-grid,
+  .schedule-draft-fields,
+  .selected-schedule-form,
+  .mobile-verification-gate,
+  .completion-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .history-row,
+  .history-row.case-row,
+  .case-row,
+  .review-item,
+  .student-row,
+  .detail-summary-grid,
+  .schedule-list-item,
+  .schedule-location-card,
+  .assign-student,
+  .management-row,
+  .submission-item,
+  .live-attendance-row,
+  .live-site-card,
+  .validation-user-card,
+  .validation-pick-card,
+  .student-progress-pick-card,
+  .student-validation-card,
+  .progress-breakdown-item,
+  .completion-row,
+  .completion-alert,
+  .compliance-row,
+  .duty-report-row,
+  .case-report-row,
+  .schedule-report-row,
+  .export-history-item,
+  .notification-card,
+  .alert-card,
+  .settings-row,
+  .confirmation-reference,
+  .error-summary-card,
+  .validation-issue-card,
+  .about-module-grid,
+  .about-module-card,
+  .about-role-item,
+  .help-search-panel,
+  .help-topic-grid,
+  .help-topic-card,
+  .user-row,
+  .profile-activity-item,
+  .profile-photo-section,
+  .role-user-card,
+  .selected-user-card,
+  .permission-item,
+  .assigned-roster-row,
+  .appeal-card,
+  .appeal-detail-grid,
+  .selected-day-layout,
+  .schedule-draft-row,
+  .student-transfer-row,
+  .student-roster-table-row,
+  .selected-schedule-summary,
+  .overtime-person-summary,
+  .weekly-duty-summary,
+  .weekly-duty-row,
+  .manual-attendance-layout,
+  .manual-attendance-review-compact,
+  .manual-attendance-review-summary,
+  .manual-attendance-review-student,
+  .manual-attendance-student-table-row,
+  .manual-attendance-history-item,
+  .detail-row,
+  .report-mini-row,
+  .mini-data-row,
+  .overtime-table-row,
+  .extension-selected-card,
+  .extension-history-row,
+  .ci-recommendation-history-item,
+  .approved-appeal-item {
+    grid-template-columns: 1fr !important;
+    min-width: 0 !important;
+    gap: 10px !important;
+  }
+
+  .student-progress-pick-list {
+    gap: 12px !important;
+  }
+
+  .student-progress-pick-list .student-progress-pick-card {
+    display: grid !important;
+    grid-template-columns: 32px 42px minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px 12px !important;
+    padding: 14px !important;
+  }
+
+  .student-progress-pick-list .student-progress-pick-card::before {
+    position: static !important;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    transform: none !important;
+  }
+
+  .student-progress-pick-list .student-progress-pick-card > .avatar {
+    grid-column: 2;
+    grid-row: 1;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    align-self: center;
+    justify-self: center;
+  }
+
+  .student-progress-pick-list .student-progress-pick-card > span:not(.avatar),
+  .student-progress-pick-list .student-progress-pick-card > .student-progress-pick-copy {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 0;
+    margin-left: 0 !important;
+  }
+
+  .student-progress-pick-list .student-progress-pick-card > .status-badge {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start !important;
+    margin-top: 2px;
+  }
+
+  .history-row-head,
+  .student-row-head,
+  .completion-row-head,
+  .live-attendance-head,
+  .compliance-row-head,
+  .duty-report-row-head,
+  .case-report-row-head,
+  .schedule-report-row-head,
+  .user-row-head,
+  .assigned-roster-head,
+  .student-roster-table-head,
+  .report-mini-head,
+  .mini-data-head,
+  .overtime-table-head {
+    display: none !important;
+  }
+
+  .history-table,
+  .completion-table,
+  .user-table,
+  .assigned-roster-table,
+  .student-table,
+  .mini-data-table,
+  .overtime-sheet,
+  .overtime-table,
+  .report-mini-table,
+  .live-attendance-table {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0 !important;
+  }
+
+  .overtime-sheet-title {
+    min-width: 0 !important;
+    padding: 14px;
+    text-align: left;
+  }
+
+  .overtime-table-row > span,
+  .mini-data-row span,
+  .report-mini-row span,
+  .report-mini-row strong {
+    min-width: 0;
+    border-right: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .overtime-table-row > span + span,
+  .mini-data-row span + span,
+  .report-mini-row span + span,
+  .report-mini-row strong + span {
+    border-top: 1px solid var(--line);
+  }
+
+  .schedule-draft-main,
+  .roster-student-cell,
+  .appeal-student-cell,
+  .row-title,
+  .manual-attendance-history-actions,
+  .overtime-heading-actions,
+  .schedule-maker-actions,
+  .schedule-draft-actions,
+  .selected-schedule-button-row,
+  .export-form-actions,
+  .report-actions,
+  .validation-comment-actions,
+  .modal-actions,
+  .logout-confirm-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .schedule-draft-actions,
+  .selected-schedule-button-row,
+  .export-form-actions,
+  .report-actions,
+  .validation-comment-actions,
+  .modal-actions,
+  .logout-confirm-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+  }
+
+  .schedule-draft-main .status-badge,
+  .manual-attendance-ci-panel .validation-user-card .status-badge,
+  .manual-attendance-ci-panel .student-progress-pick-card .status-badge,
+  .ci-recommendation-history-item .status-badge,
+  .approved-appeal-item .status-badge {
+    grid-column: auto !important;
+    justify-self: start !important;
+    margin-left: 0 !important;
+  }
+
+  .modal-card,
+  .confirm-dialog,
+  .schedule-roster-modal {
+    width: calc(100vw - 28px) !important;
+    max-width: calc(100vw - 28px) !important;
+    max-height: calc(100dvh - 28px);
+    overflow-y: auto;
+  }
+
+  .schedule-roster-modal .modal-heading {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .attendance-page {
+    overflow-x: hidden;
+  }
+
+  .attendance-shell,
+  .attendance-hero,
+  .role-grid,
+  .attendance-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .role-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: stretch !important;
+  }
+
+  .attendance-page {
+    padding: 16px !important;
+  }
+
+  .attendance-hero {
+    padding-inline: 0 !important;
+  }
+
+  .attendance-hero > *,
+  .brand-line > div,
+  .panel-head-row,
+  .panel-body > *,
+  .row-title > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .brand-line {
+    align-items: flex-start;
+  }
+
+  .attendance-panel {
+    width: auto !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-inline: 0 !important;
+  }
+
+  .attendance-hero h1,
+  .panel-head h2 {
+    max-width: calc(100vw - 32px) !important;
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-info-panel {
+    min-height: auto;
+  }
+
+  .info-content,
+  .login-form-panel {
+    gap: 24px;
+    padding: 22px 16px;
+  }
+
+  .info-copy h2 {
+    font-size: 1.7rem;
+  }
+
+  .info-copy p {
+    font-size: 0.94rem;
+  }
+
+  .auth-card {
+    padding: 20px 16px;
+  }
+
+  .workspace {
+    padding: 14px;
+  }
+
+  .workspace-hero,
+  .workspace-card,
+  .workspace-panel {
+    padding: 16px;
+  }
+
+  .topbar {
+    padding: 12px;
+  }
+
+  .topbar-title h1 {
+    font-size: 1rem;
+  }
+
+  .topbar-actions {
+    scrollbar-width: none;
+  }
+
+  .topbar-actions::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sidebar-logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .sidebar-brand strong {
+    font-size: 1.05rem;
   }
 }

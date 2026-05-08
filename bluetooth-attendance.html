@@ -148,6 +148,11 @@
         gap: 14px;
       }
 
+      .teacher-action-stack {
+        display: grid;
+        gap: 10px;
+      }
+
       .panel-head h2 {
         font-size: clamp(1.6rem, 6vw, 2.35rem);
         line-height: 1.05;
@@ -217,6 +222,61 @@
       .session-stat strong {
         color: var(--text);
         font-size: 1.35rem;
+      }
+
+      .location-card,
+      .location-picker {
+        display: grid;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        background: #fbfcfe;
+      }
+
+      .location-card span,
+      .location-picker span {
+        color: #53627d;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .location-card strong {
+        color: var(--text);
+        font-size: 1.08rem;
+      }
+
+      .location-card p {
+        font-size: 0.92rem;
+      }
+
+      .location-option {
+        display: grid;
+        gap: 4px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: #ffffff;
+        color: var(--text);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+        text-align: left;
+      }
+
+      .location-option:hover,
+      .location-option:focus-visible {
+        border-color: rgba(138, 37, 44, 0.36);
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(138, 37, 44, 0.12);
+      }
+
+      .location-option small {
+        color: #53627d;
+        font-size: 0.82rem;
+        font-weight: 700;
       }
 
       .progress-track {
@@ -632,6 +692,9 @@
       }
 
       .session-card,
+      .location-card,
+      .location-picker,
+      .location-option,
       .status-box,
       .student-row,
       .device-row,
@@ -642,6 +705,11 @@
       .session-card {
         grid-template-columns: repeat(3, 1fr);
         padding: 14px;
+      }
+
+      .location-card,
+      .location-picker {
+        padding: 15px;
       }
 
       .session-stat {
@@ -863,7 +931,10 @@
                   <p class="section-kicker">Teacher View</p>
                   <h2 id="teacher-title">Host attendance signal</h2>
                 </div>
-                <button class="primary-action" id="teacher-toggle" type="button">Turn Bluetooth On</button>
+                <div class="teacher-action-stack">
+                  <button class="primary-action" id="teacher-toggle" type="button">Turn Bluetooth On</button>
+                  <button class="secondary-action" id="teacher-location-button" type="button" aria-expanded="false" aria-controls="teacher-location-picker">Change Location</button>
+                </div>
               </div>
               <p id="teacher-copy">Turn on Bluetooth to broadcast the attendance session and accept nearby student connections.</p>
             </div>
@@ -885,6 +956,28 @@
                 <div class="progress-track" aria-hidden="true">
                   <div class="progress-fill" id="present-progress"></div>
                 </div>
+              </div>
+
+              <div class="location-card" aria-live="polite">
+                <span>Duty Location</span>
+                <strong id="teacher-location-name">CCMC - Emergency Room</strong>
+                <p id="teacher-location-detail">Session broadcasts only for students assigned to the Emergency Room rotation.</p>
+              </div>
+
+              <div class="location-picker" id="teacher-location-picker" hidden>
+                <span>Select Location</span>
+                <button class="location-option" type="button" data-location-index="0">
+                  CCMC - Emergency Room
+                  <small>BSN 3A - Group 2</small>
+                </button>
+                <button class="location-option" type="button" data-location-index="1">
+                  CCMC - Pedia Pulmo Ward
+                  <small>BSN 3B - Group 1</small>
+                </button>
+                <button class="location-option" type="button" data-location-index="2">
+                  VSMMC - OR Main
+                  <small>BSN 4A - Group 1</small>
+                </button>
               </div>
 
               <div class="status-box" id="teacher-status-box">
@@ -934,6 +1027,10 @@
       const teacherStatus = document.querySelector("#teacher-status");
       const teacherStatusBox = document.querySelector("#teacher-status-box");
       const teacherCopy = document.querySelector("#teacher-copy");
+      const teacherLocationButton = document.querySelector("#teacher-location-button");
+      const teacherLocationPicker = document.querySelector("#teacher-location-picker");
+      const teacherLocationName = document.querySelector("#teacher-location-name");
+      const teacherLocationDetail = document.querySelector("#teacher-location-detail");
       const heroStatus = document.querySelector("#hero-status");
       const sessionTimer = document.querySelector("#session-timer");
       const presentCount = document.querySelector("#present-count");
@@ -953,10 +1050,29 @@
         ["JT", "Jay Tingzon", "BSN 3A"]
       ];
 
+      const locations = [
+        {
+          name: "CCMC - Emergency Room",
+          group: "BSN 3A - Group 2",
+          detail: "Session broadcasts only for students assigned to the Emergency Room rotation."
+        },
+        {
+          name: "CCMC - Pedia Pulmo Ward",
+          group: "BSN 3B - Group 1",
+          detail: "Session broadcasts only for students assigned to the Pedia Pulmo Ward rotation."
+        },
+        {
+          name: "VSMMC - OR Main",
+          group: "BSN 4A - Group 1",
+          detail: "Session broadcasts only for students assigned to the OR Main rotation."
+        }
+      ];
+
       let teacherActive = false;
       let timerSeconds = 0;
       let timerHandle = null;
       let presentStudents = [];
+      let activeLocationIndex = 0;
 
       function formatTimer(seconds) {
         const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -968,6 +1084,35 @@
         toast.textContent = message;
         toast.classList.add("is-visible");
         window.setTimeout(() => toast.classList.remove("is-visible"), 2400);
+      }
+
+      function activeLocation() {
+        return locations[activeLocationIndex];
+      }
+
+      function setLocationPickerOpen(open) {
+        teacherLocationPicker.hidden = !open;
+        teacherLocationButton.setAttribute("aria-expanded", String(open));
+      }
+
+      function renderTeacherLocation() {
+        const location = activeLocation();
+        teacherLocationName.textContent = location.name;
+        teacherLocationDetail.textContent = `${location.detail} ${location.group}.`;
+
+        if (teacherActive) {
+          teacherStatusBox.innerHTML = `<h3>Waiting for students...</h3><p>Teacher device is broadcasting Session A-0427 at ${location.name}.</p>`;
+        }
+      }
+
+      function changeTeacherLocation(index) {
+        activeLocationIndex = index;
+        setLocationPickerOpen(false);
+        renderTeacherLocation();
+        deviceList.innerHTML = '<div class="empty-state">No teacher device found yet.</div>';
+        studentStatusBox.classList.remove("is-success");
+        studentStatusBox.innerHTML = "<h3>Ready to scan</h3><p>Tap scan to find the active teacher device nearby.</p>";
+        showToast(`Location changed to ${activeLocation().name}.`);
       }
 
       function renderStudents() {
@@ -1016,10 +1161,10 @@
         if (active) {
           teacherToggle.textContent = "Turn Bluetooth Off";
           teacherStatus.textContent = "Bluetooth Active";
-          teacherCopy.textContent = "Broadcasting attendance session. Nearby students can connect and mark attendance.";
+          teacherCopy.textContent = `Broadcasting attendance session for ${activeLocation().name}. Nearby students can connect and mark attendance.`;
           heroStatus.innerHTML = '<span class="status-dot"></span>Bluetooth Active';
           teacherStatusBox.classList.add("is-success");
-          teacherStatusBox.innerHTML = "<h3>Waiting for students...</h3><p>Teacher device is broadcasting Session A-0427.</p>";
+          teacherStatusBox.innerHTML = `<h3>Waiting for students...</h3><p>Teacher device is broadcasting Session A-0427 at ${activeLocation().name}.</p>`;
           timerHandle = window.setInterval(() => {
             timerSeconds += 1;
             sessionTimer.textContent = formatTimer(timerSeconds);
@@ -1059,7 +1204,7 @@
                 <strong>Prof. Reyes - Attendance Host</strong>
                 <span class="mini-badge">Available</span>
               </div>
-              <p>Session A-0427 - Strong signal</p>
+              <p>${activeLocation().name} - Strong signal</p>
             </div>
             <button class="primary-action" id="connect-button" type="button">Connect</button>
           </div>
@@ -1076,6 +1221,16 @@
       }
 
       teacherToggle.addEventListener("click", () => setTeacherActive(!teacherActive));
+      teacherLocationButton.addEventListener("click", () => setLocationPickerOpen(teacherLocationPicker.hidden));
+      teacherLocationPicker.addEventListener("click", (event) => {
+        const option = event.target.closest("[data-location-index]");
+
+        if (!option) {
+          return;
+        }
+
+        changeTeacherLocation(Number(option.dataset.locationIndex));
+      });
 
       scanButton.addEventListener("click", () => {
         scanButton.textContent = "Scanning...";
@@ -1100,6 +1255,7 @@
       });
 
       renderStudents();
+      renderTeacherLocation();
     </script>
     <script src="scripts/global-back-button.js"></script>
   </body>

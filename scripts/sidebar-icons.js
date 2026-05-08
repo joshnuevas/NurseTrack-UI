@@ -199,7 +199,39 @@
     <path d="M8 12h8"></path>
   `;
 
+  const setupMenuButtons = () => {
+    document.querySelectorAll("[data-menu-button]").forEach((button) => {
+      if (!button.getAttribute("aria-label")) {
+        button.setAttribute("aria-label", "Open navigation menu");
+      }
+
+      if (!button.getAttribute("title")) {
+        button.setAttribute("title", "Open navigation menu");
+      }
+
+      button.setAttribute("aria-haspopup", "true");
+
+      if (!button.dataset.sidebarToggleBound) {
+        button.dataset.sidebarToggleBound = "true";
+        button.addEventListener("click", () => {
+          document.body.classList.add("sidebar-open");
+        });
+      }
+    });
+
+    document.querySelectorAll("[data-close-sidebar]").forEach((button) => {
+      if (!button.dataset.sidebarCloseBound) {
+        button.dataset.sidebarCloseBound = "true";
+        button.addEventListener("click", () => {
+          document.body.classList.remove("sidebar-open");
+        });
+      }
+    });
+  };
+
   const refresh = () => {
+    setupMenuButtons();
+
     document.querySelectorAll(".sidebar-nav .nav-link").forEach((link) => {
       if (link.querySelector(".nav-icon")) {
         return;
